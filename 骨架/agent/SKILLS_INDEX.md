@@ -25,46 +25,46 @@ social-media 的六个技能进入对应阶段时必须实际使用；窄任务�
 
 ## 技能清单
 
-需要：必需＝SOP 离不开；推荐＝对应流程要用；可选＝特定场景才用。来源写"待核实"的是线索，装之前先确认；"待补"的还没有可靠来源。
+需要：必需＝SOP 离不开；推荐＝对应流程要用；可选＝特定场景才用。GitHub 来源一般可以用 `npx skills add <owner>/<repo>` 安装，也可以把对应目录复制到技能目录；skillry.dev 的技能按页面上的安装说明装。许可写"未声明"的，使用前自己确认。
 
 ### social-media · 社交内容
 
-| 名称 | 作用 | 需要 | 来源 |
-|---|---|---|---|
-| social-media-router | 判断目标和阶段，串联下面五个技能，交接规格、文件和检查结果 | 必需 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/social-media/social-media-router` |
-| content-planning | 参考研究、创意选择、脚本分镜和素材需求简报 | 必需 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/social-media/content-planning` |
-| asset-generation | 整理身份与参考素材、补图、写生成提示词、验收源素材 | 必需 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/social-media/asset-generation` |
-| content-production | 剪辑、声音、文字气泡、成片检查和封面 | 必需 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/social-media/content-production` |
-| publishing-delivery | 标题、正文、标签和逐篇待发布文件夹 | 必需 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/social-media/publishing-delivery` |
-| performance-analysis | 后台数据口径、可比分析和下一次测试 | 必需 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/social-media/performance-analysis` |
+| 名称 | 作用 | 需要 | 来源 | 许可 |
+|---|---|---|---|---|
+| social-media-router | 判断目标和阶段，串联下面五个技能，交接规格、文件和检查结果 | 必需 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/social-media/social-media-router` | MIT |
+| content-planning | 参考研究、创意选择、脚本分镜和素材需求简报 | 必需 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/social-media/content-planning` | MIT |
+| asset-generation | 整理身份与参考素材、补图、写生成提示词、验收源素材 | 必需 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/social-media/asset-generation` | MIT |
+| content-production | 剪辑、声音、文字气泡、成片检查和封面 | 必需 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/social-media/content-production` | MIT |
+| publishing-delivery | 标题、正文、标签和逐篇待发布文件夹 | 必需 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/social-media/publishing-delivery` | MIT |
+| performance-analysis | 后台数据口径、可比分析和下一次测试 | 必需 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/social-media/performance-analysis` | MIT |
 
 ### video · 视频与动效
 
-| 名称 | 作用 | 需要 | 来源 |
-|---|---|---|---|
-| ai-video-prompt | 创作、审查、按结果修改 AI 视频提示词 | 推荐 | [seedance-director-skill](https://github.com/oTATo-Boss/seedance-director-skill)；也在 [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/video/ai/ai-video-prompt` |
-| RH-minimax-H3 | RunningHub H3 生成、API 存入、任务构造、查询恢复和下载；项目授权见 `tools/runninghub-minimax-h3/AGENTS.md` | 推荐 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/video/ai/rh-minimax-h3` |
-| direct-video | 统筹审美、分镜、节奏、声音和成片验收 | 推荐 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/video/creative/direct-video` |
-| huashu-art-motion | 艺术风格配方、解说动画语法、代码渲染与成片验收 | 推荐 | `npx skills add alchaincyf/huashu-art-motion`（待核实） |
-| hyperframes | HTML、CSS、GSAP 做视频的入口，按需求转到子技能 | 推荐 | `npx skills add heygen-com/hyperframes --all`（待核实） |
-| remotion-best-practices | Remotion 入口，转到创建、字幕、预览、渲染等子技能 | 推荐 | Remotion 官方技能（remotion-dev），安装方式待补 |
-| video-frames | 用 ffmpeg 提取静帧、缩略图和短片段，用于选素材和抽帧检查 | 推荐 | 待补 |
-| faceless-explainer | 不出镜的讲解视频：把文章、笔记或话题变成逐场景的文字、图形、图表画面 | 可选 | 可能随 hyperframes 一起安装（待核实） |
-| product-launch-video | 从网址、文案或简报出产品发布片和演示（基于 HyperFrames） | 可选 | 可能随 hyperframes 一起安装（待核实） |
-| video-shotcraft | 真实页面截图、2.5D 运镜、卡点剪辑和音效（基于 Remotion） | 可选 | https://github.com/Vincentwei1021/video-shotcraft（待核实） |
-| bs-creatormotion-type-title-takeover | 巨大标题在主体背后入场、主体切走后标题留下的开场 | 可选 | 待补 |
-| bs-hyperframes-device-canvas-launch | 真实界面放进暗色摄影棚设备画面，串联滚动、操作和品牌收尾 | 可选 | 待补 |
-| bs-hyperframes-velocity-sting | 速度和方向匹配的连续剪切，做几秒的预热和片头 | 可选 | 待补 |
-| storytelling-hooks | 比较第一帧、字幕和可兑现的观看回报，不强制口播 | 可选 | 待补 |
+| 名称 | 作用 | 需要 | 来源 | 许可 |
+|---|---|---|---|---|
+| ai-video-prompt | 创作、审查、按结果修改 AI 视频提示词 | 推荐 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/video/ai/ai-video-prompt` | MIT |
+| RH-minimax-H3 | RunningHub H3 生成、API 存入、任务构造、查询恢复和下载；项目授权见 `tools/runninghub-minimax-h3/AGENTS.md` | 推荐 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/video/ai/rh-minimax-h3` | 未声明 |
+| direct-video | 统筹审美、分镜、节奏、声音和成片验收 | 推荐 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/video/creative/direct-video` | 未声明 |
+| huashu-art-motion | 艺术风格配方、解说动画语法、代码渲染与成片验收 | 推荐 | [alchaincyf/huashu-art-motion](https://github.com/alchaincyf/huashu-art-motion)；`npx skills add alchaincyf/huashu-art-motion` | MIT |
+| hyperframes | HTML、CSS、GSAP 做视频的入口，按需求转到子技能 | 推荐 | [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes) `skills/hyperframes`；`npx skills add heygen-com/hyperframes --all` | 未声明 |
+| remotion-best-practices | Remotion 入口，转到创建、字幕、预览、渲染等子技能 | 推荐 | [remotion-dev/skills](https://github.com/remotion-dev/skills) `skills/remotion-best-practices` | 未声明 |
+| video-frames | 用 ffmpeg 提取静帧、缩略图和短片段，用于选素材和抽帧检查 | 推荐 | OpenClaw 内置技能模板，安装方式待核实；没有时直接用 ffmpeg 抽帧 | 未声明 |
+| faceless-explainer | 不出镜的讲解视频：把文章、笔记或话题变成逐场景的文字、图形、图表画面 | 可选 | [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes) `skills/faceless-explainer`；`npx skills add heygen-com/hyperframes --all` 会一起装 | 未声明 |
+| product-launch-video | 从网址、文案或简报出产品发布片和演示（基于 HyperFrames） | 可选 | [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes) `skills/product-launch-video`；`npx skills add heygen-com/hyperframes --all` 会一起装 | 未声明 |
+| video-shotcraft | 真实页面截图、2.5D 运镜、卡点剪辑和音效（基于 Remotion） | 可选 | [Vincentwei1021/video-shotcraft](https://github.com/Vincentwei1021/video-shotcraft)（整个仓库就是技能） | Apache-2.0 |
+| bs-creatormotion-type-title-takeover | 巨大标题在主体背后入场、主体切走后标题留下的开场 | 可选 | [skillry.dev](https://skillry.dev/skills/bs-creatormotion-type-title-takeover) | 未声明 |
+| bs-hyperframes-device-canvas-launch | 真实界面放进暗色摄影棚设备画面，串联滚动、操作和品牌收尾 | 可选 | [skillry.dev](https://skillry.dev/skills/bs-hyperframes-device-canvas-launch) | 未声明 |
+| bs-hyperframes-velocity-sting | 速度和方向匹配的连续剪切，做几秒的预热和片头 | 可选 | [skillry.dev](https://skillry.dev/skills/bs-hyperframes-velocity-sting)（上游待核实） | 未声明 |
+| storytelling-hooks | 比较第一帧、字幕和可兑现的观看回报，不强制口播 | 可选 | [yaxeen/storytelling-skills](https://github.com/yaxeen/storytelling-skills) `skills/storytelling-hooks` | 未声明 |
 
 ### 声音、图片、排错与技能管理
 
-| 名称 | 作用 | 需要 | 来源 |
-|---|---|---|---|
-| media-use | 配乐、音效、图片、图标、配音、调色的统一入口，也能转录、字幕、抠像；记录来源，试听另报 | 推荐 | 可能随 hyperframes 一起安装（待核实） |
-| codex-imagegen | Claude 通过本机 Codex CLI 调用 image_gen，可带参考图；用法注意见 `tools/README.md` | 可选 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/image/codex-imagegen` |
-| systematic-debugging | 遇到路径、工具或工程错误先定位根因，再修复和针对性验证 | 可选 | 待补 |
-| skill-library-management | 技能分类、目录索引、开发安装映射和客户端入口管理 | 可选 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/Rules/skill-library-management` |
+| 名称 | 作用 | 需要 | 来源 | 许可 |
+|---|---|---|---|---|
+| media-use | 配乐、音效、图片、图标、配音、调色的统一入口，也能转录、字幕、抠像；记录来源，试听另报 | 推荐 | [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes) `skills/media-use`；`npx skills add heygen-com/hyperframes --all` 会一起装 | 未声明 |
+| codex-imagegen | Claude 通过本机 Codex CLI 调用 image_gen，可带参考图；用法注意见 `tools/README.md` | 可选 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/image/codex-imagegen` | 未声明 |
+| systematic-debugging | 遇到路径、工具或工程错误先定位根因，再修复和针对性验证 | 可选 | 来源未知；没有可跳过 | 未声明 |
+| skill-library-management | 技能分类、目录索引、开发安装映射和客户端入口管理 | 可选 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/Rules/skill-library-management` | 未声明 |
 
 ## Codex 内置与插件
 
