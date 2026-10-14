@@ -18,4 +18,4 @@ python3 agent/tools/环境检查/检查环境.py     # 在项目根目录运行�
 3. 登录和凭据（用到才需要）：本人登录 ChatGPT App；HeyGen CLI 用官方脚本安装后，本人运行 `heygen auth login --oauth`；RunningHub Key 由本人用 RH-minimax-H3 的 `credentials.py set` 隐藏输入；`python3 -m pip install requests`。
 4. 再跑一次本检查，直到"结果：通过"。
 
-同一台电脑再开新账号：工具、技能和登录都是共用的，不用重装；只需要给新账号建一个 Chrome 个人资料并登录它的平台后台。
+同一台电脑再开新账号：工具、技能和登录都是共用的，不用重装；要让 agent 只读查看平台后台时，再给新账号建一个 Chrome 个人资料并登录。
