@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "deny": [
+      "Edit(/发布内容/**)",
+      "Edit(/固定资产/**)",
+      "Edit(/交付/**)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit|NotebookEdit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/agent/tools/写入保护/protect_paths.py\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

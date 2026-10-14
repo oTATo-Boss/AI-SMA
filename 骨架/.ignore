@@ -1,0 +1,5 @@
+# 搜索排除：ripgrep 和 agent 的搜索工具会读取本文件（项目不用 git，.gitignore 不生效）
+node_modules/
+__pycache__/
+*.pyc
+.DS_Store

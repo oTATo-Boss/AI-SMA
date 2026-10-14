@@ -1,0 +1,147 @@
+{
+  "说明": "本机环境依赖清单。技能清单不在这里重复，检查脚本从 agent/SKILLS_INDEX.md 读取并按名字在 skill_roots 里查找。need：必需（缺了不能工作）、推荐（缺了部分流程用不了）、可选。",
+  "skill_roots": [
+    "~/.claude/skills",
+    "~/.codex/skills",
+    "~/.agents/skills",
+    ".claude/skills"
+  ],
+  "claude_roots": [
+    "~/.claude/skills",
+    ".claude/skills"
+  ],
+  "tools": [
+    {
+      "name": "python3",
+      "need": "必需",
+      "for": "任务管理、项目检查、写入保护、发布包",
+      "version": [
+        "--version"
+      ],
+      "min": "3.9",
+      "install": "python.org 安装包，或 brew install python"
+    },
+    {
+      "name": "ffmpeg",
+      "need": "必需",
+      "for": "抽帧、转码、发布包检查",
+      "version": [
+        "-version"
+      ],
+      "install": "brew install ffmpeg"
+    },
+    {
+      "name": "ffprobe",
+      "need": "必需",
+      "for": "媒体规格检查",
+      "version": [
+        "-version"
+      ],
+      "install": "随 ffmpeg 一起安装"
+    },
+    {
+      "name": "node",
+      "need": "必需",
+      "for": "Remotion、HyperFrames",
+      "version": [
+        "--version"
+      ],
+      "min": "18",
+      "install": "brew install node"
+    },
+    {
+      "name": "npx",
+      "need": "必需",
+      "for": "Remotion、HyperFrames 命令",
+      "version": [
+        "--version"
+      ],
+      "install": "随 node 一起安装"
+    },
+    {
+      "name": "heygen",
+      "need": "推荐",
+      "for": "配乐、音效、素材（HyperFrames、media-use）",
+      "version": [
+        "--version"
+      ],
+      "paths": [
+        "~/.local/bin/heygen"
+      ],
+      "install": "curl -fsSL https://static.heygen.ai/cli/install.sh | bash（先经本人同意）"
+    },
+    {
+      "name": "codex",
+      "need": "推荐",
+      "for": "Claude 通过 codex-imagegen 生图",
+      "version": [
+        "--version"
+      ],
+      "paths": [
+        "/Applications/ChatGPT.app/Contents/Resources/codex-cli/bin/codex"
+      ],
+      "install": "安装 ChatGPT 桌面 App（自带 codex-cli）并登录"
+    },
+    {
+      "name": "git",
+      "need": "可选",
+      "for": "安装技能、同步模板",
+      "version": [
+        "--version"
+      ],
+      "install": "brew install git"
+    }
+  ],
+  "apps": [
+    {
+      "name": "Google Chrome",
+      "need": "必需",
+      "path": "/Applications/Google Chrome.app",
+      "for": "Remotion 渲染；只读查看平台后台（每个账号一个个人资料）",
+      "install": "从 google.com/chrome 下载安装"
+    }
+  ],
+  "python_packages": [
+    {
+      "name": "requests",
+      "need": "推荐",
+      "for": "RH-minimax-H3 客户端",
+      "install": "python3 -m pip install requests"
+    }
+  ],
+  "logins": [
+    {
+      "name": "RunningHub Key",
+      "need": "推荐",
+      "ok": "已配置",
+      "fix": "本人运行 credentials.py set 隐藏输入 Key",
+      "skill": "rh-minimax-h3",
+      "script": "scripts/credentials.py",
+      "args": [
+        "status"
+      ]
+    },
+    {
+      "name": "HeyGen 登录",
+      "need": "推荐",
+      "command": [
+        "heygen",
+        "auth",
+        "status"
+      ],
+      "parse": "heygen",
+      "fix": "本人运行 heygen auth login --oauth，在浏览器完成登录"
+    },
+    {
+      "name": "Codex 登录",
+      "need": "推荐",
+      "command": [
+        "codex",
+        "login",
+        "status"
+      ],
+      "ok": "Logged in",
+      "fix": "打开 ChatGPT App 登录，或本人运行 codex login"
+    }
+  ]
+}
