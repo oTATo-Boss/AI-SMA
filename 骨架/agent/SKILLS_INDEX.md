@@ -43,8 +43,8 @@ social-media 的六个技能进入对应阶段时必须实际使用；窄任务�
 | 名称 | 作用 | 需要 | 来源 | 许可 |
 |---|---|---|---|---|
 | ai-video-prompt | 创作、审查、按结果修改 AI 视频提示词 | 推荐 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/video/ai/ai-video-prompt` | MIT |
-| RH-minimax-H3 | RunningHub H3 生成、API 存入、任务构造、查询恢复和下载；项目授权见 `tools/runninghub-minimax-h3/AGENTS.md` | 推荐 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/video/ai/rh-minimax-h3` | 未声明 |
-| direct-video | 统筹审美、分镜、节奏、声音和成片验收 | 推荐 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/video/creative/direct-video` | 未声明 |
+| RH-minimax-H3 | RunningHub H3 生成、API 存入、任务构造、查询恢复和下载；项目授权见 `tools/runninghub-minimax-h3/AGENTS.md` | 推荐 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/video/ai/rh-minimax-h3` | MIT |
+| direct-video | 统筹审美、分镜、节奏、声音和成片验收 | 推荐 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/video/creative/direct-video` | MIT |
 | huashu-art-motion | 艺术风格配方、解说动画语法、代码渲染与成片验收 | 推荐 | [alchaincyf/huashu-art-motion](https://github.com/alchaincyf/huashu-art-motion)；`npx skills add alchaincyf/huashu-art-motion` | MIT |
 | hyperframes | HTML、CSS、GSAP 做视频的入口，按需求转到子技能 | 推荐 | [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes) `skills/hyperframes`；`npx skills add heygen-com/hyperframes --all` | 未声明 |
 | remotion-best-practices | Remotion 入口，转到创建、字幕、预览、渲染等子技能 | 推荐 | [remotion-dev/skills](https://github.com/remotion-dev/skills) `skills/remotion-best-practices` | 未声明 |
@@ -62,9 +62,9 @@ social-media 的六个技能进入对应阶段时必须实际使用；窄任务�
 | 名称 | 作用 | 需要 | 来源 | 许可 |
 |---|---|---|---|---|
 | media-use | 配乐、音效、图片、图标、配音、调色的统一入口，也能转录、字幕、抠像；记录来源，试听另报 | 推荐 | [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes) `skills/media-use`；`npx skills add heygen-com/hyperframes --all` 会一起装 | 未声明 |
-| codex-imagegen | Claude 通过本机 Codex CLI 调用 image_gen，可带参考图；用法注意见 `tools/README.md` | 可选 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/image/codex-imagegen` | 未声明 |
+| codex-imagegen | Claude 通过本机 Codex CLI 调用 image_gen，可带参考图；用法注意见 `tools/README.md` | 可选 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/image/codex-imagegen` | MIT |
 | systematic-debugging | 遇到路径、工具或工程错误先定位根因，再修复和针对性验证 | 可选 | 来源未知；没有可跳过 | 未声明 |
-| skill-library-management | 技能分类、目录索引、开发安装映射和客户端入口管理 | 可选 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/Rules/skill-library-management` | 未声明 |
+| skill-library-management | 技能分类、目录索引、开发安装映射和客户端入口管理 | 可选 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/Rules/skill-library-management` | MIT |
 
 ## Codex 内置与插件
 
