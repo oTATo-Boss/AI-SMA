@@ -1,6 +1,6 @@
-# 账号运营项目模板 v0
+# AI-SMA · 账号运营项目模板
 
-给 AI agent（Claude Code、Codex）用的社交媒体账号运营项目骨架。新建一个账号就生成一个独立项目，里面有：
+AI-SMA（AI-Social Media Automation）是给 AI agent（Claude Code、Codex）用的社交媒体账号运营项目骨架。新建一个账号就生成一个独立项目，里面有：
 
 - 入口：6 条红线和"什么任务读什么"的路由，agent 启动时自动加载；
 - 长期规范：账号配置、定位与策略、内容与交付等，按账号填写；
@@ -16,7 +16,7 @@
 1. 给账号新建一个文件夹，比如 `~/Desktop/@账号名`，在里面打开 Claude Code 或 Codex。
 2. 发这一句：
 
-   > 用 https://github.com/oTATo-Boss/auto-video 把当前文件夹部署成账号项目。
+   > 用 https://github.com/oTATo-Boss/AI-SMA 把当前文件夹部署成账号项目。
 
 3. 部署完 agent 会直接回复：怎么用、要准备什么、要你回答的几个问题。回答完就能开工。
 
@@ -25,11 +25,11 @@
 **不用 agent，自己在终端部署**：
 
 ```bash
-git clone https://github.com/oTATo-Boss/auto-video.git
+git clone https://github.com/oTATo-Boss/AI-SMA.git
 ```
 
 ```bash
-python3 auto-video/新建账号.py --dest ~/Desktop/@账号名
+python3 AI-SMA/新建账号.py --dest ~/Desktop/@账号名
 ```
 
 部署完在这个文件夹打开 Claude Code 或 Codex，随便说一句，agent 会接着带你开工。
@@ -115,3 +115,4 @@ MIT，见 `LICENSE`。模板引用的技能各有自己的许可，以各自仓�
 - v0.4（2026-10-14）：明确一个账号一个项目文件夹，账号之间不共享信息。
 - v0.5（2026-10-14）：加快速开始、一句话 agent 部署指令和给 agent 的部署步骤。
 - v0.6（2026-10-14）：改为在建好的文件夹里一句话部署：账号名取文件夹名，Chrome 个人资料改为可选；部署完 agent 按新增的"新账号开工" SOP 回复用法、准备事项和必答问题。
+- v0.7（2026-10-14）：项目和仓库改名为 AI-SMA（AI-Social Media Automation），地址改为 https://github.com/oTATo-Boss/AI-SMA。

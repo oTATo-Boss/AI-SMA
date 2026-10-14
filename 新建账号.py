@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""把账号模板部署到账号项目文件夹（默认当前文件夹）：复制骨架、填入账号名、写第一条日志、生成任务总览、运行项目检查和环境检查，并列出还要手填的地方。"""
+"""把 AI-SMA 模板部署到账号项目文件夹（默认当前文件夹）：复制骨架、填入账号名、写第一条日志、生成任务总览、运行项目检查和环境检查，并列出还要手填的地方。"""
 import argparse
 import os
 import re
@@ -10,7 +10,7 @@ from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-VERSION = "v0.6"
+VERSION = "v0.7"
 TEMPLATE = Path(__file__).resolve().parent
 SKELETON = TEMPLATE / "骨架"
 TEXT_SUFFIXES = {".md", ".yaml", ".yml", ".json", ".py", ".txt"}
@@ -92,7 +92,7 @@ def main():
 
     log = dest / "agent/log" / now.strftime("%Y-%m") / (now.strftime("%Y-%m-%d") + ".md")
     log.parent.mkdir(parents=True, exist_ok=True)
-    log.write_text(f"# {now:%Y-%m-%d}\n\n- {now:%H:%M} · agent · 从账号模板 {VERSION} 部署项目 · "
+    log.write_text(f"# {now:%Y-%m-%d}\n\n- {now:%H:%M} · agent · 从 AI-SMA {VERSION} 部署项目 · "
                    f"下一步按 `sop/新账号开工.md` 带本人开工 · `AGENTS.md`\n", encoding="utf-8")
 
     env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1")
