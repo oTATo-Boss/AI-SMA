@@ -10,7 +10,8 @@
 |---|---|
 | 一句话自主创作 | 由团队角色分工使用，各角色预加载的技能写在 `团队/*/角色.md` |
 | 社交内容启动、接续、跨阶段 | social-media-router |
-| 选题、参考研究、脚本／分镜、图文每页方案 | content-planning；视频加 direct-video；比较开场用 storytelling-hooks |
+| 爆款、对标、评论研究 | 数据一律用 Chrome 只读采集；方法借鉴 outlier-post-finder、comment-mining、creator-profile-teardown、trend-discovery、competitor-social-research；拿到视频文件时按 viral-outliers 逐帧加转写拆解，配置了 Gemini Key 时可用 video-content-analyzer；英文短视频参考 short-form-content-os |
+| 选题、参考研究、脚本／分镜、图文每页方案 | 出创意用 creative-director；content-planning；视频加 direct-video；比较开场用 storytelling-hooks |
 | 角色与场景素材、生成提示词、AI 原片（AI 生成路线） | asset-generation → ai-video-prompt → RH-minimax-H3；补图 Codex 用 imagegen，Claude 用 codex-imagegen |
 | 艺术风格动画、动画复刻、解说动画 | huashu-art-motion（做视频和动效先评估它）+ direct-video |
 | 界面演示、产品展示（代码动画路线） | video-shotcraft（Remotion）；也可以用 product-launch-video、bs-hyperframes-device-canvas-launch、bs-hyperframes-velocity-sting |
@@ -56,6 +57,23 @@ social-media 的六个技能进入对应阶段时必须实际使用；窄任务�
 | bs-hyperframes-device-canvas-launch | 真实界面放进暗色摄影棚设备画面，串联滚动、操作和品牌收尾 | 可选 | [skillry.dev](https://skillry.dev/skills/bs-hyperframes-device-canvas-launch) | 未声明 |
 | bs-hyperframes-velocity-sting | 速度和方向匹配的连续剪切，做几秒的预热和片头 | 可选 | [skillry.dev](https://skillry.dev/skills/bs-hyperframes-velocity-sting)（上游待核实） | 未声明 |
 | storytelling-hooks | 比较第一帧、字幕和可兑现的观看回报，不强制口播 | 可选 | [yaxeen/storytelling-skills](https://github.com/yaxeen/storytelling-skills) `skills/storytelling-hooks` | 未声明 |
+
+### 研究与创意 · 外部收集
+
+ScrapeCreators 套件的技能默认调用它家的付费 API，head-of-content 套件要 TubeLab、Apify、Gemini 的 Key；本项目的市场数据用 Chrome 获取，没有 Key 时只借用方法。两个套件里没列出的技能（ad-library-teardown、audience-research、content-repurposing、influencer-prospecting、product-demand-research、scrapecreators-api、social-listening-brief、content-planner、instagram-research、tiktok-research、x-research、youtube-research）用到时再按来源查看。
+
+| 名称 | 作用 | 需要 | 来源 | 许可 |
+|---|---|---|---|---|
+| creative-director | 用 SIT、TRIZ、横向思维等方法系统地出创意，对照经典案例打分、改稿和失败预演 | 推荐 | [smixs/creative-director-skill](https://github.com/smixs/creative-director-skill) `creative-director` | CC BY 4.0（引用须署名 Serge Shima） |
+| outlier-post-finder | 找出明显高于作者常态的作品，解释为什么有效，提炼钩子和形式 | 可选 | [ScrapeCreators/social-media-research-skills](https://github.com/ScrapeCreators/social-media-research-skills) `skills/outlier-post-finder` | MIT |
+| comment-mining | 挖评论里的观众反应、用语、问题和需求 | 可选 | [ScrapeCreators/social-media-research-skills](https://github.com/ScrapeCreators/social-media-research-skills) `skills/comment-mining` | MIT |
+| creator-profile-teardown | 拆解一个创作者或品牌账号的定位、内容支柱和爆款打法 | 可选 | [ScrapeCreators/social-media-research-skills](https://github.com/ScrapeCreators/social-media-research-skills) `skills/creator-profile-teardown` | MIT |
+| trend-discovery | 发现赛道里的热门话题、标签、音乐、作品和形式 | 可选 | [ScrapeCreators/social-media-research-skills](https://github.com/ScrapeCreators/social-media-research-skills) `skills/trend-discovery` | MIT |
+| competitor-social-research | 研究竞品的社媒策略，找出赛道里有效的内容和空白 | 可选 | [ScrapeCreators/social-media-research-skills](https://github.com/ScrapeCreators/social-media-research-skills) `skills/competitor-social-research` | MIT |
+| transcript-intelligence | 从视频转写里提炼钩子、观点和可复用的脚本结构 | 可选 | [ScrapeCreators/social-media-research-skills](https://github.com/ScrapeCreators/social-media-research-skills) `skills/transcript-intelligence` | MIT |
+| viral-outliers | 找细分赛道的爆款 Reels，下载后逐帧看、转写，再改成本账号可用的脚本模板（需要 opencli、ffmpeg、faster-whisper） | 可选 | [w-avw/instagram-viral-reels-research-claude-skill](https://github.com/w-avw/instagram-viral-reels-research-claude-skill) `skills/viral-outliers` | MIT |
+| video-content-analyzer | 用 Gemini 实际看视频，提取钩子、结构和可复制的模式（需要 GEMINI_API_KEY） | 可选 | [bradautomates/head-of-content](https://github.com/bradautomates/head-of-content) `.claude/skills/video-content-analyzer` | MIT |
+| short-form-content-os | 北美英文短视频从趋势、异常爆款、钩子到脚本、分镜和迭代的工作流 | 可选 | [trsgogogo/short-form-content-os](https://github.com/trsgogogo/short-form-content-os)（整个仓库就是技能） | MIT |
 
 ### 声音、图片与技能管理
 

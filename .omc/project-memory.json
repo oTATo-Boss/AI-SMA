@@ -1,0 +1,55 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1792002306686,
+  "projectRoot": "/Users/griffith/Desktop/土豆/AI-SMA",
+  "techStack": {
+    "languages": [],
+    "frameworks": [],
+    "packageManager": null,
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [],
+    "gitBranches": null
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "测试用例": {
+      "path": "测试用例",
+      "purpose": null,
+      "fileCount": 2,
+      "lastAccessed": 1792002306676,
+      "keyFiles": [
+        "一句话自主视频.md",
+        "停更账号重启.md"
+      ]
+    },
+    "骨架": {
+      "path": "骨架",
+      "purpose": null,
+      "fileCount": 4,
+      "lastAccessed": 1792002306676,
+      "keyFiles": [
+        "AGENTS.md",
+        "CLAUDE.md"
+      ]
+    }
+  },
+  "hotPaths": [],
+  "userDirectives": []
+}
