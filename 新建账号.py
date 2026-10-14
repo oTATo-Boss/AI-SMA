@@ -10,7 +10,7 @@ from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-VERSION = "v0.8.1"
+VERSION = "v0.9"
 TEMPLATE = Path(__file__).resolve().parent
 SKELETON = TEMPLATE / "骨架"
 TEXT_SUFFIXES = {".md", ".yaml", ".yml", ".json", ".py", ".txt"}
@@ -90,12 +90,14 @@ def main():
             if filled != text:
                 path.write_text(filled, encoding="utf-8")
 
+    env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1")
+    subprocess.run([sys.executable, str(dest / "agent/tools/团队/生成角色.py")], env=env)  # 生成 Claude Code、Codex 的角色配置
+
     log = dest / "agent/log" / now.strftime("%Y-%m") / (now.strftime("%Y-%m-%d") + ".md")
     log.parent.mkdir(parents=True, exist_ok=True)
     log.write_text(f"# {now:%Y-%m-%d}\n\n- {now:%H:%M} · agent · 从 AI-SMA {VERSION} 部署项目 · "
                    f"下一步按 `sop/新账号开工.md` 带本人开工 · `AGENTS.md`\n", encoding="utf-8")
 
-    env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1")
     subprocess.run([sys.executable, str(dest / "agent/tools/任务管理/任务管理.py"), "sync"], check=True, env=env, stdout=subprocess.DEVNULL)
     print(f"已部署：{dest}（账号名：{name}）\n", flush=True)
     check = subprocess.run([sys.executable, str(dest / "agent/tools/项目检查/检查.py")], env=env)

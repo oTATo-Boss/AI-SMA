@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""项目一键检查：规则文档链接、任务记录、定位确认、账号隔离、受保护目录、密钥、启动阅读量、规则重复和配置一致性。只读，标准库。"""
+"""项目一键检查：规则文档链接、任务记录、定位确认、账号隔离、团队角色与产物、受保护目录、密钥、启动阅读量、规则重复和配置一致性。只读，标准库。"""
 import argparse
 import importlib.util
 import json
@@ -12,7 +12,7 @@ AGENT = ROOT / "agent"
 SKILLS = Path.home() / ".agents/skills"
 PROTECTED = ["交付", "发布内容", "固定资产"]
 RULE_GLOBS = ["AGENTS.md", "CLAUDE.md", "agent/*.md", "agent/规范/**/*.md", "agent/sop/**/*.md",
-              "agent/tools/**/*.md", "agent/附录/**/*.md", "agent/账号数据/README.md",
+              "agent/tools/**/*.md", "agent/附录/**/*.md", "agent/账号数据/README.md", "agent/团队/**/*.md",
               "agent/log/README.md", "agent/工作/README.md", "agent/历史资料/README.md"]
 SKIP_PARTS = {"node_modules", "__pycache__"}
 PATH_PREFIXES = ("agent/", "../", "./", "规范/", "sop/", "tools/", "工作/", "交付/", "发布内容/", "固定资产/",
@@ -20,6 +20,7 @@ PATH_PREFIXES = ("agent/", "../", "./", "规范/", "sop/", "tools/", "工作/", 
 PATH_SUFFIXES = (".md", ".json", ".jsonl", ".py", ".yaml", ".yml", ".txt", ".png", ".jpg", ".mp4", ".glb")
 SKILL_INTERNAL = ("references/", "scripts/", "templates/", "assets/")  # 技能包内相对路径，随技能入口解析
 OPTIONAL = (".claude/skills", "~/.claude/skills", "~/.codex/skills", "~/.agents/skills")  # 可能还没建的技能目录
+TASK_RELATIVE = ("调研/", "创意/", "方案/", "工程/", "产物/", "检查/", "复盘/", "交付暂存/", "输入/", "过程/")  # 任务目录里的相对路径
 # 示例或占位路径不做存在性检查。
 PLACEHOLDERS = ("<", ">", "*", "YYYY", "…", "任务目录", "绝对路径", "/path/", "实际", "选题名", "原任务",
                 "内容名称", "完整包", "SKILL_DIR", "$")
@@ -70,7 +71,7 @@ def check_links(docs):
                 if (token.startswith(PATH_PREFIXES) or ("/" in token and token.endswith(PATH_SUFFIXES))) and not token.startswith(("http", "-")):
                     targets.append(token)
             for target in targets:
-                if any(p in target for p in PLACEHOLDERS) or target.startswith(SKILL_INTERNAL + OPTIONAL) or target.endswith(".env"):
+                if any(p in target for p in PLACEHOLDERS) or target.startswith(SKILL_INTERNAL + OPTIONAL + TASK_RELATIVE) or target.endswith(".env"):
                     continue  # 示例路径、技能包内路径、可选的私有配置不查存在性
                 if not any(c.exists() for c in resolve(target, doc.parent)):
                     broken.append(f"{rel(doc)}:{number} → {target}")
@@ -91,6 +92,25 @@ def check_tasks(module, workspace):
         errors += [f"{rel(path)}：{e}" for e in task_errors]
         warnings += len(task_warnings)
     return errors, warnings, len(workspace.records())
+
+
+def load_tool(name, path):
+    spec = importlib.util.spec_from_file_location(name, AGENT / path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def check_team():
+    """角色配置是否最新；爆款库和任务目录里的团队产物是否符合合同。"""
+    if not (AGENT / "tools/团队/生成角色.py").exists():
+        return [], 0, 0
+    problems, count = load_tool("team_generate", "tools/团队/生成角色.py").check()
+    validator = load_tool("team_validate", "tools/团队/校验产物.py")
+    files = validator.artifact_files([str(AGENT / "账号数据/爆款库"), str(AGENT / "工作")])
+    for path in files:
+        problems += [f"{rel(path)}：{item}" for item in validator.validate_file(path)]
+    return problems, count, len(files)
 
 
 def check_positioning(module, workspace):
@@ -287,6 +307,12 @@ def main():
     for item in positioning:
         print("  ✗ " + item)
 
+    team, roles, artifacts = check_team()
+    report["团队"] = team
+    print(f"团队：角色 {roles} 个，产物 {artifacts} 个，问题 {len(team)} 处")
+    for item in team:
+        print("  ✗ " + item)
+
     leaks, siblings = check_isolation()
     report["串号位置"] = leaks
     print(f"隔离：同级账号项目 {siblings} 个，本项目文件里出现它们的名称 {len(leaks)} 处")
@@ -331,7 +357,7 @@ def main():
     for item in problems:
         print("  ✗ " + item)
 
-    failed |= bool(broken or task_errors or positioning or leaks or hits or problems)
+    failed |= bool(broken or task_errors or positioning or team or leaks or hits or problems)
     if args.json:
         Path(args.json).write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print("结果：" + ("有失败项" if failed else "通过"))

@@ -217,6 +217,22 @@ class TaskManagementTests(unittest.TestCase):
         self.assertIn("](<../工作/" + Path(task).parent.name + "/task.json>)", text)
         self.assertNotIn(str(self.root), text)
 
+    def test_auto_video_required_checks_block_phases(self):
+        task = self.create(workflow="auto-video")
+        self.operation(task, "authorize", "--scope", "一句话自主视频", "--source", "测试本人来源")
+        self.operation(task, "update", "--phase", "创意", "--status", "进行中", "--next", "出创意")
+        self.operation(task, "update", "--phase", "方案", "--next", "写方案", ok=False)
+        review = Path(task).parent / "创意评审.json"
+        (self.root / review).write_text('{"verdict": "pass"}')
+        self.operation(task, "check", "--name", "创意评审", "--result", "failed", "--evidence", str(review), "--summary", "未过线")
+        self.operation(task, "update", "--phase", "方案", "--next", "写方案", ok=False)
+        self.operation(task, "check", "--name", "创意评审", "--result", "passed", "--evidence", str(review), "--summary", "过线")
+        self.operation(task, "update", "--phase", "方案", "--next", "写方案")
+        self.operation(task, "update", "--phase", "交付", "--next", "打包", ok=False)
+        (self.root / review).write_text('{"verdict": "pass", "改过": true}')
+        errors, _ = self.workspace.validate(self.read(task))
+        self.assertTrue(any("证据版本已变化" in e for e in errors), errors)
+
     def test_definition_drives_timezone_choices_and_packages(self):
         definition_path = self.runtime / "流程定义.json"
         definition = json.loads(definition_path.read_text())

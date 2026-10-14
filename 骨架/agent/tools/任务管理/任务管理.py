@@ -270,6 +270,11 @@ class Workspace:
                             warnings.append("旧任务历史待核实：" + message)
                         else:
                             errors.append(message)
+        if task["phase"] in workflow["phases"]:
+            passed = {c.get("name") for c in task["checks"] if isinstance(c, dict) and c.get("result") == "passed" and c.get("evidence")}
+            for requirement in workflow.get("required_checks", []):
+                if workflow["phases"].index(task["phase"]) >= workflow["phases"].index(requirement["before_phase"]) and requirement["name"] not in passed:
+                    errors.append(f"进入「{requirement['before_phase']}」前需要通过检查：{requirement['name']}")
         for approval in task["approvals"]:
             if not isinstance(approval, dict) or not isinstance(approval.get("source"), str) or not approval["source"].strip() or not isinstance(approval.get("scope"), str) or not approval["scope"].strip():
                 errors.append("任务授权缺少范围或来源")
@@ -533,6 +538,10 @@ def main():
                         for gate in task["gates"]:
                             if definition["phases"].index(task["phase"]) >= definition["phases"].index(gate["before_phase"]) and gate["decision"] != "approved":
                                 raise TaskError("新阶段必须取得确认：" + gate["title"])
+                        passed = {c.get("name") for c in task["checks"] if c.get("result") == "passed" and c.get("evidence")}
+                        for requirement in definition.get("required_checks", []):
+                            if definition["phases"].index(task["phase"]) >= definition["phases"].index(requirement["before_phase"]) and requirement["name"] not in passed:
+                                raise TaskError("进入新阶段前需要通过检查：" + requirement["name"])
             elif args.command == "authorize":
                 if not args.scope.strip() or not args.source.strip():
                     raise TaskError("授权需要范围和本人来源")

@@ -106,5 +106,13 @@ analytics:
   pinned_content_handling: null
   moderation_handling: 单条低曝光或推荐占比不能单独证明限流
   cohort_definition: null
+autonomy:                            # 一句话自主创作的硬限制，agent 不能自行放宽（协议见 agent/团队/README.md）
+  mode: full                         # 默认 full：制作中途不找本人确认，本人只验收成品；checkpoints：选题和制作方案仍由本人确认
+  budget_per_video: 500              # 待填写：单条视频付费生成的总预算，单位见 generation.cost_unit（开工第 7 题）；并发上限见 generation.maximum_concurrent_tasks
+  max_parallel_agents: 3             # 默认：同时工作的专业角色上限
+  idea_candidates_min: 9             # 默认：每次创意至少几个候选（3 种方法 × 3 个）
+  idea_rounds_max: 2                 # 默认：创意评审都不过时最多重来几轮
+  rework_rounds_max: 2               # 默认：审片不过时同一问题最多返工几轮
+  explore_ratio: 0.2                 # 默认：选创意时留给探索性方案的比例
 isolation:
   allowed_terms: []                  # 项目检查发现同级其他账号的名称会报错；本人确认可以出现的名称写在这里

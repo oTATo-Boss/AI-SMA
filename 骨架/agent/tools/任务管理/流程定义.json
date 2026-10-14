@@ -88,6 +88,30 @@
       ],
       "gates": [],
       "requires_acceptance": false
+    },
+    "auto-video": {
+      "label": "自主视频",
+      "document": "agent/团队/README.md",
+      "phases": [
+        "调研",
+        "创意",
+        "方案",
+        "制作",
+        "审片",
+        "交付"
+      ],
+      "gates": [],
+      "required_checks": [
+        {
+          "name": "创意评审",
+          "before_phase": "方案"
+        },
+        {
+          "name": "成片审查",
+          "before_phase": "交付"
+        }
+      ],
+      "requires_acceptance": true
     }
   }
 }

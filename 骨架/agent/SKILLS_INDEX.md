@@ -8,6 +8,7 @@
 
 | 任务阶段 | 技能（按使用顺序） |
 |---|---|
+| 一句话自主创作 | 由团队角色分工使用，各角色预加载的技能写在 `团队/*/角色.md` |
 | 社交内容启动、接续、跨阶段 | social-media-router |
 | 选题、参考研究、脚本／分镜、图文每页方案 | content-planning；视频加 direct-video；比较开场用 storytelling-hooks |
 | 角色与场景素材、生成提示词、AI 原片（AI 生成路线） | asset-generation → ai-video-prompt → RH-minimax-H3；补图 Codex 用 imagegen，Claude 用 codex-imagegen |
