@@ -83,7 +83,7 @@ python3 新建账号.py --name 账号名 --dest 项目目录 --browser-profile C
 
 ## 许可
 
-MIT，见 `LICENSE`。模板引用的技能各有自己的许可，以各自仓库为准；作者自己的技能（my-skills 里的 10 个）都是 MIT。
+MIT，见 `LICENSE`。模板引用的技能各有自己的许可，以各自仓库为准；模板用到的作者自己的 11 个技能（在 my-skills 里）都是 MIT。
 
 ## 版本
 
