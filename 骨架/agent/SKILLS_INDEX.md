@@ -18,7 +18,6 @@
 | 剪辑、声音、气泡、成片检查、封面 | content-production + direct-video；配乐音效 media-use；抽帧 video-frames；台词气泡用项目工具（如有） |
 | 标题、正文、标签、内容包 | publishing-delivery；打包用项目工具 发布包 |
 | 后台数据、表现复盘 | performance-analysis |
-| 路径、工具、工程报错 | systematic-debugging |
 | 技能安装、分类、索引维护 | skill-library-management |
 
 social-media 的六个技能进入对应阶段时必须实际使用；窄任务只进入需要的阶段。项目工具在 `tools/README.md`。
@@ -57,13 +56,12 @@ social-media 的六个技能进入对应阶段时必须实际使用；窄任务�
 | bs-hyperframes-velocity-sting | 速度和方向匹配的连续剪切，做几秒的预热和片头 | 可选 | [skillry.dev](https://skillry.dev/skills/bs-hyperframes-velocity-sting)（上游待核实） | 未声明 |
 | storytelling-hooks | 比较第一帧、字幕和可兑现的观看回报，不强制口播 | 可选 | [yaxeen/storytelling-skills](https://github.com/yaxeen/storytelling-skills) `skills/storytelling-hooks` | 未声明 |
 
-### 声音、图片、排错与技能管理
+### 声音、图片与技能管理
 
 | 名称 | 作用 | 需要 | 来源 | 许可 |
 |---|---|---|---|---|
 | media-use | 配乐、音效、图片、图标、配音、调色的统一入口，也能转录、字幕、抠像；记录来源，试听另报 | 推荐 | [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes) `skills/media-use`；`npx skills add heygen-com/hyperframes --all` 会一起装 | 未声明 |
 | codex-imagegen | Claude 通过本机 Codex CLI 调用 image_gen，可带参考图；用法注意见 `tools/README.md` | 可选 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/image/codex-imagegen` | MIT |
-| systematic-debugging | 遇到路径、工具或工程错误先定位根因，再修复和针对性验证 | 可选 | 来源未知；没有可跳过 | 未声明 |
 | skill-library-management | 技能分类、目录索引、开发安装映射和客户端入口管理 | 可选 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/Rules/skill-library-management` | MIT |
 
 ## Codex 内置与插件
