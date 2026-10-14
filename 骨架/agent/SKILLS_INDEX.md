@@ -1,6 +1,6 @@
 # 项目技能索引
 
-只登记本项目会用的技能：先按任务找技能，再完整读该技能的 SKILL.md。使用规则见 `规范/项目规则.md` 第 6 节。
+只登记本项目会用的技能：先按任务找技能，再完整读该技能的 SKILL.md。使用规则见 `规范/项目规则.md` 第 6 节。制作路线只用 `规范/账号配置.yaml` 里 production_routes 启用的，下表括号里标了路线。
 
 技能装在本机，不随项目复制：Claude Code 读 `~/.claude/skills` 或项目里的 `.claude/skills`，Codex 读 `~/.codex/skills`，有的安装工具放在 `~/.agents/skills`。缺哪个就按"来源"安装；运行 `python3 agent/tools/环境检查/检查环境.py` 会逐个检查。
 
@@ -10,10 +10,10 @@
 |---|---|
 | 社交内容启动、接续、跨阶段 | social-media-router |
 | 选题、参考研究、脚本／分镜、图文每页方案 | content-planning；视频加 direct-video；比较开场用 storytelling-hooks |
-| 角色与场景素材、生成提示词、AI 原片 | asset-generation → ai-video-prompt → RH-minimax-H3；补图 Codex 用 imagegen，Claude 用 codex-imagegen |
+| 角色与场景素材、生成提示词、AI 原片（AI 生成路线） | asset-generation → ai-video-prompt → RH-minimax-H3；补图 Codex 用 imagegen，Claude 用 codex-imagegen |
 | 艺术风格动画、动画复刻、解说动画 | huashu-art-motion（做视频和动效先评估它）+ direct-video |
-| 产品片、网页和界面演示 | video-shotcraft（默认，Remotion）；也可以用 product-launch-video、bs-hyperframes-device-canvas-launch、bs-hyperframes-velocity-sting |
-| 其他代码视频 | Remotion 走 remotion-best-practices；HTML／GSAP 走 hyperframes |
+| 界面演示、产品展示（代码动画路线） | video-shotcraft（Remotion）；也可以用 product-launch-video、bs-hyperframes-device-canvas-launch、bs-hyperframes-velocity-sting |
+| 其他代码动画（代码动画路线） | Remotion 走 remotion-best-practices；HTML／GSAP 走 hyperframes |
 | 讲解、方法、实录 | faceless-explainer；标题开场可用 bs-creatormotion-type-title-takeover |
 | 剪辑、声音、气泡、成片检查、封面 | content-production + direct-video；配乐音效 media-use；抽帧 video-frames；台词气泡用项目工具（如有） |
 | 标题、正文、标签、内容包 | publishing-delivery；打包用项目工具 发布包 |

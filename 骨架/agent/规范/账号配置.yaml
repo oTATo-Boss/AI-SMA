@@ -24,6 +24,7 @@ platforms:                           # 默认；按账号实际平台改
   - name: 抖音
 content:
   form: 竖屏短视频为主               # 默认
+  production_routes: []             # 待填写：开工第 6 题选的制作路线（AI 生成视频、代码动画与界面演示、实拍剪辑、图文）；没启用的路线不用
   tone: null                         # 待填写
   topic_boundaries: []               # 待填写：内容体系和不碰的话题
   approved_brief_path: null
@@ -76,7 +77,7 @@ tools:                               # 默认：按本机实际能力修改
   research: 公开网页；需要登录的平台只读使用本机 Chrome「{{浏览器资料}}」资料
   image_generation: Codex 用 imagegen；Claude 用 codex-imagegen
   video_generation: RH-minimax-H3
-  editing: 产品片默认 Remotion；也用 HyperFrames、FFmpeg（先用 ffmpeg -filters 确认文字滤镜）
+  editing: 按制作路线选：代码动画和界面演示用 Remotion 或 HyperFrames；剪辑用 FFmpeg（先用 ffmpeg -filters 确认文字滤镜）
   audio_inspection: null
   video_inspection: ffprobe、video-frames 抽帧
   media_probe: ffprobe
@@ -105,3 +106,5 @@ analytics:
   pinned_content_handling: null
   moderation_handling: 单条低曝光或推荐占比不能单独证明限流
   cohort_definition: null
+isolation:
+  allowed_terms: []                  # 项目检查发现同级其他账号的名称会报错；本人确认可以出现的名称写在这里

@@ -10,7 +10,7 @@ from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-VERSION = "v0.7"
+VERSION = "v0.8"
 TEMPLATE = Path(__file__).resolve().parent
 SKELETON = TEMPLATE / "骨架"
 TEXT_SUFFIXES = {".md", ".yaml", ".yml", ".json", ".py", ".txt"}

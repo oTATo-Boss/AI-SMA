@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""项目一键检查：规则文档链接、任务记录、受保护目录、密钥、启动阅读量、规则重复和配置一致性。只读，标准库。"""
+"""项目一键检查：规则文档链接、任务记录、定位确认、账号隔离、受保护目录、密钥、启动阅读量、规则重复和配置一致性。只读，标准库。"""
 import argparse
 import importlib.util
 import json
@@ -77,17 +77,87 @@ def check_links(docs):
     return broken
 
 
-def check_tasks():
+def task_workspace():
     spec = importlib.util.spec_from_file_location("task_management", AGENT / "tools/任务管理/任务管理.py")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    workspace = module.Workspace(ROOT)
+    return module, module.Workspace(ROOT)
+
+
+def check_tasks(module, workspace):
     errors, warnings = [], 0
     for path in workspace.records():
         task_errors, task_warnings = workspace.validate(module.load_json(path))
         errors += [f"{rel(path)}：{e}" for e in task_errors]
         warnings += len(task_warnings)
     return errors, warnings, len(workspace.records())
+
+
+def check_positioning(module, workspace):
+    """定位状态写"已确认"时，所写任务目录里必须有本人通过的 positioning 确认，且确认绑定的方案文件没改过。"""
+    path = AGENT / "规范/定位与策略.md"
+    if not path.exists():
+        return "没有定位文件", []
+    match = re.search(r"^\*\*定位状态：(待确认|已确认)\*\*(.*)$", path.read_text(encoding="utf-8"), re.M)
+    if not match:
+        return "没写定位状态", []
+    if match.group(1) == "待确认":
+        return "待确认", []
+    found = re.search(r"`(agent/工作/[^`]+?)/?`", match.group(2))
+    if not found:
+        return "已确认", ["定位状态写了已确认，但没写确认记录所在的任务目录"]
+    record = ROOT / found.group(1) / "task.json"
+    if not record.is_file():
+        return "已确认", [f"定位确认记录不存在：{found.group(1)}"]
+    gate = next((g for g in module.load_json(record).get("gates", []) if g.get("key") == "positioning"), None)
+    if not gate or gate.get("decision") != "approved" or not str(gate.get("source", "")).strip():
+        return "已确认", [f"{found.group(1)} 里没有本人通过的 positioning 确认"]
+    if not gate.get("subject"):
+        return "已确认", [f"{found.group(1)} 的 positioning 确认没有绑定定位方案文件"]
+    error = workspace.evidence_error(gate["subject"])
+    if error:
+        return "已确认", [f"{found.group(1)} 的定位确认已失效：{error}"]
+    return "已确认，确认记录有效", []
+
+
+def config_list(key):
+    config = AGENT / "规范/账号配置.yaml"
+    text = config.read_text(encoding="utf-8") if config.exists() else ""
+    match = re.search(rf"^\s*{key}:\s*\[(.*?)\]", text, re.M)
+    return [v.strip().strip("'\"") for v in match.group(1).split(",") if v.strip()] if match else []
+
+
+def sibling_accounts():
+    """同级目录里的其他账号项目：只看文件夹名和有没有入口、账号配置，不读里面的内容。"""
+    terms = []
+    for folder in sorted(ROOT.parent.iterdir()):
+        if folder == ROOT or folder.name.startswith(".") or not folder.is_dir():
+            continue
+        if (folder / "AGENTS.md").is_file() and (folder / "agent/规范/账号配置.yaml").is_file():
+            name = folder.name.strip().lstrip("@").strip()
+            terms.append(name if len(name) >= 4 else folder.name.strip())  # 名字太短时带上 @，减少误报
+    return terms
+
+
+def check_isolation():
+    own = ROOT.name.strip().lstrip("@").strip()
+    allowed = set(config_list("allowed_terms"))
+    siblings = sibling_accounts()
+    terms = [t for t in siblings if t and t not in allowed and t not in own]
+    hits = []
+    for path in sorted(ROOT.rglob("*")) if terms else []:
+        if (path.suffix.lower() not in TEXT_SUFFIXES or SKIP_PARTS & set(path.parts) or path.name.startswith(".env")
+                or not path.is_file() or path.stat().st_size > 5_000_000):
+            continue
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (UnicodeError, OSError):
+            continue
+        for term in terms:
+            if term in text:
+                lines = [str(n) for n, line in enumerate(text.splitlines(), 1) if term in line]
+                hits.append(f"{rel(path)}:{','.join(lines[:5])} → {term}")
+    return hits, len(siblings)
 
 
 def snapshot():
@@ -204,10 +274,23 @@ def main():
     for item in broken:
         print("  ✗ " + item)
 
-    task_errors, task_warnings, total = check_tasks()
+    module, workspace = task_workspace()
+    task_errors, task_warnings, total = check_tasks(module, workspace)
     report["任务记录错误"] = task_errors
     print(f"任务：{total} 个记录，错误 {len(task_errors)}，提示 {task_warnings}")
     for item in task_errors:
+        print("  ✗ " + item)
+
+    status, positioning = check_positioning(module, workspace)
+    report["定位确认"] = {"状态": status, "问题": positioning}
+    print(f"定位：{status}")
+    for item in positioning:
+        print("  ✗ " + item)
+
+    leaks, siblings = check_isolation()
+    report["串号位置"] = leaks
+    print(f"隔离：同级账号项目 {siblings} 个，本项目文件里出现它们的名称 {len(leaks)} 处")
+    for item in leaks:
         print("  ✗ " + item)
 
     state = snapshot()
@@ -248,7 +331,7 @@ def main():
     for item in problems:
         print("  ✗ " + item)
 
-    failed |= bool(broken or task_errors or hits or problems)
+    failed |= bool(broken or task_errors or positioning or leaks or hits or problems)
     if args.json:
         Path(args.json).write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print("结果：" + ("有失败项" if failed else "通过"))
