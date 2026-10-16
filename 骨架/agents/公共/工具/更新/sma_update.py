@@ -78,6 +78,8 @@ class Updater:
         put(self.state_path, state)
 
     def adopt(self):
+        if read(safe(self.root, CONFIG), {}).get('schema_version') != 2:
+            raise UpdateError('v1 或未知项目需要专门迁移，本次未修改')
         with coordinated(self.root, self.home):
             existing = read(self.state_path)
             if existing:
@@ -206,6 +208,7 @@ class Updater:
             return report('policy_saved', self.state(), policy=config['updates'])
 
     def check(self, automatic=False, refresh=False):
+        self.state()  # Invalid/empty projects must not acquire deployment control files merely by checking.
         with coordinated(self.root, self.home):
             state = self.state()
             policy = read(self.root / CONFIG)['updates']
@@ -679,6 +682,8 @@ class Updater:
                     put(target, safe(folder / 'backup', change['path']).read_bytes())
                 elif target.exists():
                     target.unlink()
+            if blockers(self.root, read(preview / FLOW)):
+                raise UpdateError('旧流程不兼容当前未完成任务或检查点，不能回退')
             if not self.environment(preview)['ready']:
                 raise UpdateError('当前共享依赖不兼容旧版本；先按安装说明恢复并验证，不能仅回退回执')
             state['transaction'] = identifier

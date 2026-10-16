@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / '骨架/agents/公共/工具/更新'))
 from sma_common import CONFIG, CONTROL, FLOW, RECEIPT, UpdateError, fingerprint, inventory, module, put, read, sha
 from sma_update import Updater
-from sma_coordination import execution, coordinated, register, reserve, admission
+from sma_coordination import execution, coordinated, register, reserve, admission, blockers
 import sma_release
 
 
@@ -231,6 +231,10 @@ class UpdateTests(unittest.TestCase):
         self.project.mkdir()
         with self.assertRaisesRegex(UpdateError, 'v1'):
             Updater(self.project, self.home).adopt()
+        with self.assertRaises(UpdateError):
+            Updater(self.project, self.home).check()
+        self.assertFalse(list(self.project.iterdir()))
+        self.assertFalse(self.home.exists())
 
     def test_release_tamper_and_zip_escape_rejected(self):
         source = self.target()
@@ -526,6 +530,35 @@ class UpdateTests(unittest.TestCase):
         self.updater.adopt()
         self.assertEqual(self.updater.state()['baseline']['.codex/agents/film-director.toml'], sha(client))
         self.planned()
+
+    def test_pending_and_parent_tasks_still_require_compatible_contracts(self):
+        self.deploy()
+        _, _, task, path = self.task()
+        flow = read(self.project / FLOW)
+        flow['workflows']['maintenance']['phases'] = ['不同阶段']
+        self.assertIn('incompatible_checkpoint', [b['kind'] for b in blockers(self.project, flow)])
+        task['unit'] = {'type': 'project', 'id': 'parent'}
+        put(self.project / path, task)
+        flow = read(self.project / FLOW)
+        flow['workflows']['maintenance']['gates'] = [{'key': 'new-gate', 'before_phase': task['phase']}]
+        self.assertIn('incompatible_contract', [b['kind'] for b in blockers(self.project, flow)])
+
+    def test_rollback_refuses_incompatible_new_pending_task(self):
+        self.deploy()
+        self.install()
+        path = self.repo / '骨架' / FLOW
+        flow = read(path)
+        flow['workflows']['maintenance']['phases'].insert(0, '新增阶段')
+        put(path, flow)
+        identifier = self.planned()
+        self.updater.prepare(identifier)
+        self.assertIn(self.updater.apply(identifier)['phase'], {'updated', 'client_reload_required'})
+        # Client evidence is tested independently; simulate its completion in this rollback fixture.
+        state = self.updater.state();state['client_pending'] = False;self.updater.save(state)
+        self.task()
+        with self.assertRaisesRegex(UpdateError, '不兼容'):
+            self.updater.rollback(identifier)
+        self.assertEqual(self.updater.state()['version'], '2.1.0')
 
 
 if __name__ == '__main__':

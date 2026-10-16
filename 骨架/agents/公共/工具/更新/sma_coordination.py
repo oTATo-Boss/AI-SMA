@@ -73,18 +73,40 @@ def blockers(root, target_flow=None):
     for path in sorted((Path(root) / 'agents/工作').rglob('task.json')):
         task = read(path)
         umbrella = isinstance(task.get('unit'), dict) and task['unit'].get('type') == 'project'
-        if task.get('status') in {'结束', '取消', '待开始'} or umbrella:
-            continue
-        checkpoint = runtime['checkpoints'].get(task['id'])
-        if not checkpoint or checkpoint.get('task_digest') != sha(path):
-            result.append({'kind': 'checkpoint_required', 'task': task['id']})
+        if task.get('status') in {'结束', '取消'}:
             continue
         if target_flow:
             workflow = target_flow.get('workflows', {}).get(task['workflow'], {})
             phases = workflow.get('phases', [])
-            names = {p['name'] if isinstance(p, dict) else p for p in phases}
+            names = [p['name'] if isinstance(p, dict) else p for p in phases]
+            aliases = {p['id']: p['name'] for p in phases if isinstance(p, dict)}
             if task.get('phase') not in names:
                 result.append({'kind': 'incompatible_checkpoint', 'task': task['id']})
+                continue
+            position = names.index(task['phase'])
+            gates = {g.get('key'): g for g in task.get('gates', [])}
+            incompatible = bool(workflow.get('requires_acceptance') and task.get('acceptance', {}).get('status') == '不适用')
+            for gate in workflow.get('gates', []):
+                before = aliases.get(gate['before_phase'], gate['before_phase'])
+                current = gates.get(gate['key'])
+                if not current or current.get('before_phase') != before or (before in names and position >= names.index(before) and current.get('decision') != 'approved'):
+                    incompatible = True
+            for requirement in workflow.get('required_checks', []):
+                before = aliases.get(requirement['before_phase'], requirement['before_phase'])
+                if before not in names or position < names.index(before):
+                    continue
+                accepted = any(c.get('name') == requirement['name'] and c.get('result') == 'passed' and c.get('evidence')
+                    and (not requirement.get('requires_independent') or c.get('review_mode', task.get('review_mode')) == 'independent')
+                    for c in task.get('checks', []))
+                incompatible |= not accepted
+            if incompatible:
+                result.append({'kind': 'incompatible_contract', 'task': task['id']})
+                continue
+        if task.get('status') == '待开始' or umbrella:
+            continue
+        checkpoint = runtime['checkpoints'].get(task['id'])
+        if not checkpoint or checkpoint.get('task_digest') != sha(path):
+            result.append({'kind': 'checkpoint_required', 'task': task['id']})
     return result
 
 
