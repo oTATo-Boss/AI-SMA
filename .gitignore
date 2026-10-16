@@ -1,5 +1,8 @@
-.DS_Store
 __pycache__/
 *.pyc
+.DS_Store
+.ai-sma-deploy/
+验证/v2/**/outputs/
+验证/v2/**/.cache/
 .fixtures/
 .omc/

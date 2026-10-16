@@ -1,0 +1,32 @@
+{
+  "codex": {
+    "method": "debug prompt-input (no model call)",
+    "new_method_skills_found": [
+      "video-project-orchestration",
+      "screenwriting",
+      "production-continuity",
+      "video-production-pipeline"
+    ],
+    "project_instructions_found": true,
+    "custom_agent_execution": "not_verified"
+  },
+  "claude": {
+    "version": "2.1.287",
+    "method": "actual stream-json system init",
+    "project_roles_found": [
+      "delivery-producer",
+      "fact-checker",
+      "film-director",
+      "motion-designer",
+      "post-producer",
+      "quality-reviewer",
+      "screenwriter",
+      "storyboard-artist",
+      "subtitle-editor",
+      "voice-director"
+    ],
+    "model_execution": "blocked: not logged in",
+    "project_permission_activation": "awaiting user trust",
+    "all_assigned_skill_discovery": "not_verified"
+  }
+}

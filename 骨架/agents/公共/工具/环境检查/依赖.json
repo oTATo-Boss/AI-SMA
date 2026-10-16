@@ -1,148 +1,24 @@
 {
-  "说明": "本机环境依赖清单。技能清单不在这里重复，检查脚本从 agents/SKILLS_INDEX.md 读取并按名字在 skill_roots 里查找。need：必需（缺了不能工作）、推荐（缺了部分流程用不了）、可选。",
-  "skill_roots": [
-    "~/.agents/skills",
-    "~/.claude/skills",
-    "~/.codex/skills",
-    ".agents/skills",
-    ".claude/skills"
-  ],
-  "claude_roots": [
-    "~/.claude/skills",
-    ".claude/skills"
-  ],
+  "schema_version": 2,
+  "说明": "仅供部署智能体选择安装命令和只读检查。不是安装脚本。技能及路线运行依赖以技能来源.json为准。",
+  "core": ["python3", "git"],
+  "skill_roots": ["~/.agents/skills"],
+  "claude_roots": ["~/.claude/skills"],
   "tools": [
-    {
-      "name": "python3",
-      "need": "必需",
-      "for": "任务管理、项目检查、写入保护、发布包",
-      "version": [
-        "--version"
-      ],
-      "min": "3.9",
-      "install": "python.org 安装包，或 brew install python"
-    },
-    {
-      "name": "ffmpeg",
-      "need": "必需",
-      "for": "抽帧、转码、发布包检查",
-      "version": [
-        "-version"
-      ],
-      "install": "brew install ffmpeg"
-    },
-    {
-      "name": "ffprobe",
-      "need": "必需",
-      "for": "媒体规格检查",
-      "version": [
-        "-version"
-      ],
-      "install": "随 ffmpeg 一起安装"
-    },
-    {
-      "name": "node",
-      "need": "必需",
-      "for": "Remotion、HyperFrames",
-      "version": [
-        "--version"
-      ],
-      "min": "18",
-      "install": "brew install node"
-    },
-    {
-      "name": "npx",
-      "need": "必需",
-      "for": "Remotion、HyperFrames 命令",
-      "version": [
-        "--version"
-      ],
-      "install": "随 node 一起安装"
-    },
-    {
-      "name": "heygen",
-      "need": "推荐",
-      "for": "配乐、音效、素材（HyperFrames、media-use）",
-      "version": [
-        "--version"
-      ],
-      "paths": [
-        "~/.local/bin/heygen"
-      ],
-      "install": "curl -fsSL https://static.heygen.ai/cli/install.sh | bash（先经本人同意）"
-    },
-    {
-      "name": "codex",
-      "need": "推荐",
-      "for": "Claude 通过 codex-imagegen 生图",
-      "version": [
-        "--version"
-      ],
-      "paths": [
-        "/Applications/ChatGPT.app/Contents/Resources/codex-cli/bin/codex"
-      ],
-      "install": "安装 ChatGPT 桌面 App（自带 codex-cli）并登录"
-    },
-    {
-      "name": "git",
-      "need": "可选",
-      "for": "安装技能、同步模板",
-      "version": [
-        "--version"
-      ],
-      "install": "brew install git"
-    }
+    {"name":"python3","need":"必需","for":"项目状态、验证与交付工具","version":["--version"],"min":"3.9","install":{"Darwin":"python.org 官方安装包，或已有 Homebrew 时 brew install python","Windows":"python.org 官方 Windows 安装包，或已有 winget 时 winget install Python.Python.3.12；检查 py -3 与 python","Linux":"按实际发行版安装 python3；Debian/Ubuntu: apt install python3 python3-venv，Fedora: dnf install python3"}},
+    {"name":"git","need":"必需","for":"获取固定提交的来源包","version":["--version"],"install":{"Darwin":"已有 Homebrew 时 brew install git，或系统开发工具提供的 Git","Windows":"git-scm.com 官方安装包，或 winget install Git.Git","Linux":"按发行版使用 apt/dnf/pacman 安装 git"}},
+    {"name":"ffmpeg","need":"按路线","for":"剪辑、音频、转码与抽帧","version":["-version"],"install":{"Darwin":"brew install ffmpeg","Windows":"FFmpeg 官方下载页列出的 Windows 构建，或 winget install Gyan.FFmpeg；重新检测 PATH","Linux":"发行版包管理器安装 ffmpeg，检查所需编码器和滤镜"}},
+    {"name":"ffprobe","need":"按路线","for":"媒体时长、尺寸、编码与音轨检查","version":["-version"],"install":"随 FFmpeg 安装；必须分别确认 ffmpeg 与 ffprobe 均可执行"},
+    {"name":"node","need":"按路线","for":"代码动画与渲染运行环境","version":["--version"],"min":"22","install":{"Darwin":"Node.js 官方受支持 LTS；已有 Homebrew 可 brew install node","Windows":"nodejs.org 官方 LTS 安装包或 winget install OpenJS.NodeJS.LTS","Linux":"Node.js 官方受支持 LTS，按发行版选择官方文档支持的安装方式"}},
+    {"name":"npx","commands":["npx","npx.cmd"],"need":"按路线","for":"执行已选渲染框架命令；检查器不调用可能联网安装的框架命令","version":["--version"],"install":"随 Node.js 的 npm 安装；框架依赖按所选工程锁定版本安装，不能用此检查宣称渲染已通过"},
+    {"name":"blender","need":"按路线","for":"三维建模、动画与渲染","version":["--version"],"min":"4.2","install":{"Darwin":"blender.org 官方安装包或 brew install --cask blender；确认命令可达","Windows":"blender.org 官方安装包或 winget install BlenderFoundation.Blender；确认 blender.exe 可达","Linux":"blender.org 官方构建或发行版支持版本"}},
+    {"name":"auto-editor","need":"按路线","for":"转录或剪辑相关CLI","version":["--version"],"install":"按 WyattBlue/auto-editor 固定版本官方安装说明安装到隔离环境；模型与转录服务另验"},
+    {"name":"python-requests","kind":"python-module","module":"requests","need":"按路线","for":"RunningHub请求客户端","install":"在实际运行Python的隔离环境中执行 python -m pip install requests；不要修改受系统管理的Python"},
+    {"name":"heygen","need":"可选","for":"选用HeyGen素材或服务时才需要","version":["--version"],"install":"按已核对版本的HeyGen官方CLI说明安装；登录另由用户完成"},
+    {"name":"codex","commands":["codex","codex.cmd"],"need":"可选","for":"Claude选用Codex生图适配时需要","version":["--version"],"install":"按OpenAI官方Codex CLI或桌面客户端安装说明处理实际系统；登录与imagegen能力另验"},
+    {"name":"voicestudio-backend","kind":"service","need":"可选","for":"检查实际运行后端 /health、/openapi.json 与已安装模型；技能安装不证明服务可用","install":"按VoiceStudio对应系统的官方发行说明安装；模型许可和所需声音单独确认"}
   ],
-  "apps": [
-    {
-      "name": "Google Chrome",
-      "need": "必需",
-      "path": "/Applications/Google Chrome.app",
-      "for": "Remotion 渲染；只读查看平台后台（每个账号一个个人资料）",
-      "install": "从 google.com/chrome 下载安装"
-    }
-  ],
-  "python_packages": [
-    {
-      "name": "requests",
-      "need": "推荐",
-      "for": "RH-minimax-H3 客户端",
-      "install": "python3 -m pip install requests"
-    }
-  ],
-  "logins": [
-    {
-      "name": "RunningHub Key",
-      "need": "推荐",
-      "ok": "已配置",
-      "fix": "本人运行 credentials.py set 隐藏输入 Key",
-      "skill": "rh-minimax-h3",
-      "script": "scripts/credentials.py",
-      "args": [
-        "status"
-      ]
-    },
-    {
-      "name": "HeyGen 登录",
-      "need": "推荐",
-      "command": [
-        "heygen",
-        "auth",
-        "status"
-      ],
-      "parse": "heygen",
-      "fix": "本人运行 heygen auth login --oauth，在浏览器完成登录"
-    },
-    {
-      "name": "Codex 登录",
-      "need": "推荐",
-      "command": [
-        "codex",
-        "login",
-        "status"
-      ],
-      "ok": "Logged in",
-      "fix": "打开 ChatGPT App 登录，或本人运行 codex login"
-    }
-  ]
+  "apps": [],
+  "python_packages": [],
+  "logins": []
 }

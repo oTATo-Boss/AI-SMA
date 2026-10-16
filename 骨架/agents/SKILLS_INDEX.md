@@ -1,88 +1,106 @@
 # 项目技能索引
 
-只登记本项目会用的技能：先按任务找技能，再完整读该技能的 SKILL.md。使用规则见 `agents/公共/规则.md` 第 6 节。每个智能体用哪些技能写在它的 `agent.yaml`。制作路线只用 `agents/账号/账号配置.yaml` 里 production_routes 启用的，下表括号里标了路线。
+本索引用于项目技能选型与复用，实际需求以项目配置的 `skills.required` 和角色卡 `skills` 为准；启动只加载 `preload_skills`。来源、固定版本、完整包及依赖的唯一维护源是 [技能来源注册表](公共/技能来源.json)，安装遵循 [共享安装规则](公共/技能安装.md)。
 
-技能装在本机，不随项目复制：Codex 读 `~/.agents/skills` 和项目里的 `.agents/skills`，Claude Code 读 `~/.claude/skills` 和项目里的 `.claude/skills`。缺哪个就按"来源"安装；运行 `python3 agents/公共/工具/环境检查/检查环境.py` 会逐个检查。
+技能真实安装到本机共享用途分类库；本模板不打包第三方技能、不提供自动安装脚本。`ready` 是来源包已固定，`candidate`/`blocked` 不得被报告成可用。技能文件齐全、客户端发现、运行工具和制作验证分别记录。
 
-## 按任务选技能
+## 按任务选择
 
-| 任务阶段 | 技能（按使用顺序） |
+| 任务 | 优先入口 |
 |---|---|
-| 做内容（团队） | 由各智能体分工使用，每个智能体用的技能写在 `agents/role/<名字>/agent.yaml` |
-| 社交内容启动、接续、跨阶段 | social-media-router |
-| 爆款、对标、评论研究 | 数据一律用 Chrome 只读采集；方法借鉴 outlier-post-finder、comment-mining、creator-profile-teardown、trend-discovery、competitor-social-research；拿到视频文件时按 viral-outliers 逐帧加转写拆解，配置了 Gemini Key 时可用 video-content-analyzer；英文短视频参考 short-form-content-os |
-| 选题、参考研究、脚本／分镜、图文每页方案 | 出创意用 creative-director；content-planning；视频加 direct-video；比较开场用 storytelling-hooks |
-| 角色与场景素材、生成提示词、AI 原片（AI 生成路线） | asset-generation → ai-video-prompt → RH-minimax-H3；补图 Codex 用 imagegen，Claude 用 codex-imagegen |
-| 艺术风格动画、动画复刻、解说动画 | huashu-art-motion（做视频和动效先评估它）+ direct-video |
-| 界面演示、产品展示（代码动画路线） | video-shotcraft（Remotion）；也可以用 product-launch-video、bs-hyperframes-device-canvas-launch、bs-hyperframes-velocity-sting |
-| 其他代码动画（代码动画路线） | Remotion 走 remotion-best-practices；HTML／GSAP 走 hyperframes |
-| 讲解、方法、实录 | faceless-explainer；标题开场可用 bs-creatormotion-type-title-takeover |
-| 剪辑、声音、气泡、成片检查、封面 | content-production + direct-video；配乐音效 media-use；抽帧 video-frames；台词气泡用项目工具（如有） |
-| 标题、正文、标签、内容包 | publishing-delivery；打包用项目工具 发布包 |
-| 后台数据、表现复盘 | performance-analysis |
-| 技能安装、分类、索引维护 | skill-library-management |
+| 项目装配与团队交接 | video-project-orchestration |
+| 创意、资料与剧本 | creative-director、content-planning、screenwriting；按片型补长视频或广告方法 |
+| 导演、分镜和连续性 | direct-video、production-continuity |
+| 图片与AI镜头 | asset-generation、ai-video-prompt、rh-minimax-h3、gpt-image-2-style-library |
+| 二维、艺术与解释动画 | huashu-art-motion + Remotion / HyperFrames |
+| 三维场景与动画 | Blender工作流与专长；Three.js路由与专长 |
+| 剪辑、声音与成片 | video-production-pipeline、content-production、ffmpeg-skill；需要时加载配音与框架音频 |
+| 包装、交付和运营 | publishing-delivery、titles-and-thumbnails、performance-analysis |
 
-social-media 的六个技能进入对应阶段时必须实际使用；窄任务只进入需要的阶段。共用工具在 `agents/公共/工具/README.md`，各智能体自带的工具在它的 `工具/`。
+## 完整登记
 
-## 技能清单
+来源包可能包含多个子技能和共享资源，依赖闭包按注册表计算。候选不自动成为项目必需项。
 
-需要：必需＝做内容离不开；推荐＝对应流程要用；可选＝特定场景才用。GitHub 来源一般可以用 `npx skills add <owner>/<repo>` 安装，也可以把对应目录复制到技能目录；skillry.dev 的技能按页面上的安装说明装。许可写"未声明"的，使用前自己确认。
+| 名称 | 一句话用途 | 状态 | 来源 |
+|---|---|---|---|
+| social-media-router | 社媒工作阶段识别与串联 | ready | [my-social](https://github.com/oTATo-Boss/my-skills/tree/a1c222490297dff1b7eb21f614df72fd3b3607fe/skills/social-media) |
+| content-planning | 参考研究、创意与内容方案 | ready | [my-social](https://github.com/oTATo-Boss/my-skills/tree/a1c222490297dff1b7eb21f614df72fd3b3607fe/skills/social-media) |
+| asset-generation | 身份参考、提示词与素材验收 | ready | [my-social](https://github.com/oTATo-Boss/my-skills/tree/a1c222490297dff1b7eb21f614df72fd3b3607fe/skills/social-media) |
+| content-production | 剪辑、声音、文字与成片验收 | ready | [my-social](https://github.com/oTATo-Boss/my-skills/tree/a1c222490297dff1b7eb21f614df72fd3b3607fe/skills/social-media) |
+| publishing-delivery | 标题文案与交付文件整理 | ready | [my-social](https://github.com/oTATo-Boss/my-skills/tree/a1c222490297dff1b7eb21f614df72fd3b3607fe/skills/social-media) |
+| performance-analysis | 后台指标口径、对比与复盘 | ready | [my-social](https://github.com/oTATo-Boss/my-skills/tree/a1c222490297dff1b7eb21f614df72fd3b3607fe/skills/social-media) |
+| direct-video | 导演方案、分镜、节奏与视听验收 | ready | [direct-video](https://github.com/oTATo-Boss/my-skills/tree/a1c222490297dff1b7eb21f614df72fd3b3607fe/skills/video/creative/direct-video) |
+| ai-video-prompt | AI镜头提示词与按结果修订 | ready | [ai-video-prompt](https://github.com/oTATo-Boss/my-skills/tree/a1c222490297dff1b7eb21f614df72fd3b3607fe/skills/video/ai/ai-video-prompt) |
+| rh-minimax-h3 | RunningHub生成、查询恢复与素材下载 | ready | [rh-minimax-h3](https://github.com/oTATo-Boss/my-skills/tree/a1c222490297dff1b7eb21f614df72fd3b3607fe/skills/video/ai/rh-minimax-h3) |
+| skill-library-management | 完整技能包、来源、分类与入口维护 | ready | [skill-library-management](https://github.com/oTATo-Boss/my-skills/tree/a1c222490297dff1b7eb21f614df72fd3b3607fe/skills/Rules/skill-library-management) |
+| creative-director | 创意方法、提案与评估 | ready | [creative-director](https://github.com/smixs/creative-director-skill/tree/ac06eb255371da35d1db0a146dbfcca8c8857543/creative-director) |
+| storytelling-hooks | 开场信息与观看承诺 | ready | [storytelling](https://github.com/yaxeen/storytelling-skills/tree/24ef3c1e3d7fde66cc5f1c5953cd6c1d7afc0b4f/skills) |
+| long-form-youtube | 长视频章节、叙事与脚本结构 | ready | [storytelling](https://github.com/yaxeen/storytelling-skills/tree/24ef3c1e3d7fde66cc5f1c5953cd6c1d7afc0b4f/skills) |
+| titles-and-thumbnails | 标题与封面配合 | ready | [storytelling](https://github.com/yaxeen/storytelling-skills/tree/24ef3c1e3d7fde66cc5f1c5953cd6c1d7afc0b4f/skills) |
+| channel-formula | 比较真实作品提炼栏目模式 | ready | [storytelling](https://github.com/yaxeen/storytelling-skills/tree/24ef3c1e3d7fde66cc5f1c5953cd6c1d7afc0b4f/skills) |
+| retention-audit | 留存曲线与时间点诊断 | ready | [storytelling](https://github.com/yaxeen/storytelling-skills/tree/24ef3c1e3d7fde66cc5f1c5953cd6c1d7afc0b4f/skills) |
+| carousel-narratives | 图文逐页叙事 | ready | [storytelling](https://github.com/yaxeen/storytelling-skills/tree/24ef3c1e3d7fde66cc5f1c5953cd6c1d7afc0b4f/skills) |
+| huashu-art-motion | 艺术画风、解释动画与制作验收 | ready | [huashu-art-motion](https://github.com/alchaincyf/huashu-art-motion/tree/2571ee0a9a0467c4d99e935ea9e0fadda19210b0/.) |
+| hyperframes | HTML视频的路线入口 | ready | [hyperframes](https://github.com/heygen-com/hyperframes/tree/ba08acb1f506b06757bd77a7e7f491d412647fbd/skills) |
+| hyperframes-core | 组合、时序、轨道与确定性 | ready | [hyperframes](https://github.com/heygen-com/hyperframes/tree/ba08acb1f506b06757bd77a7e7f491d412647fbd/skills) |
+| hyperframes-animation | 动画机制与场景转换 | ready | [hyperframes](https://github.com/heygen-com/hyperframes/tree/ba08acb1f506b06757bd77a7e7f491d412647fbd/skills) |
+| hyperframes-cli | 预览、检查与渲染命令 | ready | [hyperframes](https://github.com/heygen-com/hyperframes/tree/ba08acb1f506b06757bd77a7e7f491d412647fbd/skills) |
+| hyperframes-creative | 画面风格、字体、色彩与设计 | ready | [hyperframes](https://github.com/heygen-com/hyperframes/tree/ba08acb1f506b06757bd77a7e7f491d412647fbd/skills) |
+| hyperframes-keyframes | 可寻址关键帧与运动 | ready | [hyperframes](https://github.com/heygen-com/hyperframes/tree/ba08acb1f506b06757bd77a7e7f491d412647fbd/skills) |
+| hyperframes-registry | 官方组件与转场复用 | ready | [hyperframes](https://github.com/heygen-com/hyperframes/tree/ba08acb1f506b06757bd77a7e7f491d412647fbd/skills) |
+| hyperframes-studio | 已有工程的预览编辑 | ready | [hyperframes](https://github.com/heygen-com/hyperframes/tree/ba08acb1f506b06757bd77a7e7f491d412647fbd/skills) |
+| hyperframes-audio | 已有音轨混音、效果与自动化 | ready | [hyperframes](https://github.com/heygen-com/hyperframes/tree/ba08acb1f506b06757bd77a7e7f491d412647fbd/skills) |
+| media-use | 配乐、音效、图像与素材处理 | ready | [hyperframes](https://github.com/heygen-com/hyperframes/tree/ba08acb1f506b06757bd77a7e7f491d412647fbd/skills) |
+| music-to-video | 以音乐结构驱动影像 | ready | [hyperframes](https://github.com/heygen-com/hyperframes/tree/ba08acb1f506b06757bd77a7e7f491d412647fbd/skills) |
+| product-launch-video | 产品发布片与演示 | ready | [hyperframes](https://github.com/heygen-com/hyperframes/tree/ba08acb1f506b06757bd77a7e7f491d412647fbd/skills) |
+| embedded-captions | 已有口播素材的字幕 | ready | [hyperframes](https://github.com/heygen-com/hyperframes/tree/ba08acb1f506b06757bd77a7e7f491d412647fbd/skills) |
+| faceless-explainer | 用画面解释文章与知识 | ready | [hyperframes](https://github.com/heygen-com/hyperframes/tree/ba08acb1f506b06757bd77a7e7f491d412647fbd/skills) |
+| general-video | 自定义HTML视频组合 | ready | [hyperframes](https://github.com/heygen-com/hyperframes/tree/ba08acb1f506b06757bd77a7e7f491d412647fbd/skills) |
+| remotion-best-practices | Remotion入口与完整子技能包 | ready | [remotion](https://github.com/remotion-dev/skills/tree/32b241b97f4e0e4ab61fe9a41b05e6e64503f8c5/skills/remotion-best-practices) |
+| video-shotcraft | 产品片镜头、真实界面与节奏 | ready | [video-shotcraft](https://github.com/Vincentwei1021/video-shotcraft/tree/5ddbf521038b0a7accfb6dc1e0a9eb29c67277ab/.) |
+| ffmpeg-skill | 剪辑、音频、转码与技术检查 | ready | [ffmpeg-skill](https://github.com/kajisho5/ffmpeg-skill/tree/1f7e7e3ad1c30cb39fe9032abb5b39cca8e63376/.) |
+| voicestudio | 本地语音后端、配音与转录 | ready | [voicestudio](https://github.com/debpalash/VoiceStudio/tree/4df5033e5a1a92e22936fb4d7d2d39e03cf10a91/skills/voicestudio) |
+| auto-editor-transcribe | 音视频转录及时间信息 | ready | [auto-editor-transcribe](https://github.com/WyattBlue/auto-editor/tree/4928ad4201126973ca38e5b09c245b9e75219cf0/skills/auto-editor-transcribe) |
+| gpt-image-2-style-library | 图像风格和提示词参考 | ready | [gpt-image-2-style-library](https://github.com/freestylefly/awesome-gpt-image-2/tree/63e6176fa01be51c000108dacd72716d3e46784b/agents/skills/gpt-image-2-style-library) |
+| outlier-post-finder | 异常高表现作品研究 | ready | [social-research](https://github.com/ScrapeCreators/social-media-research-skills/tree/64ba7b4dea71e130d2712ffb6c1c1024b3b7c4b2/.) |
+| comment-mining | 观众评论与需求提取 | ready | [social-research](https://github.com/ScrapeCreators/social-media-research-skills/tree/64ba7b4dea71e130d2712ffb6c1c1024b3b7c4b2/.) |
+| creator-profile-teardown | 账号定位与内容打法拆解 | ready | [social-research](https://github.com/ScrapeCreators/social-media-research-skills/tree/64ba7b4dea71e130d2712ffb6c1c1024b3b7c4b2/.) |
+| trend-discovery | 话题、形式与音乐趋势 | ready | [social-research](https://github.com/ScrapeCreators/social-media-research-skills/tree/64ba7b4dea71e130d2712ffb6c1c1024b3b7c4b2/.) |
+| competitor-social-research | 竞品内容比较 | ready | [social-research](https://github.com/ScrapeCreators/social-media-research-skills/tree/64ba7b4dea71e130d2712ffb6c1c1024b3b7c4b2/.) |
+| transcript-intelligence | 转写内容的观点与结构提取 | ready | [social-research](https://github.com/ScrapeCreators/social-media-research-skills/tree/64ba7b4dea71e130d2712ffb6c1c1024b3b7c4b2/.) |
+| humanizer-zh | 保留事实与语气的中文润色 | ready | [humanizer-zh](https://github.com/op7418/Humanizer-zh/tree/f4518a8eab97b8bfebc66a89d34320a89bef6930/.) |
+| guizang-social-card-skill | 社交卡片与封面制作 | ready | [guizang-social-card-skill](https://github.com/op7418/guizang-social-card-skill/tree/cf4b810fac1c73fb65a2bb31d8c9278d82cbc4c5/.) |
+| threejs-choose-skills | 三维能力选型与跨模块交接 | ready | [threejs-choose-skills](https://github.com/linegel/threejs-complete-set-of-skill/tree/e3c9563a070b214aa73b84d1ea6026c9ec4db6cb/skills/threejs-choose-skills) |
+| threejs-visual-validation | 三维画面验证 | ready | [threejs-visual-validation](https://github.com/linegel/threejs-complete-set-of-skill/tree/e3c9563a070b214aa73b84d1ea6026c9ec4db6cb/skills/threejs-visual-validation) |
+| threejs-scene | 三维场景结构与摄影机 | ready | [threejs-core](https://github.com/cesartevisual/threejs-skills/tree/84f9bcb4bea1f7a28d57fe7f0af78f7f9c3dc467/skills) |
+| threejs-materials | 材质与表面表达 | ready | [threejs-core](https://github.com/cesartevisual/threejs-skills/tree/84f9bcb4bea1f7a28d57fe7f0af78f7f9c3dc467/skills) |
+| threejs-animation | 三维物体和角色动画 | ready | [threejs-core](https://github.com/cesartevisual/threejs-skills/tree/84f9bcb4bea1f7a28d57fe7f0af78f7f9c3dc467/skills) |
+| threejs-webgpu | WebGPU渲染与TSL | ready | [threejs-core](https://github.com/cesartevisual/threejs-skills/tree/84f9bcb4bea1f7a28d57fe7f0af78f7f9c3dc467/skills) |
+| blender-pro-workflow | 三维制作阶段与交付 | ready | [blender](https://github.com/RobLe3/cc-blender-skill/tree/a2634b588e80265e796aa53f8ab178d75105c2af/plugin) |
+| blender-animation | 三维关键帧与动画 | ready | [blender](https://github.com/RobLe3/cc-blender-skill/tree/a2634b588e80265e796aa53f8ab178d75105c2af/plugin) |
+| blender-cameras | 摄影机与镜头语言 | ready | [blender](https://github.com/RobLe3/cc-blender-skill/tree/a2634b588e80265e796aa53f8ab178d75105c2af/plugin) |
+| blender-lighting | 场景和产品布光 | ready | [blender](https://github.com/RobLe3/cc-blender-skill/tree/a2634b588e80265e796aa53f8ab178d75105c2af/plugin) |
+| blender-materials | 材质节点与表面 | ready | [blender](https://github.com/RobLe3/cc-blender-skill/tree/a2634b588e80265e796aa53f8ab178d75105c2af/plugin) |
+| blender-modeling | 建模与形体 | ready | [blender](https://github.com/RobLe3/cc-blender-skill/tree/a2634b588e80265e796aa53f8ab178d75105c2af/plugin) |
+| blender-rendering | 渲染设置与成片输出 | ready | [blender](https://github.com/RobLe3/cc-blender-skill/tree/a2634b588e80265e796aa53f8ab178d75105c2af/plugin) |
+| video-project-orchestration | 片型装配、团队与阶段交接 | ready | [video-project-orchestration](https://github.com/oTATo-Boss/my-skills/tree/f4aba90fa8dc83ffaaed6c07952f52bb962f213c/skills/video/production/video-project-orchestration) |
+| screenwriting | 影视剧本、场次与分集结构 | ready | [screenwriting](https://github.com/oTATo-Boss/my-skills/tree/f4aba90fa8dc83ffaaed6c07952f52bb962f213c/skills/video/creative/screenwriting) |
+| production-continuity | 跨镜头和跨集连续性 | ready | [production-continuity](https://github.com/oTATo-Boss/my-skills/tree/f4aba90fa8dc83ffaaed6c07952f52bb962f213c/skills/video/production/production-continuity) |
+| video-production-pipeline | 制作路线与工程交付 | ready | [video-production-pipeline](https://github.com/oTATo-Boss/my-skills/tree/f4aba90fa8dc83ffaaed6c07952f52bb962f213c/skills/video/production/video-production-pipeline) |
+| animejs | 动画API与时间线 | candidate | [candidate-local](https://github.com/oTATo-Boss/my-skills) |
+| animejs-creative-motion | 动态字体、SVG与创意动效 | ready | [animejs-creative-motion](https://github.com/oTATo-Boss/my-skills/tree/f4aba90fa8dc83ffaaed6c07952f52bb962f213c/skills/animejs/animejs-creative-motion) |
+| animejs-workflows | React集成与资源生命周期 | ready | [animejs-workflows](https://github.com/oTATo-Boss/my-skills/tree/f4aba90fa8dc83ffaaed6c07952f52bb962f213c/skills/animejs/animejs-workflows) |
+| animejs-example-library | 官方示例源码与资源快照 | ready | [animejs-example-library](https://github.com/oTATo-Boss/my-skills/tree/f4aba90fa8dc83ffaaed6c07952f52bb962f213c/skills/animejs/animejs-example-library) |
+| codex-imagegen | 通过Codex工具生成与编辑图片 | ready | [codex-imagegen](https://github.com/oTATo-Boss/my-skills/tree/f4aba90fa8dc83ffaaed6c07952f52bb962f213c/skills/image/codex-imagegen) |
+| ai-liveaction-fusion | 真人实拍与AI镜头融合 | candidate | [candidate-local](https://github.com/oTATo-Boss/my-skills) |
+| fashion-picture | 人物服装与时尚图像 | candidate | [candidate-local](https://github.com/oTATo-Boss/my-skills) |
+| video-frames | 视频抽帧与片段提取 | candidate | [candidate-local](https://github.com/oTATo-Boss/my-skills) |
+| bs-hyperframes-velocity-sting | 速度匹配的短片头 | candidate | [candidate-local](https://github.com/oTATo-Boss/my-skills) |
 
-### social-media · 社交内容
+## 执行边界
 
-| 名称 | 作用 | 需要 | 来源 | 许可 |
-|---|---|---|---|---|
-| social-media-router | 判断目标和阶段，串联下面五个技能，交接规格、文件和检查结果 | 必需 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/social-media/social-media-router` | MIT |
-| content-planning | 参考研究、创意选择、脚本分镜和素材需求简报 | 必需 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/social-media/content-planning` | MIT |
-| asset-generation | 整理身份与参考素材、补图、写生成提示词、验收源素材 | 必需 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/social-media/asset-generation` | MIT |
-| content-production | 剪辑、声音、文字气泡、成片检查和封面 | 必需 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/social-media/content-production` | MIT |
-| publishing-delivery | 标题、正文、标签和逐篇待发布文件夹 | 必需 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/social-media/publishing-delivery` | MIT |
-| performance-analysis | 后台数据口径、可比分析和下一次测试 | 必需 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/social-media/performance-analysis` | MIT |
+市场研究可借鉴研究套件的方法；数据渠道按项目配置，文件安装不证明API或账号已登录。社媒优化、平台阈值不能直接套到电影、科普或MV。
 
-### video · 视频与动效
+框架技能只服务选定制作路线，不能覆盖项目简报、授权范围、版本锁和交付目标。Anime.js三个适配入口已有公开固定版本；其余候选先补来源再加入路线。Codex系统生图与插件工具由客户端管理；项目不把缓存当通用可安装技能。
 
-| 名称 | 作用 | 需要 | 来源 | 许可 |
-|---|---|---|---|---|
-| ai-video-prompt | 创作、审查、按结果修改 AI 视频提示词 | 推荐 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/video/ai/ai-video-prompt` | MIT |
-| RH-minimax-H3 | RunningHub H3 生成、API 存入、任务构造、查询恢复和下载；项目授权见 `agents/role/素材制作/工具/runninghub-minimax-h3/README.md` | 推荐 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/video/ai/rh-minimax-h3` | MIT |
-| direct-video | 统筹审美、分镜、节奏、声音和成片验收 | 推荐 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/video/creative/direct-video` | MIT |
-| huashu-art-motion | 艺术风格配方、解说动画语法、代码渲染与成片验收 | 推荐 | [alchaincyf/huashu-art-motion](https://github.com/alchaincyf/huashu-art-motion)；`npx skills add alchaincyf/huashu-art-motion` | MIT |
-| hyperframes | HTML、CSS、GSAP 做视频的入口，按需求转到子技能 | 推荐 | [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes) `skills/hyperframes`；`npx skills add heygen-com/hyperframes --all` | 未声明 |
-| remotion-best-practices | Remotion 入口，转到创建、字幕、预览、渲染等子技能 | 推荐 | [remotion-dev/skills](https://github.com/remotion-dev/skills) `skills/remotion-best-practices` | 未声明 |
-| video-frames | 用 ffmpeg 提取静帧、缩略图和短片段，用于选素材和抽帧检查 | 推荐 | OpenClaw 内置技能模板，安装方式待核实；没有时直接用 ffmpeg 抽帧 | 未声明 |
-| faceless-explainer | 不出镜的讲解视频：把文章、笔记或话题变成逐场景的文字、图形、图表画面 | 可选 | [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes) `skills/faceless-explainer`；`npx skills add heygen-com/hyperframes --all` 会一起装 | 未声明 |
-| product-launch-video | 从网址、文案或简报出产品发布片和演示（基于 HyperFrames） | 可选 | [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes) `skills/product-launch-video`；`npx skills add heygen-com/hyperframes --all` 会一起装 | 未声明 |
-| video-shotcraft | 真实页面截图、2.5D 运镜、卡点剪辑和音效（基于 Remotion） | 可选 | [Vincentwei1021/video-shotcraft](https://github.com/Vincentwei1021/video-shotcraft)（整个仓库就是技能） | Apache-2.0 |
-| bs-creatormotion-type-title-takeover | 巨大标题在主体背后入场、主体切走后标题留下的开场 | 可选 | [skillry.dev](https://skillry.dev/skills/bs-creatormotion-type-title-takeover) | 未声明 |
-| bs-hyperframes-device-canvas-launch | 真实界面放进暗色摄影棚设备画面，串联滚动、操作和品牌收尾 | 可选 | [skillry.dev](https://skillry.dev/skills/bs-hyperframes-device-canvas-launch) | 未声明 |
-| bs-hyperframes-velocity-sting | 速度和方向匹配的连续剪切，做几秒的预热和片头 | 可选 | [skillry.dev](https://skillry.dev/skills/bs-hyperframes-velocity-sting)（上游待核实） | 未声明 |
-| storytelling-hooks | 比较第一帧、字幕和可兑现的观看回报，不强制口播 | 可选 | [yaxeen/storytelling-skills](https://github.com/yaxeen/storytelling-skills) `skills/storytelling-hooks` | 未声明 |
-
-### 研究与创意 · 外部收集
-
-ScrapeCreators 套件的技能默认调用它家的付费 API，head-of-content 套件要 TubeLab、Apify、Gemini 的 Key；本项目的市场数据用 Chrome 获取，没有 Key 时只借用方法。两个套件里没列出的技能（ad-library-teardown、audience-research、content-repurposing、influencer-prospecting、product-demand-research、scrapecreators-api、social-listening-brief、content-planner、instagram-research、tiktok-research、x-research、youtube-research）用到时再按来源查看。
-
-| 名称 | 作用 | 需要 | 来源 | 许可 |
-|---|---|---|---|---|
-| creative-director | 用 SIT、TRIZ、横向思维等方法系统地出创意，对照经典案例打分、改稿和失败预演 | 推荐 | [smixs/creative-director-skill](https://github.com/smixs/creative-director-skill) `creative-director` | CC BY 4.0（引用须署名 Serge Shima） |
-| outlier-post-finder | 找出明显高于作者常态的作品，解释为什么有效，提炼钩子和形式 | 可选 | [ScrapeCreators/social-media-research-skills](https://github.com/ScrapeCreators/social-media-research-skills) `skills/outlier-post-finder` | MIT |
-| comment-mining | 挖评论里的观众反应、用语、问题和需求 | 可选 | [ScrapeCreators/social-media-research-skills](https://github.com/ScrapeCreators/social-media-research-skills) `skills/comment-mining` | MIT |
-| creator-profile-teardown | 拆解一个创作者或品牌账号的定位、内容支柱和爆款打法 | 可选 | [ScrapeCreators/social-media-research-skills](https://github.com/ScrapeCreators/social-media-research-skills) `skills/creator-profile-teardown` | MIT |
-| trend-discovery | 发现赛道里的热门话题、标签、音乐、作品和形式 | 可选 | [ScrapeCreators/social-media-research-skills](https://github.com/ScrapeCreators/social-media-research-skills) `skills/trend-discovery` | MIT |
-| competitor-social-research | 研究竞品的社媒策略，找出赛道里有效的内容和空白 | 可选 | [ScrapeCreators/social-media-research-skills](https://github.com/ScrapeCreators/social-media-research-skills) `skills/competitor-social-research` | MIT |
-| transcript-intelligence | 从视频转写里提炼钩子、观点和可复用的脚本结构 | 可选 | [ScrapeCreators/social-media-research-skills](https://github.com/ScrapeCreators/social-media-research-skills) `skills/transcript-intelligence` | MIT |
-| viral-outliers | 找细分赛道的爆款 Reels，下载后逐帧看、转写，再改成本账号可用的脚本模板（需要 opencli、ffmpeg、faster-whisper） | 可选 | [w-avw/instagram-viral-reels-research-claude-skill](https://github.com/w-avw/instagram-viral-reels-research-claude-skill) `skills/viral-outliers` | MIT |
-| video-content-analyzer | 用 Gemini 实际看视频，提取钩子、结构和可复制的模式（需要 GEMINI_API_KEY） | 可选 | [bradautomates/head-of-content](https://github.com/bradautomates/head-of-content) `.claude/skills/video-content-analyzer` | MIT |
-| short-form-content-os | 北美英文短视频从趋势、异常爆款、钩子到脚本、分镜和迭代的工作流 | 可选 | [trsgogogo/short-form-content-os](https://github.com/trsgogogo/short-form-content-os)（整个仓库就是技能） | MIT |
-
-### 声音、图片与技能管理
-
-| 名称 | 作用 | 需要 | 来源 | 许可 |
-|---|---|---|---|---|
-| media-use | 配乐、音效、图片、图标、配音、调色的统一入口，也能转录、字幕、抠像；记录来源，试听另报 | 推荐 | [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes) `skills/media-use`；`npx skills add heygen-com/hyperframes --all` 会一起装 | 未声明 |
-| codex-imagegen | Claude 通过本机 Codex CLI 调用 image_gen，可带参考图；用法注意见 `agents/公共/工具/README.md` | 可选 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/image/codex-imagegen` | MIT |
-| skill-library-management | 技能分类、目录索引、开发安装映射和客户端入口管理 | 可选 | [my-skills](https://github.com/oTATo-Boss/my-skills) `skills/Rules/skill-library-management` | MIT |
-
-## Codex 内置与插件
-
-Codex 用户：imagegen 是 Codex 内置技能；Remotion、HyperFrames、HeyGen 在 Codex 的插件管理里启用，版本和连接以当前会话为准。Claude 用户用上面的技能和 heygen 命令行。
+角色具体分配见 `role/<角色>/agent.yaml`；执行期间新增技能时同步项目配置、来源注册与安装验证，不静默删掉缺失分配。

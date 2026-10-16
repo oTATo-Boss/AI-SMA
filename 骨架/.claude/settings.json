@@ -26,11 +26,11 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Write|Edit|MultiEdit|NotebookEdit|Bash",
+        "matcher": "Write|Edit|MultiEdit|NotebookEdit|Bash|PowerShell",
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/agents/公共/工具/写入保护/protect_paths.py\"",
+            "command": "python3 -c 'import pathlib,runpy; p=pathlib.Path.cwd().resolve(); s=next((d/'\"'\"'agents/公共/工具/写入保护/hook_entry.py'\"'\"' for d in (p,*p.parents) if (d/'\"'\"'agents/公共/工具/写入保护/hook_entry.py'\"'\"').is_file()),None); runpy.run_path(str(s),run_name='\"'\"'__main__'\"'\"') if s else None'",
             "timeout": 10
           }
         ]

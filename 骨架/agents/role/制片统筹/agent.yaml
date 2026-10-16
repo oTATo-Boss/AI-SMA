@@ -1,0 +1,8 @@
+# 配置卡：部署后由团队生成器生成客户端角色登记。
+id: production-manager
+name: 制片统筹
+description: 复杂单片与系列项目的制片：拆分集、段落、场景和镜头，安排资源与依赖，记录制作进度和恢复点；不改创意、剧本或镜头内容。
+skills: [video-project-orchestration, video-production-pipeline]
+preload_skills: [video-project-orchestration]
+claude_tools: inherit
+nesting: false

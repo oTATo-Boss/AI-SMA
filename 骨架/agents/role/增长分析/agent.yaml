@@ -1,8 +1,8 @@
-# 配置卡：给软件读的设置。改完运行 python3 agents/公共/工具/团队/生成角色.py
+# 配置卡：部署后由团队生成器生成客户端角色登记。
 id: growth-analyst
 name: 增长分析
-description: 要看本账号自己的表现、发布后有了数据、想知道哪种内容有效，或者已有账号要做转型诊断时派它：和账号常态比较，按创意机制归因，写成有证据的经验更新，记进相关智能体的经验。不改定位，不把单条低曝光说成限流。
-skills: [performance-analysis]
+description: 基于本项目真实发布数据分析受众和内容表现，给出可检验改进；无发布或留存数据时只列数据缺口，不编造效果结论。
+skills: [performance-analysis, channel-formula, retention-audit]
+preload_skills: [performance-analysis]
 claude_tools: inherit
 nesting: false
-effort: high

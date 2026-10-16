@@ -1,0 +1,8 @@
+# 配置卡：部署后由团队生成器生成客户端角色登记。
+id: sound-designer
+name: 音乐、音效与混音
+description: 按导演方案组织音乐、音效、环境和对白混音，建立声音节奏并交付分轨与混音；MV 的原音乐为锁定主时间轴。
+skills: [media-use, hyperframes-audio, ffmpeg-skill, video-production-pipeline]
+preload_skills: [video-production-pipeline]
+claude_tools: inherit
+nesting: false

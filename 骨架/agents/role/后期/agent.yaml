@@ -1,8 +1,8 @@
-# 配置卡：给软件读的设置。改完运行 python3 agents/公共/工具/团队/生成角色.py
+# 配置卡：部署后由团队生成器生成客户端角色登记。
 id: post-producer
-name: 后期
-description: 素材齐了要剪成片、配声音字幕、做封面和标题正文标签，或者审片要求返工剪辑、包装时派它；审片通过后打交付包。不给自己判合格，不发布。
-skills: [content-production, publishing-delivery, video-frames]
+name: 剪辑
+description: 把已确认素材组织为叙事与节奏清楚的剪辑，维护镜头到时间线的映射并局部返工；后期旧目录和发布包工具路径保留，封面打包由包装交付负责。
+skills: [content-production, ffmpeg-skill, video-production-pipeline]
+preload_skills: [content-production]
 claude_tools: inherit
 nesting: false
-effort: high

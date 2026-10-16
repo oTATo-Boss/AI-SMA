@@ -1,0 +1,101 @@
+{
+  "schema_version": 2,
+  "roles": {
+    "account-lead": {
+      "folder": "总负责人",
+      "name": "总负责人"
+    },
+    "production-manager": {
+      "folder": "制片统筹",
+      "name": "制片统筹"
+    },
+    "market-intel": {
+      "folder": "市场研究",
+      "name": "市场与受众研究"
+    },
+    "fact-checker": {
+      "folder": "资料核验",
+      "name": "资料与事实核验"
+    },
+    "creative-director": {
+      "folder": "创意总监",
+      "name": "创意总监"
+    },
+    "screenwriter": {
+      "folder": "编剧",
+      "name": "编剧"
+    },
+    "creative-critic": {
+      "folder": "创意评审",
+      "name": "创意与剧本评审"
+    },
+    "film-director": {
+      "folder": "导演",
+      "name": "导演"
+    },
+    "storyboard-artist": {
+      "folder": "分镜预演",
+      "name": "分镜与预演"
+    },
+    "art-director": {
+      "folder": "美术设计",
+      "name": "美术设计"
+    },
+    "asset-designer": {
+      "folder": "角色场景资产",
+      "name": "角色与场景资产"
+    },
+    "continuity-supervisor": {
+      "folder": "场记连续性",
+      "name": "场记与连续性"
+    },
+    "media-producer": {
+      "folder": "素材制作",
+      "name": "AI 镜头制作"
+    },
+    "motion-designer": {
+      "folder": "二维代码动效",
+      "name": "二维与代码动效"
+    },
+    "cg-artist": {
+      "folder": "三维CG",
+      "name": "三维 CG"
+    },
+    "capture-director": {
+      "folder": "摄影素材采集",
+      "name": "摄影与素材采集"
+    },
+    "post-producer": {
+      "folder": "后期",
+      "name": "剪辑"
+    },
+    "compositor": {
+      "folder": "合成调色",
+      "name": "合成与调色"
+    },
+    "voice-director": {
+      "folder": "配音对白",
+      "name": "配音与对白"
+    },
+    "sound-designer": {
+      "folder": "音乐音效混音",
+      "name": "音乐、音效与混音"
+    },
+    "subtitle-editor": {
+      "folder": "字幕本地化",
+      "name": "字幕与本地化"
+    },
+    "quality-reviewer": {
+      "folder": "审片",
+      "name": "成片审查"
+    },
+    "delivery-producer": {
+      "folder": "包装交付",
+      "name": "包装与交付"
+    },
+    "growth-analyst": {
+      "folder": "增长分析",
+      "name": "增长分析"
+    }
+  }
+}

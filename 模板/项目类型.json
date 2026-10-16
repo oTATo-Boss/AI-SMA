@@ -1,0 +1,1661 @@
+{
+  "schema_version": 2,
+  "profiles": {
+    "social-account": {
+      "name": "社媒账号运营",
+      "aliases": [
+        "账号",
+        "账号项目",
+        "社媒",
+        "社媒账号",
+        "短视频账号",
+        "小红书账号",
+        "抖音账号"
+      ],
+      "form": "account",
+      "roles": [
+        "account-lead",
+        "film-director",
+        "post-producer",
+        "quality-reviewer",
+        "delivery-producer",
+        "market-intel",
+        "creative-director",
+        "creative-critic",
+        "growth-analyst"
+      ],
+      "skills": [
+        "social-media-router"
+      ],
+      "routes": [
+        "ai"
+      ],
+      "platforms": [
+        {
+          "name": "小红书"
+        },
+        {
+          "name": "抖音"
+        }
+      ],
+      "video": {
+        "target_duration_seconds": null,
+        "duration_tolerance_seconds": null,
+        "aspect_ratio": "9:16",
+        "width_px": 1080,
+        "height_px": 1920,
+        "frame_rate": 30,
+        "format": "mp4",
+        "video_codec": "H.264",
+        "audio_codec": "AAC"
+      },
+      "delivery": {
+        "video_filename": "视频.mp4",
+        "cover_required": true,
+        "copy_required": true,
+        "include_source_project": true,
+        "include_source_manifest": true,
+        "overwrite_policy": "新增版本目录，不覆盖既有交付",
+        "additional_required_files": []
+      },
+      "workflow": {
+        "phases": [
+          {
+            "id": "brief",
+            "name": "项目简报",
+            "owners": [
+              "account-lead"
+            ],
+            "requires": []
+          },
+          {
+            "id": "research",
+            "name": "受众与对标",
+            "owners": [
+              "market-intel"
+            ],
+            "requires": [
+              "brief"
+            ]
+          },
+          {
+            "id": "concept",
+            "name": "创意",
+            "owners": [
+              "creative-director"
+            ],
+            "requires": [
+              "research"
+            ]
+          },
+          {
+            "id": "creative-review",
+            "name": "创意评审",
+            "owners": [
+              "creative-critic"
+            ],
+            "requires": [
+              "concept"
+            ]
+          },
+          {
+            "id": "direction",
+            "name": "导演与分镜",
+            "owners": [
+              "film-director"
+            ],
+            "requires": [
+              "creative-review"
+            ]
+          },
+          {
+            "id": "production",
+            "name": "镜头制作",
+            "owners": [
+              "film-director"
+            ],
+            "requires": [
+              "direction"
+            ],
+            "use_route_owners": true
+          },
+          {
+            "id": "edit",
+            "name": "剪辑与后期",
+            "owners": [
+              "post-producer"
+            ],
+            "requires": [
+              "production"
+            ]
+          },
+          {
+            "id": "review",
+            "name": "成片审查",
+            "owners": [
+              "quality-reviewer"
+            ],
+            "requires": [
+              "edit"
+            ]
+          },
+          {
+            "id": "delivery",
+            "name": "包装交付",
+            "owners": [
+              "delivery-producer"
+            ],
+            "requires": [
+              "review"
+            ]
+          }
+        ],
+        "acceptance": [
+          "定位与受众经用户确认",
+          "标题封面承诺在内容中兑现",
+          "发布包齐全，发布由用户执行"
+        ],
+        "required_checks": [
+          {
+            "name": "创意评审",
+            "before_phase": "direction",
+            "requires_independent": false
+          },
+          {
+            "name": "成片审查",
+            "before_phase": "delivery",
+            "requires_independent": false
+          }
+        ]
+      }
+    },
+    "long-form": {
+      "name": "长视频与纪录讲解",
+      "aliases": [
+        "长视频",
+        "B站长视频",
+        "B站视频",
+        "YouTube长视频",
+        "YouTube",
+        "纪录讲解",
+        "纪录片",
+        "访谈",
+        "教程"
+      ],
+      "form": "single",
+      "roles": [
+        "account-lead",
+        "film-director",
+        "post-producer",
+        "quality-reviewer",
+        "delivery-producer",
+        "fact-checker",
+        "screenwriter",
+        "voice-director",
+        "subtitle-editor"
+      ],
+      "skills": [
+        "long-form-youtube"
+      ],
+      "routes": [
+        "code-2d"
+      ],
+      "platforms": [
+        {
+          "name": "B站"
+        },
+        {
+          "name": "YouTube"
+        }
+      ],
+      "video": {
+        "target_duration_seconds": null,
+        "duration_tolerance_seconds": null,
+        "aspect_ratio": "16:9",
+        "width_px": 1920,
+        "height_px": 1080,
+        "frame_rate": 30,
+        "format": "mp4",
+        "video_codec": "H.264",
+        "audio_codec": "AAC"
+      },
+      "delivery": {
+        "video_filename": "视频.mp4",
+        "cover_required": true,
+        "copy_required": true,
+        "include_source_project": true,
+        "include_source_manifest": true,
+        "overwrite_policy": "新增版本目录，不覆盖既有交付",
+        "additional_required_files": []
+      },
+      "workflow": {
+        "phases": [
+          {
+            "id": "brief",
+            "name": "项目简报",
+            "owners": [
+              "account-lead"
+            ],
+            "requires": []
+          },
+          {
+            "id": "research",
+            "name": "资料与事实",
+            "owners": [
+              "fact-checker"
+            ],
+            "requires": [
+              "brief"
+            ]
+          },
+          {
+            "id": "script",
+            "name": "章节与脚本",
+            "owners": [
+              "screenwriter"
+            ],
+            "requires": [
+              "research"
+            ]
+          },
+          {
+            "id": "direction",
+            "name": "导演与分镜",
+            "owners": [
+              "film-director"
+            ],
+            "requires": [
+              "script"
+            ]
+          },
+          {
+            "id": "production",
+            "name": "镜头制作",
+            "owners": [
+              "film-director"
+            ],
+            "requires": [
+              "direction"
+            ],
+            "use_route_owners": true
+          },
+          {
+            "id": "sound",
+            "name": "声音制作",
+            "owners": [
+              "voice-director"
+            ],
+            "requires": [
+              "direction"
+            ]
+          },
+          {
+            "id": "edit",
+            "name": "剪辑与后期",
+            "owners": [
+              "post-producer"
+            ],
+            "requires": [
+              "production",
+              "sound"
+            ]
+          },
+          {
+            "id": "subtitle",
+            "name": "字幕与本地化",
+            "owners": [
+              "subtitle-editor"
+            ],
+            "requires": [
+              "edit"
+            ]
+          },
+          {
+            "id": "review",
+            "name": "成片审查",
+            "owners": [
+              "quality-reviewer"
+            ],
+            "requires": [
+              "subtitle"
+            ]
+          },
+          {
+            "id": "delivery",
+            "name": "包装交付",
+            "owners": [
+              "delivery-producer"
+            ],
+            "requires": [
+              "review"
+            ]
+          }
+        ],
+        "acceptance": [
+          "事实、数字和引述可追溯",
+          "章节推进和实际配音时间一致",
+          "整片声音与字幕覆盖完整"
+        ],
+        "required_checks": [
+          {
+            "name": "成片审查",
+            "before_phase": "delivery",
+            "requires_independent": false
+          }
+        ]
+      }
+    },
+    "science": {
+      "name": "科普与知识动画",
+      "aliases": [
+        "科普",
+        "科普动画",
+        "知识动画",
+        "数学动画",
+        "技术讲解",
+        "科学解释"
+      ],
+      "form": "single",
+      "roles": [
+        "account-lead",
+        "film-director",
+        "post-producer",
+        "quality-reviewer",
+        "delivery-producer",
+        "fact-checker",
+        "screenwriter",
+        "storyboard-artist",
+        "voice-director",
+        "subtitle-editor"
+      ],
+      "skills": [],
+      "routes": [
+        "code-2d"
+      ],
+      "platforms": [],
+      "video": {
+        "target_duration_seconds": null,
+        "duration_tolerance_seconds": null,
+        "aspect_ratio": "16:9",
+        "width_px": 1920,
+        "height_px": 1080,
+        "frame_rate": 30,
+        "format": "mp4",
+        "video_codec": "H.264",
+        "audio_codec": "AAC"
+      },
+      "delivery": {
+        "video_filename": "视频.mp4",
+        "cover_required": false,
+        "copy_required": false,
+        "include_source_project": true,
+        "include_source_manifest": true,
+        "overwrite_policy": "新增版本目录，不覆盖既有交付",
+        "additional_required_files": []
+      },
+      "workflow": {
+        "phases": [
+          {
+            "id": "brief",
+            "name": "项目简报",
+            "owners": [
+              "account-lead"
+            ],
+            "requires": []
+          },
+          {
+            "id": "research",
+            "name": "资料核验",
+            "owners": [
+              "fact-checker"
+            ],
+            "requires": [
+              "brief"
+            ]
+          },
+          {
+            "id": "script",
+            "name": "解释脚本",
+            "owners": [
+              "screenwriter"
+            ],
+            "requires": [
+              "research"
+            ]
+          },
+          {
+            "id": "evidence-review",
+            "name": "解释核验",
+            "owners": [
+              "fact-checker"
+            ],
+            "requires": [
+              "script"
+            ]
+          },
+          {
+            "id": "direction",
+            "name": "导演与分镜",
+            "owners": [
+              "film-director",
+              "storyboard-artist"
+            ],
+            "requires": [
+              "evidence-review"
+            ]
+          },
+          {
+            "id": "production",
+            "name": "镜头制作",
+            "owners": [
+              "film-director"
+            ],
+            "requires": [
+              "direction"
+            ],
+            "use_route_owners": true
+          },
+          {
+            "id": "sound",
+            "name": "声音制作",
+            "owners": [
+              "voice-director"
+            ],
+            "requires": [
+              "direction"
+            ]
+          },
+          {
+            "id": "edit",
+            "name": "剪辑与后期",
+            "owners": [
+              "post-producer"
+            ],
+            "requires": [
+              "production",
+              "sound"
+            ]
+          },
+          {
+            "id": "subtitle",
+            "name": "字幕与本地化",
+            "owners": [
+              "subtitle-editor"
+            ],
+            "requires": [
+              "edit"
+            ]
+          },
+          {
+            "id": "review",
+            "name": "成片审查",
+            "owners": [
+              "quality-reviewer"
+            ],
+            "requires": [
+              "subtitle"
+            ]
+          },
+          {
+            "id": "delivery",
+            "name": "包装交付",
+            "owners": [
+              "delivery-producer"
+            ],
+            "requires": [
+              "review"
+            ]
+          }
+        ],
+        "acceptance": [
+          "核心解释与事实证据一致",
+          "画面类比不被误当真实机制",
+          "动画、数字、旁白和字幕相互一致"
+        ],
+        "required_checks": [
+          {
+            "name": "成片审查",
+            "before_phase": "delivery",
+            "requires_independent": false
+          }
+        ]
+      }
+    },
+    "advertising": {
+      "name": "广告与品牌短片",
+      "aliases": [
+        "广告",
+        "品牌广告",
+        "品牌短片",
+        "产品广告",
+        "商业宣传",
+        "广告片"
+      ],
+      "form": "single",
+      "roles": [
+        "account-lead",
+        "film-director",
+        "post-producer",
+        "quality-reviewer",
+        "delivery-producer",
+        "production-manager",
+        "market-intel",
+        "fact-checker",
+        "creative-director",
+        "creative-critic",
+        "art-director",
+        "storyboard-artist",
+        "sound-designer"
+      ],
+      "skills": [],
+      "routes": [
+        "ai"
+      ],
+      "platforms": [],
+      "video": {
+        "target_duration_seconds": null,
+        "duration_tolerance_seconds": null,
+        "aspect_ratio": "16:9",
+        "width_px": 1920,
+        "height_px": 1080,
+        "frame_rate": 30,
+        "format": "mp4",
+        "video_codec": "H.264",
+        "audio_codec": "AAC"
+      },
+      "delivery": {
+        "video_filename": "视频.mp4",
+        "cover_required": false,
+        "copy_required": false,
+        "include_source_project": true,
+        "include_source_manifest": true,
+        "overwrite_policy": "新增版本目录，不覆盖既有交付",
+        "additional_required_files": []
+      },
+      "workflow": {
+        "phases": [
+          {
+            "id": "brief",
+            "name": "项目简报",
+            "owners": [
+              "account-lead"
+            ],
+            "requires": []
+          },
+          {
+            "id": "research",
+            "name": "品牌与受众研究",
+            "owners": [
+              "market-intel",
+              "fact-checker"
+            ],
+            "requires": [
+              "brief"
+            ]
+          },
+          {
+            "id": "concept",
+            "name": "创意提案",
+            "owners": [
+              "creative-director"
+            ],
+            "requires": [
+              "research"
+            ]
+          },
+          {
+            "id": "creative-review",
+            "name": "创意评审",
+            "owners": [
+              "creative-critic"
+            ],
+            "requires": [
+              "concept"
+            ]
+          },
+          {
+            "id": "direction",
+            "name": "导演与分镜",
+            "owners": [
+              "film-director",
+              "storyboard-artist"
+            ],
+            "requires": [
+              "creative-review"
+            ]
+          },
+          {
+            "id": "art",
+            "name": "美术与资产",
+            "owners": [
+              "art-director"
+            ],
+            "requires": [
+              "direction"
+            ]
+          },
+          {
+            "id": "production",
+            "name": "镜头制作",
+            "owners": [
+              "film-director"
+            ],
+            "requires": [
+              "art"
+            ],
+            "use_route_owners": true
+          },
+          {
+            "id": "sound",
+            "name": "声音制作",
+            "owners": [
+              "sound-designer"
+            ],
+            "requires": [
+              "direction"
+            ]
+          },
+          {
+            "id": "edit",
+            "name": "剪辑与后期",
+            "owners": [
+              "post-producer"
+            ],
+            "requires": [
+              "production",
+              "sound"
+            ]
+          },
+          {
+            "id": "review",
+            "name": "成片审查",
+            "owners": [
+              "quality-reviewer"
+            ],
+            "requires": [
+              "edit"
+            ]
+          },
+          {
+            "id": "delivery",
+            "name": "包装交付",
+            "owners": [
+              "delivery-producer"
+            ],
+            "requires": [
+              "review"
+            ]
+          }
+        ],
+        "acceptance": [
+          "品牌与产品主张具有真实依据",
+          "视觉、声音和结尾服务已确认主张",
+          "按约定交付画幅与渠道版本并保留来源"
+        ],
+        "required_checks": [
+          {
+            "name": "创意评审",
+            "before_phase": "direction",
+            "requires_independent": false
+          },
+          {
+            "name": "成片审查",
+            "before_phase": "delivery",
+            "requires_independent": false
+          }
+        ]
+      }
+    },
+    "launch": {
+      "name": "Launch 与产品演示",
+      "aliases": [
+        "launch",
+        "Launch",
+        "产品发布",
+        "产品发布片",
+        "发布会视频",
+        "产品演示",
+        "功能演示"
+      ],
+      "form": "single",
+      "roles": [
+        "account-lead",
+        "film-director",
+        "post-producer",
+        "quality-reviewer",
+        "delivery-producer",
+        "fact-checker",
+        "creative-director",
+        "storyboard-artist",
+        "capture-director",
+        "sound-designer"
+      ],
+      "skills": [
+        "product-launch-video"
+      ],
+      "routes": [
+        "code-2d",
+        "live-action"
+      ],
+      "platforms": [],
+      "video": {
+        "target_duration_seconds": null,
+        "duration_tolerance_seconds": null,
+        "aspect_ratio": "16:9",
+        "width_px": 1920,
+        "height_px": 1080,
+        "frame_rate": 30,
+        "format": "mp4",
+        "video_codec": "H.264",
+        "audio_codec": "AAC"
+      },
+      "delivery": {
+        "video_filename": "视频.mp4",
+        "cover_required": true,
+        "copy_required": false,
+        "include_source_project": true,
+        "include_source_manifest": true,
+        "overwrite_policy": "新增版本目录，不覆盖既有交付",
+        "additional_required_files": []
+      },
+      "workflow": {
+        "phases": [
+          {
+            "id": "brief",
+            "name": "项目简报",
+            "owners": [
+              "account-lead"
+            ],
+            "requires": []
+          },
+          {
+            "id": "research",
+            "name": "产品事实核验",
+            "owners": [
+              "fact-checker"
+            ],
+            "requires": [
+              "brief"
+            ]
+          },
+          {
+            "id": "concept",
+            "name": "演示结构",
+            "owners": [
+              "creative-director"
+            ],
+            "requires": [
+              "research"
+            ]
+          },
+          {
+            "id": "capture",
+            "name": "真实界面采集",
+            "owners": [
+              "capture-director"
+            ],
+            "requires": [
+              "concept"
+            ]
+          },
+          {
+            "id": "direction",
+            "name": "导演与分镜",
+            "owners": [
+              "film-director",
+              "storyboard-artist"
+            ],
+            "requires": [
+              "capture"
+            ]
+          },
+          {
+            "id": "production",
+            "name": "镜头制作",
+            "owners": [
+              "film-director"
+            ],
+            "requires": [
+              "direction"
+            ],
+            "use_route_owners": true
+          },
+          {
+            "id": "sound",
+            "name": "声音制作",
+            "owners": [
+              "sound-designer"
+            ],
+            "requires": [
+              "direction"
+            ]
+          },
+          {
+            "id": "edit",
+            "name": "剪辑与后期",
+            "owners": [
+              "post-producer"
+            ],
+            "requires": [
+              "production",
+              "sound"
+            ]
+          },
+          {
+            "id": "review",
+            "name": "成片审查",
+            "owners": [
+              "quality-reviewer"
+            ],
+            "requires": [
+              "edit"
+            ]
+          },
+          {
+            "id": "delivery",
+            "name": "包装交付",
+            "owners": [
+              "delivery-producer"
+            ],
+            "requires": [
+              "review"
+            ]
+          }
+        ],
+        "acceptance": [
+          "展示的界面与功能来自真实产品",
+          "演示信息与用户价值一致",
+          "音乐、字体、界面素材与导出完整可用"
+        ],
+        "required_checks": [
+          {
+            "name": "成片审查",
+            "before_phase": "delivery",
+            "requires_independent": false
+          }
+        ]
+      }
+    },
+    "film": {
+      "name": "剧情短片与电影",
+      "aliases": [
+        "短片",
+        "剧情短片",
+        "电影",
+        "影视",
+        "实验短片"
+      ],
+      "form": "single",
+      "roles": [
+        "account-lead",
+        "film-director",
+        "post-producer",
+        "quality-reviewer",
+        "delivery-producer",
+        "production-manager",
+        "screenwriter",
+        "creative-critic",
+        "storyboard-artist",
+        "art-director",
+        "asset-designer",
+        "continuity-supervisor",
+        "voice-director",
+        "sound-designer",
+        "compositor"
+      ],
+      "skills": [],
+      "routes": [
+        "ai"
+      ],
+      "platforms": [],
+      "video": {
+        "target_duration_seconds": null,
+        "duration_tolerance_seconds": null,
+        "aspect_ratio": "16:9",
+        "width_px": 1920,
+        "height_px": 1080,
+        "frame_rate": 24,
+        "format": "mp4",
+        "video_codec": "H.264",
+        "audio_codec": "AAC"
+      },
+      "delivery": {
+        "video_filename": "视频.mp4",
+        "cover_required": false,
+        "copy_required": false,
+        "include_source_project": true,
+        "include_source_manifest": true,
+        "overwrite_policy": "新增版本目录，不覆盖既有交付",
+        "additional_required_files": []
+      },
+      "workflow": {
+        "phases": [
+          {
+            "id": "brief",
+            "name": "项目简报",
+            "owners": [
+              "account-lead"
+            ],
+            "requires": []
+          },
+          {
+            "id": "script",
+            "name": "剧本",
+            "owners": [
+              "screenwriter"
+            ],
+            "requires": [
+              "brief"
+            ]
+          },
+          {
+            "id": "script-review",
+            "name": "剧本评审",
+            "owners": [
+              "creative-critic"
+            ],
+            "requires": [
+              "script"
+            ]
+          },
+          {
+            "id": "continuity",
+            "name": "设定与场景状态",
+            "owners": [
+              "continuity-supervisor"
+            ],
+            "requires": [
+              "script-review"
+            ]
+          },
+          {
+            "id": "direction",
+            "name": "导演与分镜",
+            "owners": [
+              "film-director",
+              "storyboard-artist"
+            ],
+            "requires": [
+              "continuity"
+            ]
+          },
+          {
+            "id": "art",
+            "name": "美术与资产",
+            "owners": [
+              "art-director",
+              "asset-designer"
+            ],
+            "requires": [
+              "direction"
+            ]
+          },
+          {
+            "id": "production",
+            "name": "镜头制作",
+            "owners": [
+              "film-director"
+            ],
+            "requires": [
+              "art"
+            ],
+            "use_route_owners": true
+          },
+          {
+            "id": "sound",
+            "name": "声音制作",
+            "owners": [
+              "voice-director",
+              "sound-designer"
+            ],
+            "requires": [
+              "direction"
+            ]
+          },
+          {
+            "id": "edit",
+            "name": "剪辑与后期",
+            "owners": [
+              "post-producer",
+              "compositor"
+            ],
+            "requires": [
+              "production",
+              "sound"
+            ]
+          },
+          {
+            "id": "review",
+            "name": "成片审查",
+            "owners": [
+              "quality-reviewer"
+            ],
+            "requires": [
+              "edit"
+            ]
+          },
+          {
+            "id": "delivery",
+            "name": "包装交付",
+            "owners": [
+              "delivery-producer"
+            ],
+            "requires": [
+              "review"
+            ]
+          }
+        ],
+        "acceptance": [
+          "人物行动、表演和因果符合剧本",
+          "角色、道具、空间和故事时间连续",
+          "按场景恢复制作，整片最终审片覆盖全部采用版本"
+        ],
+        "required_checks": [
+          {
+            "name": "剧本评审",
+            "before_phase": "direction",
+            "requires_independent": false
+          },
+          {
+            "name": "成片审查",
+            "before_phase": "delivery",
+            "requires_independent": false
+          }
+        ]
+      }
+    },
+    "series": {
+      "name": "短剧、中剧与系列剧情",
+      "aliases": [
+        "短剧",
+        "中剧",
+        "连续剧",
+        "系列剧情",
+        "分集剧",
+        "剧集"
+      ],
+      "form": "series",
+      "roles": [
+        "account-lead",
+        "film-director",
+        "post-producer",
+        "quality-reviewer",
+        "delivery-producer",
+        "production-manager",
+        "screenwriter",
+        "creative-critic",
+        "storyboard-artist",
+        "art-director",
+        "asset-designer",
+        "continuity-supervisor",
+        "voice-director",
+        "sound-designer",
+        "compositor",
+        "subtitle-editor"
+      ],
+      "skills": [],
+      "routes": [
+        "ai"
+      ],
+      "platforms": [],
+      "video": {
+        "target_duration_seconds": null,
+        "duration_tolerance_seconds": null,
+        "aspect_ratio": "16:9",
+        "width_px": 1920,
+        "height_px": 1080,
+        "frame_rate": 24,
+        "format": "mp4",
+        "video_codec": "H.264",
+        "audio_codec": "AAC"
+      },
+      "delivery": {
+        "video_filename": "视频.mp4",
+        "cover_required": false,
+        "copy_required": false,
+        "include_source_project": true,
+        "include_source_manifest": true,
+        "overwrite_policy": "新增版本目录，不覆盖既有交付",
+        "additional_required_files": []
+      },
+      "workflow": {
+        "phases": [
+          {
+            "id": "brief",
+            "name": "项目简报",
+            "owners": [
+              "account-lead"
+            ],
+            "requires": []
+          },
+          {
+            "id": "series-plan",
+            "name": "总纲与分集",
+            "owners": [
+              "screenwriter",
+              "production-manager"
+            ],
+            "requires": [
+              "brief"
+            ]
+          },
+          {
+            "id": "script",
+            "name": "本集剧本",
+            "owners": [
+              "screenwriter"
+            ],
+            "requires": [
+              "series-plan"
+            ]
+          },
+          {
+            "id": "script-review",
+            "name": "剧本评审",
+            "owners": [
+              "creative-critic"
+            ],
+            "requires": [
+              "script"
+            ]
+          },
+          {
+            "id": "continuity",
+            "name": "跨集连续性",
+            "owners": [
+              "continuity-supervisor"
+            ],
+            "requires": [
+              "script-review"
+            ]
+          },
+          {
+            "id": "direction",
+            "name": "导演与分镜",
+            "owners": [
+              "film-director",
+              "storyboard-artist"
+            ],
+            "requires": [
+              "continuity"
+            ]
+          },
+          {
+            "id": "art",
+            "name": "美术与资产",
+            "owners": [
+              "art-director",
+              "asset-designer"
+            ],
+            "requires": [
+              "direction"
+            ]
+          },
+          {
+            "id": "production",
+            "name": "镜头制作",
+            "owners": [
+              "film-director"
+            ],
+            "requires": [
+              "art"
+            ],
+            "use_route_owners": true
+          },
+          {
+            "id": "sound",
+            "name": "声音制作",
+            "owners": [
+              "voice-director",
+              "sound-designer"
+            ],
+            "requires": [
+              "direction"
+            ]
+          },
+          {
+            "id": "edit",
+            "name": "剪辑与后期",
+            "owners": [
+              "post-producer",
+              "compositor"
+            ],
+            "requires": [
+              "production",
+              "sound"
+            ]
+          },
+          {
+            "id": "subtitle",
+            "name": "字幕与本地化",
+            "owners": [
+              "subtitle-editor"
+            ],
+            "requires": [
+              "edit"
+            ]
+          },
+          {
+            "id": "review",
+            "name": "成片审查",
+            "owners": [
+              "quality-reviewer"
+            ],
+            "requires": [
+              "subtitle"
+            ]
+          },
+          {
+            "id": "delivery",
+            "name": "包装交付",
+            "owners": [
+              "delivery-producer"
+            ],
+            "requires": [
+              "review"
+            ]
+          }
+        ],
+        "acceptance": [
+          "集数、分集边界与剧本范围符合简报",
+          "跨集设定和结尾状态可追溯",
+          "单集验收与整季一致性分别完成"
+        ],
+        "required_checks": [
+          {
+            "name": "剧本评审",
+            "before_phase": "direction",
+            "requires_independent": false
+          },
+          {
+            "name": "成片审查",
+            "before_phase": "delivery",
+            "requires_independent": false
+          }
+        ]
+      }
+    },
+    "music-video": {
+      "name": "MV 与音乐影像",
+      "aliases": [
+        "MV",
+        "mv",
+        "音乐影像",
+        "音乐视频",
+        "歌词视频",
+        "音乐视觉化"
+      ],
+      "form": "single",
+      "roles": [
+        "account-lead",
+        "film-director",
+        "post-producer",
+        "quality-reviewer",
+        "delivery-producer",
+        "creative-director",
+        "art-director",
+        "storyboard-artist",
+        "sound-designer"
+      ],
+      "skills": [
+        "music-to-video"
+      ],
+      "routes": [
+        "code-2d"
+      ],
+      "platforms": [],
+      "video": {
+        "target_duration_seconds": null,
+        "duration_tolerance_seconds": null,
+        "aspect_ratio": "16:9",
+        "width_px": 1920,
+        "height_px": 1080,
+        "frame_rate": 30,
+        "format": "mp4",
+        "video_codec": "H.264",
+        "audio_codec": "AAC"
+      },
+      "delivery": {
+        "video_filename": "视频.mp4",
+        "cover_required": false,
+        "copy_required": false,
+        "include_source_project": true,
+        "include_source_manifest": true,
+        "overwrite_policy": "新增版本目录，不覆盖既有交付",
+        "additional_required_files": []
+      },
+      "workflow": {
+        "phases": [
+          {
+            "id": "brief",
+            "name": "项目简报",
+            "owners": [
+              "account-lead"
+            ],
+            "requires": []
+          },
+          {
+            "id": "music",
+            "name": "音乐锁定与分析",
+            "owners": [
+              "sound-designer"
+            ],
+            "requires": [
+              "brief"
+            ]
+          },
+          {
+            "id": "concept",
+            "name": "音乐视觉概念",
+            "owners": [
+              "creative-director",
+              "art-director"
+            ],
+            "requires": [
+              "music"
+            ]
+          },
+          {
+            "id": "direction",
+            "name": "导演与分镜",
+            "owners": [
+              "film-director",
+              "storyboard-artist"
+            ],
+            "requires": [
+              "concept"
+            ]
+          },
+          {
+            "id": "art",
+            "name": "美术与资产",
+            "owners": [
+              "art-director"
+            ],
+            "requires": [
+              "direction"
+            ]
+          },
+          {
+            "id": "production",
+            "name": "镜头制作",
+            "owners": [
+              "film-director"
+            ],
+            "requires": [
+              "art"
+            ],
+            "use_route_owners": true
+          },
+          {
+            "id": "sound",
+            "name": "声音制作",
+            "owners": [
+              "sound-designer"
+            ],
+            "requires": [
+              "direction"
+            ]
+          },
+          {
+            "id": "edit",
+            "name": "剪辑与后期",
+            "owners": [
+              "post-producer"
+            ],
+            "requires": [
+              "production",
+              "sound"
+            ]
+          },
+          {
+            "id": "review",
+            "name": "成片审查",
+            "owners": [
+              "quality-reviewer"
+            ],
+            "requires": [
+              "edit"
+            ]
+          },
+          {
+            "id": "delivery",
+            "name": "包装交付",
+            "owners": [
+              "delivery-producer"
+            ],
+            "requires": [
+              "review"
+            ]
+          }
+        ],
+        "acceptance": [
+          "采用歌曲、音乐时间轴与来源明确",
+          "镜头结构响应音乐段落而非每拍机械切换",
+          "叙事MV另启用编剧与连续性角色"
+        ],
+        "required_checks": [
+          {
+            "name": "成片审查",
+            "before_phase": "delivery",
+            "requires_independent": false
+          }
+        ]
+      }
+    },
+    "motion-design": {
+      "name": "动效与视觉实验",
+      "aliases": [
+        "动效",
+        "视觉实验",
+        "艺术动画",
+        "Logo动画",
+        "动态图形",
+        "三维视觉",
+        "生成艺术"
+      ],
+      "form": "single",
+      "roles": [
+        "account-lead",
+        "film-director",
+        "post-producer",
+        "quality-reviewer",
+        "delivery-producer",
+        "creative-director",
+        "art-director",
+        "sound-designer"
+      ],
+      "skills": [],
+      "routes": [
+        "code-2d"
+      ],
+      "platforms": [],
+      "video": {
+        "target_duration_seconds": null,
+        "duration_tolerance_seconds": null,
+        "aspect_ratio": "16:9",
+        "width_px": 1920,
+        "height_px": 1080,
+        "frame_rate": 30,
+        "format": "mp4",
+        "video_codec": "H.264",
+        "audio_codec": "AAC"
+      },
+      "delivery": {
+        "video_filename": "视频.mp4",
+        "cover_required": false,
+        "copy_required": false,
+        "include_source_project": true,
+        "include_source_manifest": true,
+        "overwrite_policy": "新增版本目录，不覆盖既有交付",
+        "additional_required_files": []
+      },
+      "workflow": {
+        "phases": [
+          {
+            "id": "brief",
+            "name": "项目简报",
+            "owners": [
+              "account-lead"
+            ],
+            "requires": []
+          },
+          {
+            "id": "concept",
+            "name": "视觉与运动概念",
+            "owners": [
+              "creative-director",
+              "art-director"
+            ],
+            "requires": [
+              "brief"
+            ]
+          },
+          {
+            "id": "direction",
+            "name": "导演与分镜",
+            "owners": [
+              "film-director"
+            ],
+            "requires": [
+              "concept"
+            ]
+          },
+          {
+            "id": "art",
+            "name": "美术与资产",
+            "owners": [
+              "art-director"
+            ],
+            "requires": [
+              "direction"
+            ]
+          },
+          {
+            "id": "production",
+            "name": "镜头制作",
+            "owners": [
+              "film-director"
+            ],
+            "requires": [
+              "art"
+            ],
+            "use_route_owners": true
+          },
+          {
+            "id": "sound",
+            "name": "声音制作",
+            "owners": [
+              "sound-designer"
+            ],
+            "requires": [
+              "direction"
+            ]
+          },
+          {
+            "id": "edit",
+            "name": "剪辑与后期",
+            "owners": [
+              "post-producer"
+            ],
+            "requires": [
+              "production",
+              "sound"
+            ]
+          },
+          {
+            "id": "review",
+            "name": "成片审查",
+            "owners": [
+              "quality-reviewer"
+            ],
+            "requires": [
+              "edit"
+            ]
+          },
+          {
+            "id": "delivery",
+            "name": "包装交付",
+            "owners": [
+              "delivery-producer"
+            ],
+            "requires": [
+              "review"
+            ]
+          }
+        ],
+        "acceptance": [
+          "运动机制与视觉方向一致",
+          "工程时间、随机性和资源加载可复现",
+          "静帧检查与实际动态渲染分别有证据"
+        ],
+        "required_checks": [
+          {
+            "name": "成片审查",
+            "before_phase": "delivery",
+            "requires_independent": false
+          }
+        ]
+      }
+    }
+  },
+  "routes": {
+    "ai": {
+      "name": "AI 镜头生成",
+      "roles": [
+        "asset-designer",
+        "media-producer"
+      ],
+      "skills": [],
+      "runtimes": [
+        "python",
+        "ffmpeg",
+        "ffprobe"
+      ],
+      "notes": "生成服务登录、凭据和生图能力按实际选择单独验证。"
+    },
+    "live-action": {
+      "name": "实拍与真实界面素材",
+      "roles": [
+        "capture-director"
+      ],
+      "skills": [],
+      "runtimes": [
+        "python",
+        "ffmpeg",
+        "ffprobe"
+      ],
+      "notes": "支持用户提供实拍素材与获授权界面采集；真实现场拍摄由用户或摄制人员执行。"
+    },
+    "code-2d": {
+      "name": "二维与代码动画",
+      "roles": [
+        "motion-designer"
+      ],
+      "skills": [],
+      "runtimes": [
+        "python",
+        "node",
+        "ffmpeg",
+        "ffprobe"
+      ],
+      "notes": "选用已安装的 Remotion、HyperFrames 或 huashu 路线；具体工程依赖由所选技能声明。"
+    },
+    "cg-3d": {
+      "name": "三维 CG",
+      "roles": [
+        "cg-artist",
+        "asset-designer"
+      ],
+      "skills": [],
+      "runtimes": [
+        "python",
+        "node",
+        "blender",
+        "ffmpeg",
+        "ffprobe"
+      ],
+      "notes": "可选 Blender 与 Three.js；硬件、WebGPU和渲染后端的就绪分别验证。"
+    }
+  }
+}

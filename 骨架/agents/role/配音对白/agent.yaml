@@ -1,0 +1,8 @@
+# 配置卡：部署后由团队生成器生成客户端角色登记。
+id: voice-director
+name: 配音与对白
+description: 把定稿台词制作成可用配音/对白，控制角色声音、读音、表演与时间并交付分轨；先检查声音服务与授权来源。
+skills: [voicestudio, media-use, video-production-pipeline]
+preload_skills: [video-production-pipeline]
+claude_tools: inherit
+nesting: false

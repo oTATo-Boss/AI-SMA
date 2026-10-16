@@ -1,0 +1,8 @@
+# 配置卡：部署后由团队生成器生成客户端角色登记。
+id: subtitle-editor
+name: 字幕与本地化
+description: 制作准确、可读、同步的字幕与本地化版本，维护字幕和声音/画面的版本关系；不把自动转录直接当定稿。
+skills: [embedded-captions, ffmpeg-skill, video-production-pipeline]
+preload_skills: [video-production-pipeline]
+claude_tools: inherit
+nesting: false

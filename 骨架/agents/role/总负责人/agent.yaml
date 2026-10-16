@@ -1,8 +1,8 @@
-# 配置卡：给软件读的设置。总负责人是主对话，不生成子智能体登记文件。
+# 配置卡：部署后由团队生成器生成客户端角色登记。
 id: account-lead
 name: 总负责人
-description: 主对话：和本人对话，拆任务、派子智能体、合并产物、裁决分歧、交付和记录；不亲自做专业工作。
-skills: [social-media-router]
+description: 主对话：识别项目类型与阶段，按已部署角色派工、整合版本化产物、处理依赖与异常并交付；没有子智能体时按角色顺序代行，明确 self 审查。
+skills: [video-project-orchestration]
+preload_skills: [video-project-orchestration]
 claude_tools: inherit
-effort: high
 main: true

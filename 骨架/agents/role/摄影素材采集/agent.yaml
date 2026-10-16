@@ -1,0 +1,8 @@
+# 配置卡：部署后由团队生成器生成客户端角色登记。
+id: capture-director
+name: 摄影与素材采集
+description: 为实拍、访谈、纪录与真实产品界面制定采集方案，整理素材及来源；可执行获授权的屏幕采集，实地拍摄由用户或摄制人员完成。
+skills: [direct-video, video-shotcraft, video-production-pipeline]
+preload_skills: [video-production-pipeline]
+claude_tools: inherit
+nesting: false

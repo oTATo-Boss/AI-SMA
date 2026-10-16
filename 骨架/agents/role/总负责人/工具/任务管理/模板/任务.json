@@ -1,5 +1,10 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
+  "parent_id": null,
+  "depends_on": [],
+  "unit": null,
+  "input_versions": [],
+  "review_mode": "independent",
   "id": "",
   "title": "",
   "workflow": "maintenance",

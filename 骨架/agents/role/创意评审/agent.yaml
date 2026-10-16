@@ -1,8 +1,8 @@
-# 配置卡：给软件读的设置。改完运行 python3 agents/公共/工具/团队/生成角色.py
+# 配置卡：部署后由团队生成器生成客户端角色登记。
 id: creative-critic
-name: 创意评审
-description: 创意候选齐了、要决定做哪个时派它：盲评打分、核对证据、查和原作的相似度、做失败预演，给出选哪个、必须改什么。不出创意、不改创意。
-skills: [storytelling-hooks, direct-video]
+name: 创意与剧本评审
+description: 独立比较创意或审读剧本，检查目的、结构、可行性、相似度与兑现，提出有定位的必改项；不替作者重写，不审查自己刚创作的版本并冒称独立。
+skills: [screenwriting, storytelling-hooks, direct-video]
+preload_skills: [screenwriting]
 claude_tools: [Read, Write, Bash, Glob, Grep, WebSearch, WebFetch, Skill]
 nesting: false
-effort: xhigh

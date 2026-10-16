@@ -1,0 +1,8 @@
+# 配置卡：部署后由团队生成器生成客户端角色登记。
+id: asset-designer
+name: 角色与场景资产
+description: 按美术规范制作并整理角色、场景、道具和图像资产，维护稳定资产 ID、版本与来源；不改镜头叙事，不将局部生成结果自动升级为全片设定。
+skills: [asset-generation, gpt-image-2-style-library, video-production-pipeline]
+preload_skills: [asset-generation]
+claude_tools: inherit
+nesting: false

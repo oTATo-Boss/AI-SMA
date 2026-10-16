@@ -1,0 +1,8 @@
+# 配置卡：部署后由团队生成器生成客户端角色登记。
+id: storyboard-artist
+name: 分镜与预演
+description: 将导演意图落实为镜头表、分镜与可选动态预演，锁定镜头编号、时长、构图、运动和资产依赖；不随意改变剧本事件。
+skills: [direct-video, video-production-pipeline]
+preload_skills: [video-production-pipeline]
+claude_tools: inherit
+nesting: false

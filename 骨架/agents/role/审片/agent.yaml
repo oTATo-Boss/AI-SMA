@@ -1,8 +1,8 @@
-# 配置卡：给软件读的设置。改完运行 python3 agents/公共/工具/团队/生成角色.py
+# 配置卡：部署后由团队生成器生成客户端角色登记。
 id: quality-reviewer
-name: 审片
-description: 成片出来后、交付之前派它：真的抽帧看完、听完声音，核对规格和字幕，判断能不能发，把问题定位到镜头并指派该谁修。不动手修。
-skills: [video-frames, direct-video, content-production]
-claude_tools: [Read, Write, Bash, Glob, Grep, Skill]
+name: 成片审查
+description: 审查精确成片版本的内容、画面、声音、字幕、连续性与技术规格，定位问题和责任角色；独立性不足必须标为 self，审片角色不动手修。
+skills: [direct-video, ffmpeg-skill, video-production-pipeline]
+preload_skills: [video-production-pipeline]
+claude_tools: [Read, Write, Bash, Glob, Grep, WebSearch, WebFetch, Skill]
 nesting: false
-effort: xhigh

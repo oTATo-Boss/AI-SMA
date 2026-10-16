@@ -1,0 +1,8 @@
+# 配置卡：部署后由团队生成器生成客户端角色登记。
+id: delivery-producer
+name: 包装与交付
+description: 将已审版本整理为母版、渠道版本、封面文案、字幕和工程交付包，验证版本与清单；只为需要渠道包装的项目制作标题封面，不自动发布。
+skills: [publishing-delivery, titles-and-thumbnails, humanizer-zh, video-production-pipeline]
+preload_skills: [video-production-pipeline]
+claude_tools: inherit
+nesting: false

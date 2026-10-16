@@ -1,6 +1,6 @@
 # 任务管理工具
 
-总负责人的工具，素材制作也用它的 `job` 命令登记付费任务。入口 `任务管理.py`，Python 3.9+ 标准库，不用安装依赖。在项目根目录运行，参数路径都相对项目根目录；`--revision` 用刚读到的任务版本。工具只写 agents/ 内的任务记录和任务总览，不复制交付、不发布、不调用生成服务、不创建调度。目录、时区和交付包文件名读 `流程定义.json` 的 project、packages。
+总负责人的工具，素材制作也用它登记外部任务。入口 `任务管理.py`，Python 3.9+；macOS/Linux 使用 fcntl 锁，Windows 使用 msvcrt 锁，缺时区数据时由部署智能体用当前 Python 安装 tzdata。在项目根目录运行，参数路径都相对项目根目录，记录路径使用 `/`；`--revision` 用刚读到的任务版本。工具只写 agents/ 内的任务记录和任务总览，不复制交付、不发布、不调用生成服务、不创建常驻调度。目录、时区和交付包文件名读 `流程定义.json` 的 project、packages。
 
 ## 常用命令
 
@@ -32,6 +32,7 @@ python3 agents/role/总负责人/工具/任务管理/任务管理.py accept 'age
 - **检查**：`passed` 必须有文件证据；没检查填 `unverified`，失败填 `failed`。同名检查更新后，旧结果留在运行记录。content 任务的"创意评审""成片审查"没通过，进不了"方案""交付"。
 - **外部任务**：`job` 不用 `--revision`，带锁追加或更新 external_jobs（同一工具和任务 ID 再登记就更新状态），几个素材制作同时登记也不会冲突；回包位置要真实存在。
 - **包类型**：`social-video` 是三文件视频包（文件名见流程定义 packages）；`prompt` 是 txt 和参考图；`other` 用于本人确认过的其他形式，只检查非空独立文件，不能拿来绕过具体交付规范。
+- 新模板的 packages 还可写 `{"required": ["母版.mp4", "工程"], "optional": ["字幕.srt"], "allow_extra": false}`；required/optional 是顶层文件或目录，目录里的实际文件逐个做路径检查和哈希。旧列表格式仍要求精确文件清单。
 - **check-package** 只检查文件清单、非空、文件头、文本编码和哈希，不解码视频，不看分辨率、审美、版权或提示词内容；名称不冲突只代表检查时没冲突，新增前要再确认。
 - **delivery** 只登记已经新增到 `交付/` 的完整包；最新一条是当前版本，旧条目不能重写。登记新交付会恢复待验收，不继承旧版验收。
 - **accept** 只记录本人对当前版本的真实验收并绑定文件哈希，不自动结束任务。
@@ -39,6 +40,8 @@ python3 agents/role/总负责人/工具/任务管理/任务管理.py accept 'age
 ## 任务记录字段
 
 每个任务只有一份 `task.json`，模板在 `模板/任务.json`。
+
+新项目配置是 `agents/项目/项目配置.yaml` 的 JSON 文本且 schema_version=2；工具自动创建 v2 任务。只有旧账号配置时继续创建 v1 任务，读取和更新已有 v1 记录不会静默升级。流程的 phases 可为旧字符串列表，或 `{id, name, owners, requires}` 对象列表；任务记录保存 name，CLI 同时接受 id。阶段 owners/requires 为总负责人拆任务的编排依据，工具通过 required_checks/gates 执行检查门槛，不运行后台阶段调度。
 
 | 字段 | 内容 |
 |---|---|
@@ -50,6 +53,33 @@ python3 agents/role/总负责人/工具/任务管理/任务管理.py accept 'age
 | `external_jobs` | 工具、任务 ID、状态、回包位置和已知消耗，不写凭据 |
 | `issues`、`migration` | 限制和未解决事项；旧任务状态的出处和未确认信息 |
 | `revision`、时间、`owner` | 记录版本、北京时间、当前处理者（协调标记，不扩大授权） |
+| v2 `parent_id`、`depends_on` | 上级任务 ID 和直接前置任务 ID；不能引用缺失任务、自己或形成循环；目录仍是单层，不移动旧任务 |
+| v2 `unit` | null 或 `{type, id}`；type 为 project/episode/chapter/sequence/scene/shot/work-package |
+| v2 `input_versions` | 每个实际输入的 path/sha256；来自前置任务时附 task_id；JSON 产物可附 artifact_version |
+| v2 `review_mode` | independent 或 self；项目 execution_mode 为 single/serial 时默认 self，原生分工默认 independent |
+
+### v2 长项目与恢复
+
+```bash
+python3 agents/role/总负责人/工具/任务管理/任务管理.py new --title '第一场分镜' --workflow content --goal '将剧本第一场转为分镜' --done-when '镜头可执行且连续性通过' --parent-id '<项目任务ID>' --depends-on '<剧本任务ID>' --unit-type scene --unit-id S01
+python3 agents/role/总负责人/工具/任务管理/任务管理.py update 'agents/工作/<任务目录>' --revision 1 --input 'agents/工作/<任务目录>/剧本.md'
+python3 agents/role/总负责人/工具/任务管理/任务管理.py refresh-inputs 'agents/工作/<任务目录>' --revision 2 --source '已检查剧本新版的变更范围，安排重审相关镜头'
+```
+
+新建依赖任务会绑定前置任务当前 outputs 的文件版本，update --input 会绑定具体文件；没有任何绑定产物的前置任务不能开始执行。上游文件、版本或输出清单变化时 validate 和状态推进失败，不自动重做付费工作。`refresh-inputs` 是显式重新接收输入：更新哈希、撤销旧检查和验收、重新打开确认、退回首阶段；历史交付和运行记录保留。它不代表受影响内容已重做或已审过。
+
+passed 检查的 review_mode 要与 v2 评审报告一致；requires_independent=true 的门槛必须有真正独立的结构化评审报告。检查工具同时验证报告绑定的素材，不能只绑定一份写着“通过”的文本。
+
+### 外部服务提交意图
+
+```bash
+python3 agents/role/总负责人/工具/任务管理/任务管理.py job-intent 'agents/工作/<任务目录>' --tool '生成服务' --submission-key S01-v1 --request 'agents/工作/<任务目录>/工程/请求.json'
+python3 agents/role/总负责人/工具/任务管理/任务管理.py job 'agents/工作/<任务目录>' --tool '生成服务' --submission-key S01-v1 --status unknown --record 'agents/工作/<任务目录>/工程/请求.json'
+python3 agents/role/总负责人/工具/任务管理/任务管理.py job-recover 'agents/工作/<任务目录>' --submission-key S01-v1
+python3 agents/role/总负责人/工具/任务管理/任务管理.py job 'agents/工作/<任务目录>' --tool '生成服务' --submission-key S01-v1 --task-id '<服务返回ID>' --status submitted --record 'agents/工作/<任务目录>/工程/回执.json'
+```
+
+调用服务之前先保存去除凭据的请求并登记意图；提交键只能登记一次。支持 intent/unknown/submitted/running/succeeded/failed/cancelled。回包不明先登记 unknown，再查询服务或核对实际回执；job-recover 只读状态，不调用服务、不批准重复提交。同一意图不能改绑另一个服务任务 ID。服务不支持查询或幂等键时，记录真实限制，不能仅因本地未存 ID 就重提。旧 job --task-id 命令继续可用。
 
 结束条件：处于流程末阶段，关联有效成果，至少一项有证据的检查通过且没有未解决的失败；内容和交付任务还要有当前交付和本人验收。done_when 的每一项都要在检查说明里对应，一次机器检查不能替代全部完成条件。发布不是结束条件。
 

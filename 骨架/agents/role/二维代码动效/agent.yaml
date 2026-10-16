@@ -1,0 +1,8 @@
+# 配置卡：部署后由团队生成器生成客户端角色登记。
+id: motion-designer
+name: 二维与代码动效
+description: 以代码制作二维、字体、SVG、解释动画和界面包装，交付可复现工程与精确时长片段；选定引擎后只加载当前需要的子技能。
+skills: [animejs-creative-motion, animejs-workflows, animejs-example-library, huashu-art-motion, remotion-best-practices, hyperframes, video-production-pipeline]
+preload_skills: [video-production-pipeline]
+claude_tools: inherit
+nesting: false

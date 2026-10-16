@@ -1,0 +1,8 @@
+# 配置卡：部署后由团队生成器生成客户端角色登记。
+id: continuity-supervisor
+name: 场记与连续性
+description: 维护故事时间、人物状态、服装道具、空间与跨镜头/跨集一致性，标出冲突和下游影响；不自行改写故事或重做镜头。
+skills: [production-continuity, screenwriting]
+preload_skills: [production-continuity]
+claude_tools: inherit
+nesting: false

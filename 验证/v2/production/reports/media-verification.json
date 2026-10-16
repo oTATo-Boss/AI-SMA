@@ -1,0 +1,177 @@
+{
+  "schema_version": 1,
+  "results": [
+    {
+      "film": "science",
+      "path": "science.mp4",
+      "sha256": "9faf2936d9d3b39f56e8bd26788067557f3e486c3b7c84b324e938a158c60e51",
+      "duration_s": 60.0,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "fps": "30/1",
+      "audio": [
+        "aac",
+        "48000",
+        2
+      ],
+      "full_decode": "passed",
+      "audio_peak_dbfs": -5.69,
+      "audio_rms_dbfs": -22.45,
+      "motion_mean_absolute_difference_10fps": 0.546,
+      "frames_with_nonzero_motion_fraction": 0.377,
+      "seek_determinism": "A-B-A exact pixel match",
+      "captions": "measured segment timing within video; no cue overlap",
+      "last_speech_end_s": 58.40720833333333,
+      "contact_sheet": "science-encoded-contact.png",
+      "playback": "pending separate playback record",
+      "listening": "unverified; signal measurement is not listening",
+      "creative_approval": "pending independent review"
+    },
+    {
+      "film": "ad",
+      "path": "ad.mp4",
+      "sha256": "ffc75f16ba9947f53226ed802dad82651f226e92c35b4e42ce3b7354aa314e4d",
+      "duration_s": 15.0,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "fps": "30/1",
+      "audio": [
+        "aac",
+        "48000",
+        2
+      ],
+      "full_decode": "passed",
+      "audio_peak_dbfs": -11.16,
+      "audio_rms_dbfs": -26.53,
+      "motion_mean_absolute_difference_10fps": 0.787,
+      "frames_with_nonzero_motion_fraction": 0.409,
+      "seek_determinism": "A-B-A exact pixel match",
+      "captions": "not applicable",
+      "last_speech_end_s": null,
+      "contact_sheet": "ad-encoded-contact.png",
+      "playback": "pending separate playback record",
+      "listening": "unverified; signal measurement is not listening",
+      "creative_approval": "pending independent review"
+    },
+    {
+      "film": "ad_vertical",
+      "path": "ad_vertical.mp4",
+      "sha256": "a60db224c251c34ad1776662348501c7906a3c2b2a44c35c99852497324bd132",
+      "duration_s": 15.0,
+      "dimensions": [
+        720,
+        1280
+      ],
+      "fps": "30/1",
+      "audio": [
+        "aac",
+        "48000",
+        2
+      ],
+      "full_decode": "passed",
+      "audio_peak_dbfs": -11.16,
+      "audio_rms_dbfs": -26.53,
+      "motion_mean_absolute_difference_10fps": 0.767,
+      "frames_with_nonzero_motion_fraction": 0.416,
+      "seek_determinism": "A-B-A exact pixel match",
+      "captions": "not applicable",
+      "last_speech_end_s": null,
+      "contact_sheet": "ad_vertical-encoded-contact.png",
+      "playback": "pending separate playback record",
+      "listening": "unverified; signal measurement is not listening",
+      "creative_approval": "pending independent review"
+    },
+    {
+      "film": "drama1",
+      "path": "drama1.mp4",
+      "sha256": "d20d088254110fe63fa2141674e6a76d59e2f4ff898bb43027d611a29d82dc53",
+      "duration_s": 30.0,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "fps": "30/1",
+      "audio": [
+        "aac",
+        "48000",
+        2
+      ],
+      "full_decode": "passed",
+      "audio_peak_dbfs": -5.66,
+      "audio_rms_dbfs": -23.25,
+      "motion_mean_absolute_difference_10fps": 0.992,
+      "frames_with_nonzero_motion_fraction": 1.0,
+      "seek_determinism": "A-B-A exact pixel match",
+      "captions": "measured segment timing within video; no cue overlap",
+      "last_speech_end_s": 27.27285416666667,
+      "contact_sheet": "drama1-encoded-contact.png",
+      "playback": "pending separate playback record",
+      "listening": "unverified; signal measurement is not listening",
+      "creative_approval": "pending independent review"
+    },
+    {
+      "film": "drama2",
+      "path": "drama2.mp4",
+      "sha256": "f88a42d2d1abc58e880b03d5bace4d34ed110126cdf67ae82f48bf7af4f0bd15",
+      "duration_s": 30.0,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "fps": "30/1",
+      "audio": [
+        "aac",
+        "48000",
+        2
+      ],
+      "full_decode": "passed",
+      "audio_peak_dbfs": -5.44,
+      "audio_rms_dbfs": -23.89,
+      "motion_mean_absolute_difference_10fps": 1.641,
+      "frames_with_nonzero_motion_fraction": 1.0,
+      "seek_determinism": "A-B-A exact pixel match",
+      "captions": "measured segment timing within video; no cue overlap",
+      "last_speech_end_s": 27.958770833333332,
+      "contact_sheet": "drama2-encoded-contact.png",
+      "playback": "pending separate playback record",
+      "listening": "unverified; signal measurement is not listening",
+      "creative_approval": "pending independent review"
+    },
+    {
+      "film": "mv",
+      "path": "mv.mp4",
+      "sha256": "17a18301a87f6c27605eb1e9186c468352a4866ed05032b5c632f6fe6f92e748",
+      "duration_s": 30.0,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "fps": "30/1",
+      "audio": [
+        "aac",
+        "48000",
+        2
+      ],
+      "full_decode": "passed",
+      "audio_peak_dbfs": -11.35,
+      "audio_rms_dbfs": -25.63,
+      "motion_mean_absolute_difference_10fps": 3.339,
+      "frames_with_nonzero_motion_fraction": 1.0,
+      "seek_determinism": "A-B-A exact pixel match",
+      "captions": "not applicable",
+      "last_speech_end_s": null,
+      "contact_sheet": "mv-encoded-contact.png",
+      "playback": "pending separate playback record",
+      "listening": "unverified; signal measurement is not listening",
+      "creative_approval": "pending independent review"
+    }
+  ],
+  "notes": [
+    "Local macOS test only. Native Windows/Linux production rendering not tested.",
+    "Art direction and public redistribution rights are not inferred from these checks."
+  ]
+}

@@ -1,0 +1,8 @@
+# 配置卡：部署后由团队生成器生成客户端角色登记。
+id: cg-artist
+name: 三维 CG
+description: 制作三维场景、摄影机、材质、动画和渲染，交付可编辑工程及镜头；依任务选 Three.js 或已安装且验证的 Blender 能力。
+skills: [blender-pro-workflow, blender-animation, blender-cameras, blender-lighting, blender-materials, blender-modeling, blender-rendering, threejs-choose-skills, threejs-scene, threejs-materials, threejs-animation, threejs-visual-validation, video-production-pipeline]
+preload_skills: [video-production-pipeline]
+claude_tools: inherit
+nesting: false

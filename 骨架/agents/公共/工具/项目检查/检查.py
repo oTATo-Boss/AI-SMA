@@ -15,7 +15,7 @@ PROTECTED = ["交付", "发布内容", "固定资产"]
 RULE_GLOBS = ["AGENTS.md", "CLAUDE.md", "agents/*.md", "agents/role/*/AGENT.md", "agents/role/*/知识/**/*.md",
               "agents/role/*/工具/**/*.md", "agents/role/*/记忆/经验.md", "agents/账号/*.md", "agents/账号/附录/**/*.md",
               "agents/账号/数据/README.md", "agents/账号/爆款库/README.md", "agents/账号/历史资料/README.md",
-              "agents/公共/**/*.md", "agents/工作/README.md", "agents/工作/日志/README.md"]
+              "agents/项目/*.md", "agents/公共/**/*.md", "agents/工作/README.md", "agents/工作/日志/README.md"]
 SKIP_PARTS = {"node_modules", "__pycache__"}
 PATH_PREFIXES = ("agents/", "../", "./", "交付/", "发布内容/", "固定资产/", "~/", "/Users/", ".claude/", ".codex/")
 PATH_SUFFIXES = (".md", ".json", ".jsonl", ".py", ".yaml", ".yml", ".txt", ".png", ".jpg", ".mp4", ".glb")
@@ -123,6 +123,9 @@ def check_team():
 def check_positioning(module, workspace):
     """定位状态写"已确认"时，所写任务目录里必须有本人通过的 positioning 确认，且确认绑定的方案文件没改过。"""
     path = AGENTS / "账号/定位与策略.md"
+    config = AGENTS / "项目/项目配置.yaml"
+    if config.exists() and json.loads(config.read_text(encoding="utf-8"))["project"]["profile"] != "social-account":
+        return "非账号项目：按项目开工要求确认", []
     if not path.exists():
         return "没有定位文件", []
     match = re.search(r"^\*\*定位状态：(待确认|已确认)\*\*(.*)$", path.read_text(encoding="utf-8"), re.M)
@@ -148,6 +151,10 @@ def check_positioning(module, workspace):
 
 
 def config_list(key):
+    path = AGENTS / "项目/项目配置.yaml"
+    if path.exists():
+        config = json.loads(path.read_text(encoding="utf-8"))
+        return config.get("isolation", {}).get(key, [])
     config = AGENTS / "账号/账号配置.yaml"
     text = config.read_text(encoding="utf-8") if config.exists() else ""
     match = re.search(rf"^\s*{key}:\s*\[(.*?)\]", text, re.M)
@@ -160,7 +167,7 @@ def sibling_accounts():
     for folder in sorted(ROOT.parent.iterdir()):
         if folder == ROOT or folder.name.startswith(".") or not folder.is_dir():
             continue
-        configs = (folder / "agents/账号/账号配置.yaml", folder / "agent/规范/账号配置.yaml")  # 新旧两种结构都认
+        configs = (folder / "agents/项目/项目配置.yaml", folder / "agents/账号/账号配置.yaml", folder / "agent/规范/账号配置.yaml")
         if (folder / "AGENTS.md").is_file() and any(c.is_file() for c in configs):
             name = folder.name.strip().lstrip("@").strip()
             terms.append(name if len(name) >= 4 else folder.name.strip())  # 名字太短时带上 @，减少误报
@@ -299,6 +306,37 @@ def check_duplicates(docs):
 
 def check_config():
     problems = []
+    common = AGENTS / "项目/项目配置.yaml"
+    if common.exists():
+        config = json.loads(common.read_text(encoding="utf-8"))
+        definition = json.loads((AGENTS / "role/总负责人/工具/任务管理/流程定义.json").read_text(encoding="utf-8"))
+        if config.get("schema_version") != 2:
+            problems.append("项目配置 schema_version 必须为 2")
+        if config.get("project", {}).get("stage") not in {"开工中", "已开工"}:
+            problems.append("项目开工状态无效")
+        if config["project"].get("timezone") != definition["project"].get("timezone"):
+            problems.append("项目时区和任务时区不一致")
+        if config.get("team", {}).get("execution_mode") not in {"auto", "multi", "single"}:
+            problems.append("team.execution_mode 无效")
+        team = load_tool("team_config_check", "agents/公共/工具/团队/生成角色.py")
+        found, general = team.roles()
+        problems.extend(general)
+        actual = {r["meta"].get("id") for r in found}
+        selected = set(config.get("team", {}).get("roles", []))
+        if actual != selected:
+            problems.append("启用角色与实际角色目录不一致")
+        required = set(config.get("skills", {}).get("required", []))
+        assigned = {s for r in found for s in r["meta"].get("skills", [])}
+        if assigned - required:
+            problems.append("角色所分配技能未纳入安装需求：" + "、".join(sorted(assigned - required)))
+        catalog = json.loads((AGENTS / "公共/技能来源.json").read_text(encoding="utf-8"))
+        for name in sorted(required):
+            item = catalog["skills"].get(name)
+            if item is None or item.get("status", "ready") != "ready":
+                problems.append("所需技能不可部署：" + name)
+            elif set(item.get("requires", [])) - required:
+                problems.append("技能依赖未闭合：" + name)
+        return problems
     config = AGENTS / "账号/账号配置.yaml"
     definition = json.loads((AGENTS / "role/总负责人/工具/任务管理/流程定义.json").read_text(encoding="utf-8"))
     if not config.exists():

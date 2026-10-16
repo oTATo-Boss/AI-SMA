@@ -1,8 +1,8 @@
-# 配置卡：给软件读的设置。改完运行 python3 agents/公共/工具/团队/生成角色.py
+# 配置卡：部署后由团队生成器生成客户端角色登记。
 id: film-director
 name: 导演
-description: 创意选定后、动手制作前派它：把创意变成制作方案、镜头表、生成提示词和声音设计。不改创意的核心机制，不亲自生成素材。
-skills: [direct-video, ai-video-prompt]
-claude_tools: [Read, Write, Edit, Bash, Glob, Grep, Skill]
+description: 把已定创意与剧本转成导演方案，确定叙事、表演、镜头和声音关系，协调专业制作；分镜、提示词和实际生成由对应角色承担。
+skills: [direct-video, video-production-pipeline]
+preload_skills: [direct-video]
+claude_tools: inherit
 nesting: false
-effort: high

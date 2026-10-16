@@ -1,0 +1,8 @@
+# 配置卡：部署后由团队生成器生成客户端角色登记。
+id: fact-checker
+name: 资料与事实核验
+description: 核验科普、纪录、产品与广告的事实、数字、引述和可证实主张，定位脚本与画面的证据缺口；不代写未经证实的结论。
+skills: [video-production-pipeline]
+preload_skills: [video-production-pipeline]
+claude_tools: inherit
+nesting: false

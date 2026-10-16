@@ -49,8 +49,8 @@ class TeamToolTests(unittest.TestCase):
     def test_generate_and_check_adapters(self):
         result = self.run_tool("生成角色.py")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertEqual(len(list((self.root / ".claude/agents").glob("*.md"))), 8)
-        self.assertEqual(len(list((self.root / ".codex/agents").glob("*.toml"))), 8)
+        self.assertEqual(len(list((self.root / ".claude/agents").glob("*.md"))), 23)
+        self.assertEqual(len(list((self.root / ".codex/agents").glob("*.toml"))), 23)
         self.assertFalse((self.root / ".claude/agents/account-lead.md").exists())
         critic = (self.root / ".claude/agents/creative-critic.md").read_text(encoding="utf-8")
         self.assertTrue(critic.startswith("---\nname: creative-critic\n"))
@@ -61,7 +61,7 @@ class TeamToolTests(unittest.TestCase):
         if tomllib:
             data = tomllib.loads((self.root / ".codex/agents/creative-critic.toml").read_text(encoding="utf-8"))
             self.assertEqual(data["name"], "creative-critic")
-            self.assertEqual(data["model_reasoning_effort"], "xhigh")
+            self.assertNotIn("model", data)
             self.assertIn("agents/role/创意评审/AGENT.md", data["developer_instructions"])
             config = tomllib.loads((self.root / ".codex/config.toml").read_text(encoding="utf-8"))
             self.assertEqual(config["agents"]["max_concurrent_threads_per_session"], 3)
@@ -71,7 +71,7 @@ class TeamToolTests(unittest.TestCase):
         guide.write_text(guide.read_text(encoding="utf-8") + "\n补一句。\n", encoding="utf-8")
         self.assertEqual(self.run_tool("生成角色.py", "--check").returncode, 0, "改说明书不需要重新生成")
         card = self.root / "agents/role/审片/agent.yaml"
-        card.write_text(card.read_text(encoding="utf-8").replace("effort: xhigh", "effort: high"), encoding="utf-8")
+        card.write_text(card.read_text(encoding="utf-8") + "\neffort: high\n", encoding="utf-8")
         result = self.run_tool("生成角色.py", "--check")
         self.assertEqual(result.returncode, 1)
         self.assertIn("不是最新", result.stdout)

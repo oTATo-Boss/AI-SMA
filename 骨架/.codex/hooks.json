@@ -3,11 +3,11 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Bash|apply_patch",
+        "matcher": "Bash|PowerShell|exec_command|shell_command|run_shell_command|shell|apply_patch",
         "hooks": [
           {
             "type": "command",
-            "command": "d=\"$PWD\"; while [ \"$d\" != / ] && [ ! -f \"$d/agents/公共/工具/写入保护/protect_paths.py\" ]; do d=$(dirname \"$d\"); done; [ -f \"$d/agents/公共/工具/写入保护/protect_paths.py\" ] && exec python3 \"$d/agents/公共/工具/写入保护/protect_paths.py\"; exit 0",
+            "command": "python3 -c 'import pathlib,runpy; p=pathlib.Path.cwd().resolve(); s=next((d/'\"'\"'agents/公共/工具/写入保护/hook_entry.py'\"'\"' for d in (p,*p.parents) if (d/'\"'\"'agents/公共/工具/写入保护/hook_entry.py'\"'\"').is_file()),None); runpy.run_path(str(s),run_name='\"'\"'__main__'\"'\"') if s else None'",
             "timeout": 10,
             "statusMessage": "检查项目写入保护"
           }

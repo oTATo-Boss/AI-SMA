@@ -3,8 +3,10 @@
 以及 .codex/config.toml（同时干活的子智能体上限）。登记文件只让子智能体先读自己的说明书，说明书改了不用重新生成。
 顺带检查每个智能体包是否齐全、配置卡是否合格、用到的技能是否登记在技能目录。--check 只检查是否最新，不写文件。标准库。"""
 import argparse
+import hashlib
 import importlib.util
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -12,6 +14,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[4]
 ROLES = ROOT / "agents/role"
 ACCOUNT_CONFIG = ROOT / "agents/账号/账号配置.yaml"
+PROJECT_CONFIG = ROOT / "agents/项目/项目配置.yaml"
 SKILLS_INDEX = ROOT / "agents/SKILLS_INDEX.md"
 CLAUDE = ROOT / ".claude/agents"
 CODEX = ROOT / ".codex/agents"
@@ -91,6 +94,47 @@ def roles():
     return found, general
 
 
+def project_config():
+    return json.loads(PROJECT_CONFIG.read_text(encoding="utf-8")) if PROJECT_CONFIG.exists() else None
+
+
+def ownership_path():
+    return ROOT / ("agents/项目/团队生成记录.json" if PROJECT_CONFIG.exists() else "agents/公共/工具/团队/生成记录.json")
+
+
+def safe_output(path):
+    path = Path(path)
+    path.relative_to(ROOT)
+    for candidate in (path, *path.parents):
+        if candidate == ROOT:
+            break
+        if candidate.is_symlink() or (candidate.exists() and candidate.resolve() != candidate.absolute()):
+            raise ValueError("客户端输出经过链接，保留原内容：" + rel(path))
+    return path
+
+
+def content_digest(content):
+    return hashlib.sha256(content.encode("utf-8")).hexdigest()
+
+
+def ownership():
+    path = safe_output(ownership_path())
+    if not path.exists():
+        return {"schema_version": 1, "files": {}}
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if value.get("schema_version") != 1 or not isinstance(value.get("files"), dict):
+        raise ValueError("团队生成记录格式无效，保留原文件")
+    return value
+
+
+def atomic_write(path, content):
+    path = safe_output(path)
+    temporary = safe_output(path.with_name(path.name + ".tmp"))
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary.write_text(content, encoding="utf-8")
+    os.replace(temporary, path)
+
+
 def load_tool(name, relative):
     path = ROOT / relative
     if not path.exists():
@@ -103,6 +147,9 @@ def load_tool(name, relative):
 
 def available_skills():
     """Claude Code 能发现的技能名（小写）；找不到环境检查工具时返回 None，表示不过滤。"""
+    if PROJECT_CONFIG.exists():
+        # Availability is verified separately. Generation must never silently remove assigned skills.
+        return None
     module = load_tool("environment_check", "agents/公共/工具/环境检查/检查环境.py")
     deps = ROOT / "agents/公共/工具/环境检查/依赖.json"
     if module is None or not deps.exists():
@@ -112,6 +159,9 @@ def available_skills():
 
 def indexed_skills():
     """技能目录里登记的技能名（小写）；没有技能目录时返回 None，表示不核对。"""
+    catalog = ROOT / "agents/公共/技能来源.json"
+    if catalog.exists():
+        return {s.lower() for s in json.loads(catalog.read_text(encoding="utf-8"))["skills"]}
     module = load_tool("environment_check", "agents/公共/工具/环境检查/检查环境.py")
     if module is None or not SKILLS_INDEX.exists():
         return None
@@ -126,7 +176,7 @@ def pointer(role):
 
 def render_claude(role, available):
     meta = role["meta"]
-    skills = meta.get("skills", [])
+    skills = meta.get("preload_skills", meta.get("skills", []))
     preload = [s for s in skills if available is None or s.lower() in available]
     missing = [s for s in skills if s not in preload]
     lines = ["---", f"name: {meta['id']}", "description: " + json.dumps(f"{meta['name']}：{meta['description']}", ensure_ascii=False)]
@@ -142,6 +192,8 @@ def render_claude(role, available):
         lines += ["skills:"] + [f"  - {s}" for s in preload]
     lines.append("---")
     body = pointer(role)
+    if PROJECT_CONFIG.exists():
+        body += "\n本角色全部已分配技能与实际入口见 agents/项目/安装回执.json；未验证时先回报缺口。按任务读取所需技能，不将全部技能预加载。"
     if missing:
         body += "\n\n本机没找到这些技能：" + "、".join(missing) + "。按 `agents/SKILLS_INDEX.md` 的来源安装，或回报总负责人。"
     head = "\n".join(lines) + f"\n<!-- {MARK}，源文件 agents/role/{role['folder']}/agent.yaml；要改请改源文件后重新运行 -->\n\n"
@@ -160,11 +212,15 @@ def render_codex(role):
     body = pointer(role)
     if meta.get("skills"):
         body += "\n本角色用到的技能：" + "、".join(meta["skills"]) + "。用之前完整读它们的 SKILL.md。"
+    if PROJECT_CONFIG.exists():
+        body += "\n精确技能来源、版本、入口与验证状态见 agents/项目/安装回执.json；不按同名技能猜测来源。"
     lines.append("developer_instructions = '''")
     return "\n".join(lines) + "\n" + body + "\n'''\n"
 
 
 def parallel_limit():
+    if PROJECT_CONFIG.exists():
+        return int(project_config().get("autonomy", {}).get("max_parallel_agents", 3))
     text = ACCOUNT_CONFIG.read_text(encoding="utf-8") if ACCOUNT_CONFIG.exists() else ""
     match = re.search(r"^\s*max_parallel_agents:\s*(\d+)", text, re.M)
     return int(match.group(1)) if match else 3
@@ -172,13 +228,16 @@ def parallel_limit():
 
 def network_commands():
     """账号配置 autonomy.network_commands：没写时按 true，做内容时命令可以联网。"""
+    if PROJECT_CONFIG.exists():
+        return project_config().get("autonomy", {}).get("network_commands", True)
     text = ACCOUNT_CONFIG.read_text(encoding="utf-8") if ACCOUNT_CONFIG.exists() else ""
     match = re.search(r"^\s*network_commands:\s*(true|false)\b", text, re.M)
     return match is None or match.group(1) == "true"
 
 
 def render_codex_config():
-    text = (f"# {MARK}，取自 agents/账号/账号配置.yaml 的 autonomy（max_parallel_agents、network_commands）；要改请改源文件后重新运行\n"
+    source = "agents/项目/项目配置.yaml" if PROJECT_CONFIG.exists() else "agents/账号/账号配置.yaml"
+    text = (f"# {MARK}，取自 {source} 的 autonomy（max_parallel_agents、network_commands）；要改请改源文件后重新运行\n"
             f"[agents]\nmax_concurrent_threads_per_session = {parallel_limit()}\n")
     if network_commands():
         text += "\n[sandbox_workspace_write]\nnetwork_access = true\n"
@@ -190,27 +249,46 @@ def plan():
     found, problems = roles()
     problems += [p for role in found for p in role["problems"]]
     available, indexed = available_skills(), indexed_skills()
+    config = project_config()
+    client = config.get("project", {}).get("client", "both") if config else "both"
+    selected = set(config.get("team", {}).get("roles", [])) if config else None
     files, notes = {}, []
     for role in found:
+        if selected is not None and role["meta"].get("id") not in selected:
+            continue
+        preloads = role["meta"].get("preload_skills", [])
+        if not isinstance(preloads, list) or set(preloads) - set(role["meta"].get("skills", [])):
+            problems.append(f"agents/role/{role['folder']}/agent.yaml：preload_skills 必须是 skills 的子集")
         if indexed is not None:
             problems += [f"agents/role/{role['folder']}/agent.yaml：技能 {s} 没登记在 agents/SKILLS_INDEX.md"
                          for s in role["meta"].get("skills", []) if s.lower() not in indexed]
         if role["problems"] or role["meta"].get("main") is True:
             continue
-        files[CLAUDE / f"{role['meta']['id']}.md"] = render_claude(role, available)
-        files[CODEX / f"{role['meta']['id']}.toml"] = render_codex(role)
-    if CODEX_CONFIG.exists() and MARK not in CODEX_CONFIG.read_text(encoding="utf-8", errors="ignore"):
-        notes.append(f".codex/config.toml 是本人自己的设置，没有覆盖；需要时手动加 [agents] max_concurrent_threads_per_session = {parallel_limit()}")
-    else:
-        files[CODEX_CONFIG] = render_codex_config()
+        if client in {"claude", "both"}:
+            files[CLAUDE / f"{role['meta']['id']}.md"] = render_claude(role, available)
+        if client in {"codex", "both"}:
+            files[CODEX / f"{role['meta']['id']}.toml"] = render_codex(role)
+    if client in {"codex", "both"}:
+        safe_output(CODEX_CONFIG)
+        if CODEX_CONFIG.exists() and MARK not in CODEX_CONFIG.read_text(encoding="utf-8", errors="ignore"):
+            notes.append(f".codex/config.toml 是本人自己的设置，没有覆盖；需要时手动加 [agents] max_concurrent_threads_per_session = {parallel_limit()}")
+        else:
+            files[CODEX_CONFIG] = render_codex_config()
+    for path in files:
+        safe_output(path)
     return files, problems, len(found), notes
 
 
 def stale(files):
     """生成目录里由本脚本生成、但已没有对应智能体的文件。"""
     extra = []
-    for folder in (CLAUDE, CODEX):
+    config = project_config()
+    client = config.get("project", {}).get("client", "both") if config else "both"
+    folders = [folder for name, folder in (("claude", CLAUDE), ("codex", CODEX)) if client in {name, "both"}]
+    for folder in folders:
+        safe_output(folder)
         for path in sorted(folder.glob("*")) if folder.exists() else []:
+            safe_output(path)
             if path not in files and path.is_file() and MARK in path.read_text(encoding="utf-8", errors="ignore"):
                 extra.append(path)
     return extra
@@ -229,6 +307,9 @@ def check():
 
 
 def main():
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true", help="只检查是否最新，不写文件")
     args = parser.parse_args()
@@ -239,10 +320,23 @@ def main():
             print("  ✗ " + item)
         return 1 if problems else 0
     files, problems, count, notes = plan()
+    owned = ownership()
     for path, content in files.items():
-        path.parent.mkdir(parents=True, exist_ok=True)
+        safe_output(path)
+        safe_output(path.with_name(path.name + ".tmp"))
+        if path.exists():
+            current = path.read_text(encoding="utf-8")
+            if current != content and content_digest(current) != owned["files"].get(rel(path)):
+                problems.append(f"{rel(path)} 已有用户修改或来源未登记，保留原文件；请在配置卡中合并修改后处理此冲突")
+    if problems:
+        for item in problems:
+            print("  ✗ " + item)
+        return 1
+    for path, content in files.items():
         if not path.exists() or path.read_text(encoding="utf-8") != content:
-            path.write_text(content, encoding="utf-8")
+            atomic_write(path, content)
+        owned["files"][rel(path)] = content_digest(content)
+        atomic_write(ownership_path(), json.dumps(owned, ensure_ascii=False, indent=2) + "\n")
     extra = stale(files)
     claude = sum(p.parent == CLAUDE for p in files)
     codex = sum(p.parent == CODEX for p in files)
@@ -255,4 +349,8 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except (ValueError, OSError, KeyError) as exc:
+        print(f"停止：{exc}", file=sys.stderr)
+        sys.exit(1)

@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><title>AI-SMA v2 小样审片</title>
+<style>body{margin:30px;background:#192520;color:#eee8db;font:16px system-ui}main{max-width:1100px;margin:auto}video{display:block;background:#111;width:100%;height:65vh;object-fit:contain}button{padding:12px;margin:8px 8px 8px 0;border:1px solid #a5ac93;background:transparent;color:inherit;cursor:pointer}button:focus{outline:3px solid #cc9c4a}pre{white-space:pre-wrap}p{line-height:1.6;color:#bcc5b4}</style>
+<main><h1>AI-SMA v2 · 本机验证样片</h1><p>科普与剧情的系统配音仅供本机内部测试。视频播放器播放检查、画面观察和实际试听分别记录。</p>
+<div id="buttons"></div><video id="player" controls playsinline></video><pre id="status">选择一个样片。</pre></main>
+<script>
+const films={science:'月相 · 60秒',ad:'FIELD 横屏 · 15秒',ad_vertical:'FIELD 竖屏 · 15秒',drama1:'车票 第一段 · 30秒',drama2:'车票 第二段 · 30秒',mv:'折光 MV · 30秒'};
+const player=document.querySelector('video');const statusView=document.querySelector('#status');const records=[];let current=null,frames=0;
+for(const [id,label]of Object.entries(films)){const b=document.createElement('button');b.textContent=label;b.onclick=()=>{player.src='outputs/'+id+'.mp4';current=id;frames=0;player.play()};buttons.append(b)}
+function update(){statusView.textContent=JSON.stringify({film:current,currentTime:player.currentTime,duration:player.duration,paused:player.paused,ended:player.ended,decodedFrames:frames,muted:player.muted,error:player.error?.message},null,2)}
+function tick(){frames++;update();player.requestVideoFrameCallback(tick)}
+if(player.requestVideoFrameCallback)player.requestVideoFrameCallback(tick);
+player.addEventListener('ended',()=>{records.push({film:current,ended:true,time:player.currentTime,frames});update()});
+window.reviewRecords=records;
+</script></html>

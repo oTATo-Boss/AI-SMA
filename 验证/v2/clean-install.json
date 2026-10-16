@@ -1,0 +1,183 @@
+{
+  "scope": "真实固定公开提交→隔离用户目录完整实体安装→逐文件及Claude入口校验；未改变真实HOME，不代表新操作系统或客户端会话验证",
+  "sources": {
+    "my-social": {
+      "repository": "https://github.com/oTATo-Boss/my-skills",
+      "ref": "a1c222490297dff1b7eb21f614df72fd3b3607fe"
+    },
+    "direct-video": {
+      "repository": "https://github.com/oTATo-Boss/my-skills",
+      "ref": "a1c222490297dff1b7eb21f614df72fd3b3607fe"
+    },
+    "ai-video-prompt": {
+      "repository": "https://github.com/oTATo-Boss/my-skills",
+      "ref": "a1c222490297dff1b7eb21f614df72fd3b3607fe"
+    },
+    "rh-minimax-h3": {
+      "repository": "https://github.com/oTATo-Boss/my-skills",
+      "ref": "a1c222490297dff1b7eb21f614df72fd3b3607fe"
+    },
+    "skill-library-management": {
+      "repository": "https://github.com/oTATo-Boss/my-skills",
+      "ref": "a1c222490297dff1b7eb21f614df72fd3b3607fe"
+    },
+    "creative-director": {
+      "repository": "https://github.com/smixs/creative-director-skill",
+      "ref": "ac06eb255371da35d1db0a146dbfcca8c8857543"
+    },
+    "storytelling": {
+      "repository": "https://github.com/yaxeen/storytelling-skills",
+      "ref": "24ef3c1e3d7fde66cc5f1c5953cd6c1d7afc0b4f"
+    },
+    "huashu-art-motion": {
+      "repository": "https://github.com/alchaincyf/huashu-art-motion",
+      "ref": "2571ee0a9a0467c4d99e935ea9e0fadda19210b0"
+    },
+    "hyperframes": {
+      "repository": "https://github.com/heygen-com/hyperframes",
+      "ref": "ba08acb1f506b06757bd77a7e7f491d412647fbd"
+    },
+    "remotion": {
+      "repository": "https://github.com/remotion-dev/skills",
+      "ref": "32b241b97f4e0e4ab61fe9a41b05e6e64503f8c5"
+    },
+    "video-shotcraft": {
+      "repository": "https://github.com/Vincentwei1021/video-shotcraft",
+      "ref": "5ddbf521038b0a7accfb6dc1e0a9eb29c67277ab"
+    },
+    "ffmpeg-skill": {
+      "repository": "https://github.com/kajisho5/ffmpeg-skill",
+      "ref": "1f7e7e3ad1c30cb39fe9032abb5b39cca8e63376"
+    },
+    "voicestudio": {
+      "repository": "https://github.com/debpalash/VoiceStudio",
+      "ref": "4df5033e5a1a92e22936fb4d7d2d39e03cf10a91"
+    },
+    "auto-editor-transcribe": {
+      "repository": "https://github.com/WyattBlue/auto-editor",
+      "ref": "4928ad4201126973ca38e5b09c245b9e75219cf0"
+    },
+    "gpt-image-2-style-library": {
+      "repository": "https://github.com/freestylefly/awesome-gpt-image-2",
+      "ref": "63e6176fa01be51c000108dacd72716d3e46784b"
+    },
+    "social-research": {
+      "repository": "https://github.com/ScrapeCreators/social-media-research-skills",
+      "ref": "64ba7b4dea71e130d2712ffb6c1c1024b3b7c4b2"
+    },
+    "humanizer-zh": {
+      "repository": "https://github.com/op7418/Humanizer-zh",
+      "ref": "f4518a8eab97b8bfebc66a89d34320a89bef6930"
+    },
+    "guizang-social-card-skill": {
+      "repository": "https://github.com/op7418/guizang-social-card-skill",
+      "ref": "cf4b810fac1c73fb65a2bb31d8c9278d82cbc4c5"
+    },
+    "threejs-choose-skills": {
+      "repository": "https://github.com/linegel/threejs-complete-set-of-skill",
+      "ref": "e3c9563a070b214aa73b84d1ea6026c9ec4db6cb"
+    },
+    "threejs-visual-validation": {
+      "repository": "https://github.com/linegel/threejs-complete-set-of-skill",
+      "ref": "e3c9563a070b214aa73b84d1ea6026c9ec4db6cb"
+    },
+    "threejs-core": {
+      "repository": "https://github.com/cesartevisual/threejs-skills",
+      "ref": "84f9bcb4bea1f7a28d57fe7f0af78f7f9c3dc467"
+    },
+    "blender": {
+      "repository": "https://github.com/RobLe3/cc-blender-skill",
+      "ref": "a2634b588e80265e796aa53f8ab178d75105c2af"
+    },
+    "video-project-orchestration": {
+      "repository": "https://github.com/oTATo-Boss/my-skills",
+      "ref": "f4aba90fa8dc83ffaaed6c07952f52bb962f213c"
+    },
+    "screenwriting": {
+      "repository": "https://github.com/oTATo-Boss/my-skills",
+      "ref": "f4aba90fa8dc83ffaaed6c07952f52bb962f213c"
+    },
+    "production-continuity": {
+      "repository": "https://github.com/oTATo-Boss/my-skills",
+      "ref": "f4aba90fa8dc83ffaaed6c07952f52bb962f213c"
+    },
+    "video-production-pipeline": {
+      "repository": "https://github.com/oTATo-Boss/my-skills",
+      "ref": "f4aba90fa8dc83ffaaed6c07952f52bb962f213c"
+    },
+    "codex-imagegen": {
+      "repository": "https://github.com/oTATo-Boss/my-skills",
+      "ref": "f4aba90fa8dc83ffaaed6c07952f52bb962f213c"
+    },
+    "animejs-creative-motion": {
+      "repository": "https://github.com/oTATo-Boss/my-skills",
+      "ref": "f4aba90fa8dc83ffaaed6c07952f52bb962f213c"
+    },
+    "animejs-workflows": {
+      "repository": "https://github.com/oTATo-Boss/my-skills",
+      "ref": "f4aba90fa8dc83ffaaed6c07952f52bb962f213c"
+    },
+    "animejs-example-library": {
+      "repository": "https://github.com/oTATo-Boss/my-skills",
+      "ref": "f4aba90fa8dc83ffaaed6c07952f52bb962f213c"
+    }
+  },
+  "profiles": {
+    "series": {
+      "skills": 28,
+      "files_ready": true,
+      "errors": [],
+      "issues": {}
+    },
+    "long-form": {
+      "skills": 25,
+      "files_ready": true,
+      "errors": [],
+      "issues": {}
+    },
+    "film": {
+      "skills": 21,
+      "files_ready": true,
+      "errors": [],
+      "issues": {}
+    },
+    "launch": {
+      "skills": 26,
+      "files_ready": true,
+      "errors": [],
+      "issues": {}
+    },
+    "motion-design": {
+      "skills": 25,
+      "files_ready": true,
+      "errors": [],
+      "issues": {}
+    },
+    "music-video": {
+      "skills": 26,
+      "files_ready": true,
+      "errors": [],
+      "issues": {}
+    },
+    "science": {
+      "skills": 25,
+      "files_ready": true,
+      "errors": [],
+      "issues": {}
+    },
+    "advertising": {
+      "skills": 24,
+      "files_ready": true,
+      "errors": [],
+      "issues": {}
+    },
+    "social-account": {
+      "skills": 25,
+      "files_ready": true,
+      "errors": [],
+      "issues": {}
+    }
+  },
+  "runtime_tools": "not part of isolated file-install test",
+  "client_discovery": "not_verified"
+}
