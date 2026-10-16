@@ -43,6 +43,9 @@ def load_module(path, name):
 def registry():
     return read_json(ROOT / '模板/项目类型.json'), read_json(ROOT / '模板/角色.json')['roles']
 
+def template_version():
+    return read_json(ROOT / '发布.json')['version']
+
 def alias(value, entries):
     for key, item in entries.items():
         if value in [key, item['name'], *item.get('aliases', [])]:
@@ -103,6 +106,7 @@ def select_workflow(workflow, selected, route_owners, disabled):
 
 def build_plan(args):
     definitions, roles = registry()
+    roles.update(getattr(args, 'custom_roles', {}))
     profile_id = alias(args.profile, definitions['profiles'])
     profile = copy.deepcopy(definitions['profiles'][profile_id])
     variant = getattr(args, 'variant', None)
@@ -149,6 +153,10 @@ def build_plan(args):
         if flag:
             selected.discard(role)
             disabled.add(role)
+    inherited = sorted(selected)
+    selected.update(getattr(args, 'role_include', []) or [])
+    disabled.update(getattr(args, 'role_exclude', []) or [])
+    selected.difference_update(disabled)
     phases = profile['workflow']['phases']
     if 'subtitle-editor' in selected and not any('subtitle-editor' in p.get('owners', []) for p in phases):
         index = next(i for i, p in enumerate(phases) if p['id'] == 'review')
@@ -165,7 +173,7 @@ def build_plan(args):
     if args.client in {'claude', 'both'} and 'asset-designer' in selected:
         skills.append('codex-imagegen')
     for role in sorted(selected):
-        skills.extend(card_skills(roles[role]['folder']))
+        skills.extend(roles[role]['skills'] if roles[role].get('custom') else card_skills(roles[role]['folder']))
     skills = skill_closure(skills, catalog)
     for name in skills:
         runtimes.update(catalog['skills'][name].get('runtimes', []))
@@ -184,7 +192,9 @@ def build_plan(args):
     delivery['required_files'] = list(dict.fromkeys(required_files))
     if args.no_sound:
         video['audio_codec'] = None
-    return dict(schema_version=2, template_version='2.0.0', profile=profile_id,
+    return dict(schema_version=2, template_version=template_version(), profile=profile_id,
+        selection=dict(inherited_roles=inherited, role_include=getattr(args, 'role_include', []) or [],
+                       role_exclude=getattr(args, 'role_exclude', []) or [], variant=variant),
         name=args.name or Path(args.dest).expanduser().name.lstrip('@'), form=form, routes=routes,
         roles=sorted(selected), skills=skills, runtimes=sorted(runtimes), client=args.client,
         execution_mode=args.execution_mode, platforms=[{'name': x} for x in args.platform] if args.platform else profile.get('platforms', []),
@@ -216,8 +226,9 @@ def safe_target(dest, relative):
 
 def project_config(plan):
     return dict(schema_version=2,
+        selection=plan.get('selection', {}), updates=dict(mode='auto', interval_hours=24, pin=None),
         project=dict(name=plan['name'], profile=plan['profile'], form=plan['form'], stage='开工中', language='zh-CN',
-            timezone='Asia/Shanghai', client=plan['client'], browser_profile=plan['browser_profile'],
+            timezone='Asia/Shanghai', client=plan['client'], browser_profile=plan['browser_profile'], hook_shell=plan.get('hook_shell'),
             goal='待填写：项目目标', audience='待填写：目标观众'),
         content=dict(production_routes=plan['routes']), platforms=plan['platforms'], video=plan['video'], delivery=plan['delivery'],
         autonomy=dict(max_parallel_agents=3, rework_rounds_max=2, network_commands=True),
@@ -279,6 +290,8 @@ def assemble(dest, plan, resume=False, assemble_only=False):
     if dest == ROOT or ROOT in dest.parents:
         raise ValueError('用户项目不能建在模板仓库内')
     if resume:
+        if safe_target(dest, '.ai-sma-deploy/update/state.json').exists():
+            raise ValueError('项目已接入更新管理；首次部署基线已封存，请使用 更新项目.py status/resume 或 新建项目.py --check')
         if not state_path.is_file():
             raise ValueError('没有本工具的部署记录，不能恢复')
         state = read_json(state_path)
@@ -345,11 +358,22 @@ def assemble(dest, plan, resume=False, assemble_only=False):
         skills_and_tools='not_verified' if assemble_only else ('incomplete' if environment else 'verified'),
         client_discovery='not_verified', services_and_models='not_verified', runtime_samples='not_verified')
     write_json(state_path, state, dest)
+    if not assemble_only and structural == 0:
+        updater_path = dest / 'agents/公共/工具/更新'
+        sys.path.insert(0, str(updater_path))
+        try:
+            from sma_update import Updater
+            Updater(dest).adopt()
+        finally:
+            sys.path.remove(str(updater_path))
     print(f"项目已装配：{dest}；状态：{state['phase']}")
     print('下一步：部署智能体读取 agents/公共/技能安装.md，安装并验证装配清单要求的技能及工具；本脚本未执行安装。')
     return 1 if structural else (2 if environment else 0)
 
 def main(argv=None):
+    if sys.version_info < (3, 11):
+        print('AI-SMA v2.1 需要 Python 3.11 或更新版本；请由部署智能体选择实际可用解释器。', file=sys.stderr)
+        return 2
     for stream in (sys.stdout, sys.stderr):
         if hasattr(stream, 'reconfigure'):
             stream.reconfigure(encoding='utf-8')
@@ -365,6 +389,8 @@ def main(argv=None):
     parser.add_argument('--execution-mode', choices=['auto', 'multi', 'single'], default='auto')
     parser.add_argument('--browser-profile')
     parser.add_argument('--hook-shell', choices=['posix', 'powershell', 'cmd'], help='实际客户端运行钩子的 shell；默认按操作系统选择')
+    parser.add_argument('--role-include', action='append', default=[])
+    parser.add_argument('--role-exclude', action='append', default=[])
     for flag in ('voice', 'subtitles', 'no-voice', 'no-sound', 'no-subtitles', 'resume', 'check', 'plan', 'list', 'assemble-only'):
         parser.add_argument('--' + flag, action='store_true')
     args = parser.parse_args(argv)

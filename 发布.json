@@ -1,0 +1,11 @@
+{
+  "version": "2.1.0",
+  "update_protocol": 1,
+  "min_python": "3.11",
+  "repository": "oTATo-Boss/AI-SMA",
+  "upgrade_from": ["2.0.0", "2.1.0"],
+  "breaking": false,
+  "summary": "v2 项目的针对性更新、定制保留、任务协调与共享技能兼容验证",
+  "migrations": [],
+  "known_limits": ["v1 项目需要独立迁移", "共享技能由智能体按公开说明安装", "客户端发现与登录须单独实测"]
+}

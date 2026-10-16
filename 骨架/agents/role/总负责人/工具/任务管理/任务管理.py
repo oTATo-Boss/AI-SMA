@@ -7,6 +7,7 @@ import importlib.util
 import json
 import os
 import re
+import sys
 import tempfile
 import time
 import uuid
@@ -187,8 +188,9 @@ class Workspace:
             return str(exc)
         return None
 
-    def package(self, value, kind, new_name=None):
-        if kind not in set(self.packages) | {"prompt", "other"}:
+    def package(self, value, kind, new_name=None, rules=None):
+        packages = self.packages if rules is None else rules
+        if kind not in set(packages) | {"prompt", "other"}:
             raise TaskError("未知交付包类型")
         folder = self.path(value, exists=True)
         if not folder.is_dir():
@@ -198,7 +200,7 @@ class Workspace:
         entries = sorted(folder.iterdir())
         if not entries:
             raise TaskError("交付包为空")
-        package_rule = self.packages.get(kind)
+        package_rule = packages.get(kind)
         expected = package_rule if isinstance(package_rule, list) else None
         if expected is not None and {p.name for p in entries} != set(expected):
             raise TaskError(f"{kind} 包应只含：" + "、".join(expected))
@@ -398,6 +400,24 @@ class Workspace:
         if errors:
             return errors, warnings
         workflow = self.definition["workflows"].get(task["workflow"])
+        historical_packages = self.packages
+        bindings_path = self.root / '.ai-sma-deploy/update/task-contexts.json'
+        if bindings_path.exists():
+            context_id = load_json(bindings_path).get(task.get('id'))
+            if context_id and re.fullmatch(r'[0-9a-f]{64}', context_id):
+                context_path = self.root / '.ai-sma-deploy/update/contexts' / (context_id + '.json')
+                if context_path.exists():
+                    historic_definition = load_json(context_path).get('workflow', {})
+                    historical_packages = historic_definition.get('packages', self.packages)
+                    historical = historic_definition.get('workflows', {}).get(task['workflow'])
+                    if historical:
+                        workflow = copy.deepcopy(historical)
+                        aliases = {p['id']: p['name'] for p in workflow['phases'] if isinstance(p, dict)}
+                        workflow['phases'] = [p['name'] if isinstance(p, dict) else p for p in workflow['phases']]
+                        workflow.setdefault('gates', [])
+                        workflow.setdefault('required_checks', [])
+                        for rule in workflow['gates'] + workflow['required_checks']:
+                            rule['before_phase'] = aliases.get(rule['before_phase'], rule['before_phase'])
         if not workflow:
             return ["未知流程"], warnings
         if task["phase"] not in workflow["phases"]:
@@ -486,7 +506,7 @@ class Workspace:
             try:
                 if not isinstance(delivery, dict) or not {"path", "kind", "files", "source"}.issubset(delivery):
                     raise TaskError("交付记录不完整")
-                fresh = self.package(delivery["path"], delivery["kind"])
+                fresh = self.package(delivery["path"], delivery["kind"], rules=historical_packages)
                 if fresh["files"] != delivery["files"]:
                     errors.append("交付文件与登记版本不一致：" + delivery["path"])
                 if not delivery["source"]:
@@ -603,7 +623,29 @@ class Workspace:
             finally:
                 release_lock(stream)
 
+    @contextmanager
+    def update_guard(self):
+        if not (self.root / '.ai-sma-deploy/update/state.json').exists():
+            yield
+            return
+        location = str(self.root / 'agents/公共/工具/更新')
+        if location not in sys.path:
+            sys.path.insert(0, location)
+        from sma_coordination import coordinated, admission, register
+        from sma_common import UpdateError
+        try:
+            with coordinated(self.root):
+                admission(self.root)
+                yield
+                register(self.root)
+        except UpdateError as exc:
+            raise TaskError(str(exc)) from exc
+
     def mutate(self, value, revision, action, change, wait=0, tolerate_existing=False):
+        with self.update_guard():
+            return self._mutate(value, revision, action, change, wait, tolerate_existing)
+
+    def _mutate(self, value, revision, action, change, wait=0, tolerate_existing=False):
         """revision 为 None 时不核对版本；tolerate_existing 时任务原有的问题不挡住这次写入（只用于 job 这种只追加的登记）。"""
         path = self.task_path(value)
         with self.locked(path, wait):
@@ -612,6 +654,11 @@ class Workspace:
                 raise TaskError("任务版本冲突，重新读取当前 revision 后再写")
             task = copy.deepcopy(original)
             change(task)
+            control = self.root / '.ai-sma-deploy/update'
+            if (control / 'state.json').exists() and (action == 'job-intent' or (action == 'update' and task.get('status') == '进行中')):
+                execution_state = load_json(control / 'execution.json') if (control / 'execution.json').exists() else {}
+                if not any(item.get('task') == task['id'] for item in execution_state.get('leases', {}).values()):
+                    raise TaskError('先为此任务登记 begin 执行者，再开始制作或提交外部任务')
             task["revision"] += 1
             task["updated_at"] = now()
             errors, warnings = self.validate(task)
@@ -635,7 +682,11 @@ class Workspace:
             self.overview()
             return task, warnings
 
-    def new(self, title, workflow, goal, done_when, owner, parent_id=None, depends_on=None, unit=None, review_mode=None):
+    def new(self, *args, **kwargs):
+        with self.update_guard():
+            return self._new(*args, **kwargs)
+
+    def _new(self, title, workflow, goal, done_when, owner, parent_id=None, depends_on=None, unit=None, review_mode=None):
         if not portable_name(title):
             raise TaskError("任务名称不能为空或包含路径")
         definition = self.definition["workflows"][workflow]
@@ -663,6 +714,9 @@ class Workspace:
             raise TaskError("任务 ID 冲突，稍后创建")
         directory.mkdir()
         self.atomic(directory / "task.json", json.dumps(task, ensure_ascii=False, indent=2) + "\n")
+        if (self.root / '.ai-sma-deploy/update/state.json').exists():
+            from sma_coordination import bind_context
+            bind_context(self.root, task['id'])
         self.overview()
         return task, self.relative(directory / "task.json")
 
@@ -775,6 +829,10 @@ def parser():
     recover.add_argument("--submission-key")
     sub.add_parser("sync", help="生成任务总览")
     sub.add_parser("validate-all", help="检查所有当前任务")
+    for action in ('begin', 'checkpoint', 'end'):
+        run = sub.add_parser(action, help='登记执行版本及安全检查点')
+        run.add_argument('task')
+        run.add_argument('--owner', required=True)
     package = sub.add_parser("check-package", help="只读检查完整包及新名称冲突；不复制交付")
     package.add_argument("path")
     package.add_argument("--kind", choices=kinds, required=True)
@@ -786,6 +844,11 @@ def main():
     args = parser().parse_args()
     try:
         workspace = Workspace(Path(__file__).resolve().parents[5])
+        if args.command in {'begin', 'checkpoint', 'end'}:
+            sys.path.insert(0, str(workspace.root / 'agents/公共/工具/更新'))
+            from sma_coordination import execution
+            print(json.dumps(execution(workspace.root, args.command, args.task, args.owner), ensure_ascii=False))
+            return 0
         if args.command == "new":
             if bool(args.unit_type) != bool(args.unit_id):
                 raise TaskError("unit-type 与 unit-id 要一起填写")

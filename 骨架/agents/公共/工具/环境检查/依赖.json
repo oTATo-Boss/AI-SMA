@@ -5,7 +5,7 @@
   "skill_roots": ["~/.agents/skills"],
   "claude_roots": ["~/.claude/skills"],
   "tools": [
-    {"name":"python3","need":"必需","for":"项目状态、验证与交付工具","version":["--version"],"min":"3.9","install":{"Darwin":"python.org 官方安装包，或已有 Homebrew 时 brew install python","Windows":"python.org 官方 Windows 安装包，或已有 winget 时 winget install Python.Python.3.12；检查 py -3 与 python","Linux":"按实际发行版安装 python3；Debian/Ubuntu: apt install python3 python3-venv，Fedora: dnf install python3"}},
+    {"name":"python3","need":"必需","for":"项目状态、验证与交付工具","version":["--version"],"min":"3.11","install":{"Darwin":"python.org 官方安装包，或已有 Homebrew 时 brew install python","Windows":"python.org 官方 Windows 安装包，或已有 winget 时 winget install Python.Python.3.12；检查 py -3 与 python","Linux":"按实际发行版安装 python3；Debian/Ubuntu: apt install python3 python3-venv，Fedora: dnf install python3"}},
     {"name":"git","need":"必需","for":"获取固定提交的来源包","version":["--version"],"install":{"Darwin":"已有 Homebrew 时 brew install git，或系统开发工具提供的 Git","Windows":"git-scm.com 官方安装包，或 winget install Git.Git","Linux":"按发行版使用 apt/dnf/pacman 安装 git"}},
     {"name":"ffmpeg","need":"按路线","for":"剪辑、音频、转码与抽帧","version":["-version"],"install":{"Darwin":"brew install ffmpeg","Windows":"FFmpeg 官方下载页列出的 Windows 构建，或 winget install Gyan.FFmpeg；重新检测 PATH","Linux":"发行版包管理器安装 ffmpeg，检查所需编码器和滤镜"}},
     {"name":"ffprobe","need":"按路线","for":"媒体时长、尺寸、编码与音轨检查","version":["-version"],"install":"随 FFmpeg 安装；必须分别确认 ffmpeg 与 ffprobe 均可执行"},

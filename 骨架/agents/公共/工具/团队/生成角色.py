@@ -27,7 +27,7 @@ KEY = re.compile(r"[a-z][a-z0-9_]*")
 
 
 def rel(path):
-    return str(Path(path).relative_to(ROOT))
+    return Path(path).relative_to(ROOT).as_posix()
 
 
 def parse_value(raw):
@@ -124,6 +124,7 @@ def ownership():
     value = json.loads(path.read_text(encoding="utf-8"))
     if value.get("schema_version") != 1 or not isinstance(value.get("files"), dict):
         raise ValueError("团队生成记录格式无效，保留原文件")
+    value['files'] = {key.replace('\\', '/'): digest for key, digest in value['files'].items()}
     return value
 
 
@@ -171,6 +172,7 @@ def indexed_skills():
 def pointer(role):
     meta, base = role["meta"], f"agents/role/{role['folder']}"
     return (f"你是{meta['name']}（{meta['id']}）。第一步：完整读 `{base}/AGENT.md` 和 `{base}/记忆/经验.md`，按说明书工作。"
+            f"随后读取存在的 `agents/项目/定制/项目规则.md` 与 `agents/项目/定制/角色/{meta['id']}.md`；本人要求优先。"
             "项目红线以根目录 AGENTS.md 为准；结果交回总负责人，不直接找本人。")
 
 
@@ -241,6 +243,26 @@ def render_codex_config():
             f"[agents]\nmax_concurrent_threads_per_session = {parallel_limit()}\n")
     if network_commands():
         text += "\n[sandbox_workspace_write]\nnetwork_access = true\n"
+    if CODEX_CONFIG.exists() and MARK in CODEX_CONFIG.read_text(encoding='utf-8'):
+        # Retain unrelated user settings and comments; only two declared fields are managed.
+        existing = CODEX_CONFIG.read_text(encoding='utf-8')
+        import tomllib
+        tomllib.loads(existing)
+        for section, key, value in [('agents', 'max_concurrent_threads_per_session', str(parallel_limit())),
+                                    ('sandbox_workspace_write', 'network_access', 'true' if network_commands() else None)]:
+            pattern = re.compile(r'(?ms)^\[' + re.escape(section) + r'\][^\n]*\n(.*?)(?=^\[|\Z)')
+            match = pattern.search(existing)
+            if match:
+                body = match.group(1)
+                field = re.compile(r'(?m)^' + re.escape(key) + r'\s*=.*$')
+                if value is None:
+                    body = field.sub('', body)
+                else:
+                    body = field.sub(key + ' = ' + value, body) if field.search(body) else body + key + ' = ' + value + '\n'
+                existing = existing[:match.start(1)] + body + existing[match.end(1):]
+            elif value is not None:
+                existing += f'\n[{section}]\n{key} = {value}\n'
+        text = existing
     return text
 
 

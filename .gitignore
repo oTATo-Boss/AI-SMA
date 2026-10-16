@@ -6,3 +6,5 @@ __pycache__/
 验证/v2/**/.cache/
 .fixtures/
 .omc/
+dist/
+验证/v2.1/outputs/
