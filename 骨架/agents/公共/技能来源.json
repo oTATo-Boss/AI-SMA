@@ -15464,7 +15464,7 @@
     },
     "video-project-orchestration": {
       "repository": "https://github.com/oTATo-Boss/my-skills",
-      "ref": "f4aba90fa8dc83ffaaed6c07952f52bb962f213c",
+      "ref": "90508b56d32d0853e669f267d96e3f72b9740478",
       "package_root": "skills/video/production/video-project-orchestration",
       "license": "MIT",
       "license_files": {},
@@ -15483,7 +15483,7 @@
           "mode": "100644"
         },
         "SOURCE.md": {
-          "blob": "28aad97ff297e98ee2129e657482a40db4b0ec07",
+          "blob": "7cfa5495222d921a29b1347496632cf763aadf93",
           "mode": "100644"
         },
         "references/handoffs.md": {
@@ -15494,7 +15494,7 @@
     },
     "screenwriting": {
       "repository": "https://github.com/oTATo-Boss/my-skills",
-      "ref": "f4aba90fa8dc83ffaaed6c07952f52bb962f213c",
+      "ref": "90508b56d32d0853e669f267d96e3f72b9740478",
       "package_root": "skills/video/creative/screenwriting",
       "license": "MIT",
       "license_files": {},
@@ -15513,7 +15513,7 @@
           "mode": "100644"
         },
         "SOURCE.md": {
-          "blob": "0de1163c4777d87778c54caa927a903f6fb7bc8a",
+          "blob": "f6162db1278d629523e69dfec6586c3502a82150",
           "mode": "100644"
         },
         "references/formats.md": {
@@ -15528,7 +15528,7 @@
     },
     "production-continuity": {
       "repository": "https://github.com/oTATo-Boss/my-skills",
-      "ref": "f4aba90fa8dc83ffaaed6c07952f52bb962f213c",
+      "ref": "90508b56d32d0853e669f267d96e3f72b9740478",
       "package_root": "skills/video/production/production-continuity",
       "license": "MIT",
       "license_files": {},
@@ -15547,7 +15547,7 @@
           "mode": "100644"
         },
         "SOURCE.md": {
-          "blob": "9779a9d53c2e77d76c9a7537b0ac2bc37e49ef7d",
+          "blob": "f56c2ae3db9cdc7446162d8ecf002f73f6e8874a",
           "mode": "100644"
         },
         "references/ledger.md": {
@@ -15558,7 +15558,7 @@
     },
     "video-production-pipeline": {
       "repository": "https://github.com/oTATo-Boss/my-skills",
-      "ref": "f4aba90fa8dc83ffaaed6c07952f52bb962f213c",
+      "ref": "90508b56d32d0853e669f267d96e3f72b9740478",
       "package_root": "skills/video/production/video-production-pipeline",
       "license": "MIT",
       "license_files": {},
@@ -15577,7 +15577,7 @@
           "mode": "100644"
         },
         "SOURCE.md": {
-          "blob": "53425ac87e8de15357d66faa4d14e2540c1bc072",
+          "blob": "71059175001349e6cd62dfdbce46e9c6ac739c56",
           "mode": "100644"
         },
         "references/manifest.md": {
@@ -15600,7 +15600,7 @@
     },
     "codex-imagegen": {
       "repository": "https://github.com/oTATo-Boss/my-skills",
-      "ref": "f4aba90fa8dc83ffaaed6c07952f52bb962f213c",
+      "ref": "e19ccc4b31a53f14ecc8d3623eb4c6886927ed83",
       "package_root": "skills/image/codex-imagegen",
       "license": "MIT",
       "license_files": {},
@@ -15619,7 +15619,7 @@
           "mode": "100644"
         },
         "SOURCE.md": {
-          "blob": "905ff21c9ac7027ba0682713207c5a8d871259fb",
+          "blob": "1fd360839fdff3f01762d73f3716f4ef6627efd0",
           "mode": "100644"
         },
         "scripts/gen-image.sh": {
@@ -15634,7 +15634,7 @@
     },
     "animejs-creative-motion": {
       "repository": "https://github.com/oTATo-Boss/my-skills",
-      "ref": "f4aba90fa8dc83ffaaed6c07952f52bb962f213c",
+      "ref": "90508b56d32d0853e669f267d96e3f72b9740478",
       "package_root": "skills/animejs/animejs-creative-motion",
       "license": "MIT",
       "license_files": {},
@@ -15649,14 +15649,14 @@
           "mode": "100644"
         },
         "SOURCE.md": {
-          "blob": "6ef6a9fd5fd15bdde8f3c81749455f90b13dc138",
+          "blob": "3819fbff7121e16cf0bc908c81d11ddf51e9d8f2",
           "mode": "100644"
         }
       }
     },
     "animejs-workflows": {
       "repository": "https://github.com/oTATo-Boss/my-skills",
-      "ref": "f4aba90fa8dc83ffaaed6c07952f52bb962f213c",
+      "ref": "90508b56d32d0853e669f267d96e3f72b9740478",
       "package_root": "skills/animejs/animejs-workflows",
       "license": "MIT",
       "license_files": {},
@@ -15671,14 +15671,14 @@
           "mode": "100644"
         },
         "SOURCE.md": {
-          "blob": "8c49864c5b26ac2c03c7d1cbcc21202a2abda7d8",
+          "blob": "765544b1165bf62779c1911b59405f8b76bb27b9",
           "mode": "100644"
         }
       }
     },
     "animejs-example-library": {
       "repository": "https://github.com/oTATo-Boss/my-skills",
-      "ref": "f4aba90fa8dc83ffaaed6c07952f52bb962f213c",
+      "ref": "90508b56d32d0853e669f267d96e3f72b9740478",
       "package_root": "skills/animejs/animejs-example-library",
       "license": "MIT",
       "license_files": {},
@@ -15693,7 +15693,7 @@
           "mode": "100644"
         },
         "SOURCE.md": {
-          "blob": "ab220add7f97a8c81d62b898772998627832d499",
+          "blob": "6727a8004099cf5bffd8d02883137d75d24ba115",
           "mode": "100644"
         },
         "assets/upstream/LICENSE.md": {
@@ -17356,8 +17356,7 @@
         "package": "full_git_blob_manifest",
         "client": "realpath_identity_then_live_client_check"
       },
-      "status": "ready",
-      "note": "本地改编，待my-skills发布完整包与上游来源"
+      "status": "ready"
     },
     "animejs-workflows": {
       "name": "animejs-workflows",
@@ -17376,8 +17375,7 @@
         "package": "full_git_blob_manifest",
         "client": "realpath_identity_then_live_client_check"
       },
-      "status": "ready",
-      "note": "本地改编，待my-skills发布完整包与上游来源"
+      "status": "ready"
     },
     "animejs-example-library": {
       "name": "animejs-example-library",
@@ -17396,8 +17394,7 @@
         "package": "full_git_blob_manifest",
         "client": "realpath_identity_then_live_client_check"
       },
-      "status": "ready",
-      "note": "本地入口和官方示例快照须一起公开发行"
+      "status": "ready"
     },
     "codex-imagegen": {
       "name": "codex-imagegen",
@@ -17417,8 +17414,7 @@
         "package": "full_git_blob_manifest",
         "client": "realpath_identity_then_live_client_check"
       },
-      "status": "ready",
-      "note": "需补三平台执行适配；不能把Codex登录与工具能力当普通技能分发"
+      "status": "ready"
     },
     "ai-liveaction-fusion": {
       "name": "ai-liveaction-fusion",

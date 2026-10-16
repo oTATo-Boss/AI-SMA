@@ -1,0 +1,16 @@
+{
+  "code_commit": "2b860cc2e1f4fd46bf22406bb2bd2b4e5114535d",
+  "url": "https://github.com/oTATo-Boss/AI-SMA/actions/runs/38879624167",
+  "result": "success",
+  "tests_per_job": 86,
+  "operating_systems": [
+    "windows-latest",
+    "macos-latest",
+    "ubuntu-latest"
+  ],
+  "python_versions": [
+    "3.11",
+    "3.13"
+  ],
+  "scope": "native core behavior tests; not all creative software or model services"
+}

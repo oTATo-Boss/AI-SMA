@@ -91,93 +91,102 @@
     },
     "video-project-orchestration": {
       "repository": "https://github.com/oTATo-Boss/my-skills",
-      "ref": "f4aba90fa8dc83ffaaed6c07952f52bb962f213c"
+      "ref": "90508b56d32d0853e669f267d96e3f72b9740478"
     },
     "screenwriting": {
       "repository": "https://github.com/oTATo-Boss/my-skills",
-      "ref": "f4aba90fa8dc83ffaaed6c07952f52bb962f213c"
+      "ref": "90508b56d32d0853e669f267d96e3f72b9740478"
     },
     "production-continuity": {
       "repository": "https://github.com/oTATo-Boss/my-skills",
-      "ref": "f4aba90fa8dc83ffaaed6c07952f52bb962f213c"
+      "ref": "90508b56d32d0853e669f267d96e3f72b9740478"
     },
     "video-production-pipeline": {
       "repository": "https://github.com/oTATo-Boss/my-skills",
-      "ref": "f4aba90fa8dc83ffaaed6c07952f52bb962f213c"
+      "ref": "90508b56d32d0853e669f267d96e3f72b9740478"
     },
     "codex-imagegen": {
       "repository": "https://github.com/oTATo-Boss/my-skills",
-      "ref": "f4aba90fa8dc83ffaaed6c07952f52bb962f213c"
+      "ref": "e19ccc4b31a53f14ecc8d3623eb4c6886927ed83"
     },
     "animejs-creative-motion": {
       "repository": "https://github.com/oTATo-Boss/my-skills",
-      "ref": "f4aba90fa8dc83ffaaed6c07952f52bb962f213c"
+      "ref": "90508b56d32d0853e669f267d96e3f72b9740478"
     },
     "animejs-workflows": {
       "repository": "https://github.com/oTATo-Boss/my-skills",
-      "ref": "f4aba90fa8dc83ffaaed6c07952f52bb962f213c"
+      "ref": "90508b56d32d0853e669f267d96e3f72b9740478"
     },
     "animejs-example-library": {
       "repository": "https://github.com/oTATo-Boss/my-skills",
-      "ref": "f4aba90fa8dc83ffaaed6c07952f52bb962f213c"
+      "ref": "90508b56d32d0853e669f267d96e3f72b9740478"
     }
   },
   "profiles": {
     "series": {
       "skills": 28,
       "files_ready": true,
+      "host_tools_ready": true,
       "errors": [],
       "issues": {}
     },
     "long-form": {
       "skills": 25,
       "files_ready": true,
+      "host_tools_ready": true,
       "errors": [],
       "issues": {}
     },
     "film": {
       "skills": 21,
       "files_ready": true,
+      "host_tools_ready": true,
       "errors": [],
       "issues": {}
     },
     "launch": {
       "skills": 26,
       "files_ready": true,
+      "host_tools_ready": true,
       "errors": [],
       "issues": {}
     },
     "motion-design": {
       "skills": 25,
       "files_ready": true,
+      "host_tools_ready": true,
       "errors": [],
       "issues": {}
     },
     "music-video": {
       "skills": 26,
       "files_ready": true,
+      "host_tools_ready": true,
       "errors": [],
       "issues": {}
     },
     "science": {
       "skills": 25,
       "files_ready": true,
+      "host_tools_ready": true,
       "errors": [],
       "issues": {}
     },
     "advertising": {
       "skills": 24,
       "files_ready": true,
+      "host_tools_ready": true,
       "errors": [],
       "issues": {}
     },
     "social-account": {
       "skills": 25,
       "files_ready": true,
+      "host_tools_ready": true,
       "errors": [],
       "issues": {}
     }
   },
-  "runtime_tools": "not part of isolated file-install test",
+  "runtime_tools": "Host CLI/version checks passed for these nine profiles; accounts, models and service rendering are separate and unverified",
   "client_discovery": "not_verified"
 }
