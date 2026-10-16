@@ -112,8 +112,9 @@ class Workspace:
     def path(self, value, *, write=False, exists=False):
         if not isinstance(value, str) or not value:
             raise TaskError("路径必须为非空的项目相对路径")
-        relative = Path(value)
-        if relative.is_absolute() or PureWindowsPath(value).is_absolute() or "\\" in value or ".." in relative.parts:
+        windows = PureWindowsPath(value)
+        relative = Path(value.replace("\\", "/"))
+        if relative.is_absolute() or windows.drive or windows.root or ".." in relative.parts:
             raise TaskError("路径必须相对项目根目录，不能包含 ..")
         if any(part.startswith(".env") or part in {"credentials", ".git"} for part in relative.parts):
             raise TaskError("任务路径不能引用凭据或 Git 内部文件")
@@ -172,7 +173,7 @@ class Workspace:
         path = self.path(value, exists=True)
         if not path.is_file():
             raise TaskError("确认和检查证据必须指向具体文件")
-        return {"path": value, "sha256": sha256(path)}
+        return {"path": self.relative(path), "sha256": sha256(path)}
 
     def evidence_error(self, evidence):
         if not isinstance(evidence, dict) or set(evidence) != {"path", "sha256"}:
@@ -180,7 +181,7 @@ class Workspace:
         if not isinstance(evidence["sha256"], str) or not re.fullmatch(r"[a-f0-9]{64}", evidence["sha256"]):
             return "证据哈希格式错误"
         try:
-            if self.evidence(evidence["path"]) != evidence:
+            if self.evidence(evidence["path"])["sha256"] != evidence["sha256"]:
                 return f"证据版本已变化：{evidence['path']}"
         except TaskError as exc:
             return str(exc)
@@ -677,7 +678,7 @@ class Workspace:
         order = {"进行中": 0, "待开始": 1, "等待本人": 2, "等待外部": 3, "受阻": 4, "结束": 5, "取消": 6}
         rows.sort(key=lambda row: (order.get(row[1].get("status"), 9), row[1].get("updated_at", ""), str(row[0])))
         base = self.overview_path.parent
-        script = os.path.relpath(self.runtime / "任务管理.py", base)
+        script = os.path.relpath(self.runtime / "任务管理.py", base).replace("\\", "/")
         lines = ["# 任务总览", "", f"由 `{script} sync` 生成，不手动维护。当前状态以各任务 `task.json` 为准。", "", "生成时间：" + now()]
         def cell(value):
             return str(value).replace("|", "／").replace("\n", " ").replace("[", "（").replace("]", "）")
@@ -689,7 +690,7 @@ class Workspace:
                 lines.extend(["", "## " + group, "", "| 任务 | 类型／阶段 | 执行状态 | 当前交付／验收 | 下一步 | 记录检查 |", "|---|---|---|---|---|---|"])
                 current_group = group
             label = self.definition["workflows"].get(task.get("workflow"), {}).get("label", "未知")
-            link = os.path.relpath(path, base)  # 相对链接：项目整体移动或复制后仍有效
+            link = os.path.relpath(path, base).replace("\\", "/")  # Markdown URLs use forward slashes on every OS.
             delivery = task.get("deliveries", [])
             summary = (Path(delivery[-1]["path"]).name if delivery else "无登记交付") + "／" + task.get("acceptance", {}).get("status", "未知")
             health = "错误：" + "；".join(errors) if errors else "记录通过"
@@ -828,6 +829,8 @@ def main():
                         task[key] = workspace.phase_name(task["workflow"], args.phase) if arg == "phase" else getattr(args, arg)
                 for arg, key in [("input", "inputs"), ("output", "outputs"), ("issue", "issues")]:
                     for item in getattr(args, arg):
+                        if arg in {"input", "output"}:
+                            item = workspace.relative(workspace.path(item))
                         if item not in task[key]:
                             task[key].append(item)
                         if arg == "input" and task["schema_version"] == 2:

@@ -5,6 +5,7 @@ import shutil
 import subprocess
 import sys
 import unittest
+from unittest import mock
 from pathlib import Path
 
 import test_task_management as legacy
@@ -36,6 +37,26 @@ class TaskV2Tests(unittest.TestCase):
                 "created_at": "2026-10-16 12:00", "evidence_refs": [], "files": [], "inputs": [evidence], "media": evidence,
                 "producer": "writer", "producer_run": "run-1", "reviewer_run": "run-2" if mode == "independent" else "run-1",
                 "review_mode": mode, "method": {}, "verdict": "pass", "defects": [], "strengths": [], "publishable": True}
+
+    def test_windows_relative_input_is_normalized_without_accepting_drive_paths(self):
+        task = self.create()
+        subject = self.evidence(task, "依据.txt", "actual evidence")
+        windows_relative = subject.replace("/", "\\")
+        self.assertEqual(self.workspace.path(windows_relative, exists=True), self.root / subject)
+        self.operation(task, "update", "--input", windows_relative)
+        self.assertEqual(self.read(task)["input_versions"][0]["path"], subject.replace("\\", "/"))
+        for unsafe in ("C:relative", "C:\\absolute", "\\rooted", "agents\\..\\outside", "\\\\host\\share"):
+            with self.assertRaises(MOD.TaskError):
+                self.workspace.path(unsafe)
+
+    def test_overview_serializes_windows_relpath_as_markdown_url(self):
+        task = self.create()
+        original = MOD.os.path.relpath
+        with mock.patch.object(MOD.os.path, "relpath", side_effect=lambda *a: original(*a).replace("/", "\\")):
+            self.workspace.overview()
+        text = self.workspace.overview_path.read_text(encoding="utf-8")
+        self.assertIn("/task.json>", text)
+        self.assertNotIn("\\task.json>", text)
 
     def test_v2_default_and_v1_read_compatibility(self):
         task = self.create()
