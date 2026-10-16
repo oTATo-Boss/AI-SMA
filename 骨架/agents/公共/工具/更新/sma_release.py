@@ -101,6 +101,13 @@ def verify(root, allow_development=False):
 
 
 def unpack(data, destination, allow_development=False, expected_manifest=None):
+    try:
+        return _unpack(data, destination, allow_development, expected_manifest)
+    except (zipfile.BadZipFile, zipfile.LargeZipFile, KeyError, TypeError, UnicodeError) as exc:
+        raise UpdateError('发行归档损坏或格式无效：' + str(exc)) from exc
+
+
+def _unpack(data, destination, allow_development=False, expected_manifest=None):
     destination = Path(destination)
     if destination.exists():
         return verify(destination, allow_development)
@@ -114,6 +121,8 @@ def unpack(data, destination, allow_development=False, expected_manifest=None):
             raise UpdateError('发行包重名或展开大小超限')
         for info in infos:
             safe(destination, info.filename)
+            if info.flag_bits & 1:
+                raise UpdateError('发行归档不能加密')
             if info.is_dir() or (info.external_attr >> 16) & 0o170000 == 0o120000:
                 raise UpdateError('发行包不接受目录条目或链接')
         manifest_data = archive.read(MANIFEST)
@@ -158,10 +167,17 @@ def get(url):
             raise
         result = subprocess.run([executable, '-q', '--fail', '--location', '--proto', '=https', '--proto-redir', '=https',
             '--max-time', '30', '--max-filesize', str(LIMIT), '--silent', '--show-error',
-            '--user-agent', 'AI-SMA-update/1', url], capture_output=True, timeout=35)
+            '--write-out', '\n%{http_code}', '--user-agent', 'AI-SMA-update/1', url], capture_output=True, timeout=35)
+        body, separator, code = result.stdout.rpartition(b'\n')
+        status = int(code) if separator and code.isdigit() else 0
         if result.returncode:
-            raise UpdateError('系统 TLS 下载失败：' + result.stderr.decode('utf-8', errors='replace')[-1000:]) from exc
-        data = result.stdout
+            message = result.stderr.decode('utf-8', errors='replace')[-1000:]
+            if status >= 400:
+                raise urllib.error.HTTPError(url, status, message, {}, None) from exc
+            raise urllib.error.URLError('系统 TLS 下载失败：' + message) from exc
+        if status != 200:
+            raise UpdateError('下载未返回成功状态')
+        data = body
         LAST_TRANSPORT = 'curl-system-trust'
     if len(data) > LIMIT:
         raise UpdateError('下载大小超限')
@@ -173,6 +189,8 @@ def releases():
     # Pagination avoids missing an older compatible major after a new major release.
     for page in range(1, 11):
         rows = json.loads(get(f'https://api.github.com/repos/oTATo-Boss/AI-SMA/releases?per_page=100&page={page}'))
+        if not isinstance(rows, list) or any(not isinstance(row, dict) for row in rows):
+            raise UpdateError('发行列表格式错误')
         for row in rows:
             if not row.get('draft') and not row.get('prerelease'):
                 try:

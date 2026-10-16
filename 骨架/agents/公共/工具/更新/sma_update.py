@@ -847,7 +847,7 @@ def main(argv=None):
             result = updater.dependency_finish(args.source, args.restore)
         else:
             result = getattr(updater, args.command)()
-    except (ValueError, OSError, KeyError, TypeError) as exc:
+    except (ValueError, OSError, KeyError, TypeError, subprocess.TimeoutExpired) as exc:
         result = report('error', blockers=[str(exc)], next_action='保留现状，根据阻塞原因处理后重试')
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 1 if result['phase'] == 'error' else (2 if result['phase'] in {'conflict', 'dependencies_pending', 'waiting_idle', 'apply_failed', 'client_reload_required', 'check_unavailable', 'release_rejected', 'rate_limited'} else 0)

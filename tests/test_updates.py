@@ -444,13 +444,33 @@ class UpdateTests(unittest.TestCase):
         import ssl
         import urllib.error
         error = urllib.error.URLError(ssl.SSLCertVerificationError('missing Python CA store'))
-        result = subprocess.CompletedProcess([], 0, b'[]', b'')
+        result = subprocess.CompletedProcess([], 0, b'[]\n200', b'')
         with patch('sma_release.urllib.request.urlopen', side_effect=error), patch('sma_release.shutil.which', return_value='/usr/bin/curl'), patch('sma_release.subprocess.run', return_value=result) as request:
             self.assertEqual(sma_release.get('https://api.github.com/repos/oTATo-Boss/AI-SMA/releases'), b'[]')
             args = request.call_args.args[0]
             self.assertNotIn('-k', args)
             self.assertIn('--proto-redir', args)
             self.assertEqual(args[1], '-q')
+
+    def test_corrupt_archive_is_a_structured_validation_error(self):
+        with self.assertRaisesRegex(UpdateError, '归档损坏'):
+            sma_release.unpack(b'not a zip', self.base / 'invalid-release')
+
+    def test_http_rate_limit_remains_distinct_with_system_tls(self):
+        import ssl
+        import urllib.error
+        self.deploy()
+        error = urllib.error.URLError(ssl.SSLCertVerificationError('missing CA store'))
+        result = subprocess.CompletedProcess([], 22, b'\n429', b'Rate limit')
+        with patch('sma_release.urllib.request.urlopen', side_effect=error), patch('sma_release.shutil.which', return_value='/usr/bin/curl'), patch('sma_release.subprocess.run', return_value=result):
+            self.assertEqual(self.updater.check()['phase'], 'rate_limited')
+
+    def test_cli_timeout_is_reported_without_traceback(self):
+        from sma_update import main
+        output = io.StringIO()
+        with patch.object(Updater, 'prepare', side_effect=subprocess.TimeoutExpired('fixture', 15)), contextlib.redirect_stdout(output):
+            self.assertEqual(main(['--project', str(self.project), 'prepare', '--plan', 'a' * 32]), 1)
+        self.assertEqual(json.loads(output.getvalue())['phase'], 'error')
 
     def test_network_check_releases_writer_locks_and_preserves_new_policy(self):
         self.deploy()

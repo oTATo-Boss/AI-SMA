@@ -7,21 +7,15 @@
     "status": "passed",
     "platform": "Darwin",
     "python": "3.12.0",
-    "tests": 118,
+    "tests": 122,
     "groups": [
-      45,
+      49,
       27,
       24,
       9,
       13
     ],
-    "log_sha256": "cccc2826daef237108b5d77d41c061b9b4b633338012d20607d433e0aa628573",
-    "additional_regressions": [
-      {
-        "case": "legacy_windows_crlf_generated_files_are_not_user_conflicts",
-        "status": "passed"
-      }
-    ]
+    "log_sha256": "9e5f792beb04217df22f300ce0b2136353b248a1c2c442424a4a1ab5778a0465"
   },
   "native_ci": {
     "status": "pending",
@@ -33,7 +27,8 @@
     "python": [
       "3.11",
       "3.13"
-    ]
+    ],
+    "first_windows_failure": "Legacy Windows CRLF bytes differed from the generator LF text digest; fixed and covered by a regression test."
   },
   "codex": {
     "version": "0.162.0-alpha.17.2",
