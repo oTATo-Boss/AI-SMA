@@ -1,0 +1,8 @@
+# 配置卡：给软件读的设置。总负责人是主对话，不生成子智能体登记文件。
+id: account-lead
+name: 总负责人
+description: 主对话：和本人对话，拆任务、派子智能体、合并产物、裁决分歧、交付和记录；不亲自做专业工作。
+skills: [social-media-router]
+claude_tools: inherit
+effort: high
+main: true

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""把 AI-SMA 模板部署到账号项目文件夹（默认当前文件夹）：复制骨架、填入账号名、写第一条日志、生成任务总览、运行项目检查和环境检查，并列出还要手填的地方。"""
+"""把 AI-SMA 模板部署到账号项目文件夹（默认当前文件夹）：复制骨架、填入账号名、生成 Codex 和 Claude 的子智能体登记、
+写第一条日志、生成任务总览、运行项目检查和环境检查，并列出还要手填的地方。"""
 import argparse
 import os
 import re
@@ -10,11 +11,16 @@ from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-VERSION = "v0.9.1"
 TEMPLATE = Path(__file__).resolve().parent
 SKELETON = TEMPLATE / "骨架"
 TEXT_SUFFIXES = {".md", ".yaml", ".yml", ".json", ".py", ".txt"}
-IGNORE = shutil.ignore_patterns("__pycache__", "*.pyc", ".DS_Store")
+IGNORE = shutil.ignore_patterns("__pycache__", "*.pyc", ".DS_Store", ".omc")
+
+
+def template_version():
+    """模板版本号：README"版本"一节的最后一行。"""
+    found = re.findall(r"^- (v\d+(?:\.\d+)*)（", (TEMPLATE / "README.md").read_text(encoding="utf-8"), re.M)
+    return found[-1] if found else "未知版本"
 
 
 def fail(message):
@@ -79,6 +85,9 @@ def main():
     shutil.copytree(SKELETON, dest, symlinks=False, ignore=IGNORE, dirs_exist_ok=True)
     for folder in ("交付", "发布内容", "固定资产"):  # 空目录不进仓库，部署时补上
         (dest / folder).mkdir(exist_ok=True)
+    for role in sorted((dest / "agents/role").iterdir()):  # 每个智能体的记录目录
+        if role.is_dir():
+            (role / "记忆/记录").mkdir(parents=True, exist_ok=True)
     copied = [rel for rel, is_dir in skeleton_entries() if not is_dir]
     for rel in copied:
         path = dest / rel
@@ -91,29 +100,29 @@ def main():
                 path.write_text(filled, encoding="utf-8")
 
     env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1")
-    subprocess.run([sys.executable, str(dest / "agent/tools/团队/生成角色.py")], env=env)  # 生成 Claude Code、Codex 的角色配置
+    subprocess.run([sys.executable, str(dest / "agents/公共/工具/团队/生成角色.py")], env=env)  # 生成 Codex、Claude 的子智能体登记
 
-    log = dest / "agent/log" / now.strftime("%Y-%m") / (now.strftime("%Y-%m-%d") + ".md")
+    log = dest / "agents/工作/日志" / now.strftime("%Y-%m") / (now.strftime("%Y-%m-%d") + ".md")
     log.parent.mkdir(parents=True, exist_ok=True)
-    log.write_text(f"# {now:%Y-%m-%d}\n\n- {now:%H:%M} · agent · 从 AI-SMA {VERSION} 部署项目 · "
-                   f"下一步按 `sop/新账号开工.md` 带本人开工 · `AGENTS.md`\n", encoding="utf-8")
+    log.write_text(f"# {now:%Y-%m-%d}\n\n- {now:%H:%M} · 从 AI-SMA {template_version()} 部署项目 · "
+                   f"下一步总负责人按开工流程带本人开工 · `agents/role/总负责人/知识/开工.md`\n", encoding="utf-8")
 
-    subprocess.run([sys.executable, str(dest / "agent/tools/任务管理/任务管理.py"), "sync"], check=True, env=env, stdout=subprocess.DEVNULL)
+    subprocess.run([sys.executable, str(dest / "agents/role/总负责人/工具/任务管理/任务管理.py"), "sync"], check=True, env=env, stdout=subprocess.DEVNULL)
     print(f"已部署：{dest}（账号名：{name}）\n", flush=True)
-    check = subprocess.run([sys.executable, str(dest / "agent/tools/项目检查/检查.py")], env=env)
+    check = subprocess.run([sys.executable, str(dest / "agents/公共/工具/项目检查/检查.py")], env=env)
     print("\n本机环境：", flush=True)
-    environment = subprocess.run([sys.executable, str(dest / "agent/tools/环境检查/检查环境.py")], env=env)
+    environment = subprocess.run([sys.executable, str(dest / "agents/公共/工具/环境检查/检查环境.py")], env=env)
 
     pending = []
     for rel in copied:
-        if rel.suffix in {".md", ".yaml", ".yml"} and rel.parts[:2] != ("agent", "sop"):
+        if rel.suffix in {".md", ".yaml", ".yml"} and "知识" not in rel.parts:  # 知识里的"待填写"是写给智能体的说明，不算
             count = (dest / rel).read_text(encoding="utf-8").count("待填写")
             if count:
                 pending.append(f"  {rel}：{count} 处")
     print("\n还要手填的地方（搜索“待填写”）：")
     print("\n".join(pending) if pending else "  无")
-    print("\n下一步：agent 按 agent/sop/新账号开工.md 马上回复本人：怎么用、要准备的、要回答的问题。")
-    print("自己在终端部署的：在这个文件夹打开 Claude Code 或 Codex，随便说一句，agent 会接着带你开工。")
+    print("\n下一步：总负责人按 agents/role/总负责人/知识/开工.md 马上回复本人：怎么用、要准备的、要回答的问题。")
+    print("自己在终端部署的：在这个文件夹打开 Codex（或 Claude Code），Codex 问时选信任这个文件夹，随便说一句，总负责人会接着带你开工。")
     return check.returncode or environment.returncode
 
 

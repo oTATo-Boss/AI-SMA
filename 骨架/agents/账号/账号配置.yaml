@@ -1,0 +1,120 @@
+# {{账号名}} · 账号配置
+# 字段沿用 social-media 技能套件的 shared/project-config.template.yaml，调用这些技能时提供本文件路径。
+# 规格参数只在这里维护；规则和理由见 内容与交付.md、定位与策略.md。
+# null 表示未配置（不是零、禁止或允许）。本文件不授予付费、上传、登录或发布权限。
+# 标"默认"的值是模板作者验证过的做法，按需修改；标"待填写"的新账号必须填。
+# 开工状态（project.stage）、Chrome 资料名（project.browser_profile）和团队上限（autonomy）也在这里。
+schema_version: 1
+project:
+  name: "{{账号名}}"
+  # 开工状态只有两种取值，开工中或已开工；定位确认、选题池写好后由总负责人改成已开工（入口红线 6）
+  stage: 开工中
+  browser_profile: "{{浏览器资料}}"     # 本账号只读查看平台用的 Chrome 个人资料名
+  goal: null                         # 待填写：账号要达成什么（详见 定位与策略.md）
+  audience: null                     # 待填写：给谁看
+  language: zh-CN
+  timezone: Asia/Shanghai            # 默认；改动时同步 agents/role/总负责人/工具/任务管理/流程定义.json
+  project_root: .
+  delivery_root: 交付
+identity:
+  creator_voice: null                # 待填写：正文用谁的口吻
+  subject_or_brand: null             # 待填写：账号、品牌、角色分别叫什么
+  invariant_features: []             # 待填写：角色或品牌不能变的识别特征
+  identity_reference_paths: []       # 待填写：固定资产/ 里的身份参考图
+  style_constraints: []
+  prohibited_claims_or_uses: []      # 待填写：禁用元素、不做的内容、不能承诺的事
+platforms:                           # 默认；按账号实际平台改
+  - name: 小红书
+  - name: 抖音
+content:
+  form: 竖屏短视频为主               # 默认
+  production_routes: []             # 待填写：开工第 6 题选的制作路线（AI 生成视频、代码动画与界面演示、实拍剪辑、图文）；没启用的路线不用
+  tone: null                         # 待填写
+  topic_boundaries: []               # 待填写：内容体系和不碰的话题
+  approved_brief_path: null
+  recent_work_index_path: agents/工作/任务总览.md
+video:                               # 默认
+  target_duration_seconds: null      # 按任务定
+  duration_tolerance_seconds: null
+  aspect_ratio: "9:16"
+  width_px: 1080
+  height_px: 1920
+  frame_rate: null                   # 按工程定
+  format: mp4
+  video_codec: H.264
+  audio_codec: AAC
+generation:                          # 默认：RunningHub H3；不用就清空
+  provider_reference: RunningHub AI 应用「MinimaxH3 多参数视频生成量化加速 V2」，应用 ID 2084320751339032577
+  model_or_workflow_reference: RH-minimax-H3 技能；本项目授权见 agents/role/素材制作/工具/runninghub-minimax-h3/README.md
+  official_documentation_url: https://www.runninghub.ai/zh-cn/call-api/api-detail/2084320751339032577?apiType=4
+  runtime_credential_reference: 环境变量 RUNNINGHUB_API_KEY、RUNNINGHUB_ENV_FILE 或技能的本机私有配置
+  supported_clip_duration_seconds: 5-15
+  desired_clip_duration_seconds: 15
+  default_quality: 720P（0.9 MP）     # 项目补充字段
+  maximum_concurrent_tasks: 3
+  cost_unit: RH币，以回包 usage 为准
+  proposed_per_task_limit: null
+  proposed_batch_limit: null
+  proposed_task_count: null
+audio:
+  voice_policy: null                 # 待填写：是否用人声、配音或旁白
+  permitted_voice_sources: []
+  music_policy: 配乐、音效优先用 HeyGen（免费额度，OAuth 登录）或已授权的自备音乐   # 默认
+  sound_effects_policy: 记录来源和许可
+  loudness_target: -16 LUFS          # 默认
+  peak_limit: null
+cover:                               # 默认
+  required: true
+  aspect_ratio: "3:4"
+  width_px: null                     # 精确 3:4 即可，例如 1080×1440
+  height_px: null
+  format: PNG
+  design_language: null              # 待填写：账号统一的封面排版逻辑
+  safe_area_reference: 缩到约 270×360 检查主句和视觉重点
+assets:
+  source_manifest_path: agents/账号/附录/作品与素材来源.md
+  approved_source_locations:
+    - 固定资产/
+  rights_constraints:
+    - 来源不明的素材不用；第三方素材确认授权，并在任务目录记录署名
+tools:                               # 默认：按本机实际能力修改
+  research: 公开网页；需要登录的平台只读使用本机 Chrome 的 project.browser_profile 资料
+  image_generation: Codex 用 imagegen；Claude 用 codex-imagegen
+  video_generation: RH-minimax-H3
+  editing: 按制作路线选：代码动画和界面演示用 Remotion 或 HyperFrames；剪辑用 FFmpeg（先用 ffmpeg -filters 确认文字滤镜）
+  audio_inspection: null
+  video_inspection: ffprobe、video-frames 抽帧
+  media_probe: ffprobe
+  backend_data: 本人提供的导出或截图，或经授权只读查看后台
+delivery:                            # 默认；文件名改动时同步 agents/role/总负责人/工具/任务管理/流程定义.json 的 packages
+  folder_name_pattern: YYYYMMDD_HHMM_内容名称
+  timestamp_basis: 实际整理时间（北京时间），不是发布时间
+  video_filename: 视频.mp4
+  cover_filename: 封面.png
+  copy_filename: 发布文案.txt
+  additional_required_files: []
+  overwrite_policy: 从不覆盖、合并或追加；同名就换新的实际时间，修订新建目录
+analytics:
+  platform: 小红书、抖音
+  account_reference: null            # 待填写：账号号或别名，不写密码和登录信息
+  source_locations:
+    - agents/账号/数据/原始资料/
+  reporting_period_start: null
+  reporting_period_end: null
+  reporting_timezone: Asia/Shanghai
+  extraction_time: null
+  comparison_window_hours: null
+  goal_metric: null                  # 待填写：按内容类型定（定位与策略 第 9 节）
+  metric_dictionary_path: null
+  paid_content_handling: null
+  pinned_content_handling: null
+  moderation_handling: 单条低曝光或推荐占比不能单独证明限流
+  cohort_definition: null
+autonomy:                            # 做内容的硬限制，智能体不能自行放宽（流程见 agents/role/总负责人/AGENT.md）
+  max_parallel_agents: 3             # 默认：同时开着的子智能体上限；改完运行 python3 agents/公共/工具/团队/生成角色.py 写进 .codex/config.toml
+  idea_candidates_min: 9             # 默认：每次创意至少几个候选（3 种方法 × 3 个）
+  idea_rounds_max: 2                 # 默认：创意评审都不过时最多重来几轮
+  rework_rounds_max: 2               # 默认：审片不过时同一问题最多返工几轮
+  explore_ratio: 0.2                 # 默认：选创意时留给探索性方案的比例
+isolation:
+  allowed_terms: []                  # 项目检查发现同级其他账号的名称会报错；本人确认可以出现的名称写在这里

@@ -1,0 +1,8 @@
+# 配置卡：给软件读的设置。改完运行 python3 agents/公共/工具/团队/生成角色.py
+id: quality-reviewer
+name: 审片
+description: 成片出来后、交付之前派它：真的抽帧看完、听完声音，核对规格和字幕，判断能不能发，把问题定位到镜头并指派该谁修。不动手修。
+skills: [video-frames, direct-video, content-production]
+claude_tools: [Read, Write, Bash, Glob, Grep, Skill]
+nesting: false
+effort: xhigh

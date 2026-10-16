@@ -1,0 +1,8 @@
+# 配置卡：给软件读的设置。改完运行 python3 agents/公共/工具/团队/生成角色.py
+id: media-producer
+name: 素材制作
+description: 镜头表定了、要出图片、视频片段、配音和音效，或者审片要求局部重生成时派它；可以按镜头分组同时做。付费生成当场登记任务 ID，不重复提交。不改镜头设计，不剪辑。
+skills: [asset-generation, ai-video-prompt, rh-minimax-h3]
+claude_tools: inherit
+nesting: false
+effort: high

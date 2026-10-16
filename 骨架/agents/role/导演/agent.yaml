@@ -1,0 +1,8 @@
+# 配置卡：给软件读的设置。改完运行 python3 agents/公共/工具/团队/生成角色.py
+id: film-director
+name: 导演
+description: 创意选定后、动手制作前派它：把创意变成制作方案、镜头表、生成提示词和声音设计。不改创意的核心机制，不亲自生成素材。
+skills: [direct-video, ai-video-prompt]
+claude_tools: [Read, Write, Edit, Bash, Glob, Grep, Skill]
+nesting: false
+effort: high

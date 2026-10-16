@@ -1,0 +1,18 @@
+{
+  "description": "项目写入保护：发布内容/、固定资产/ 只读，交付/ 只增不改（说明见 agents/公共/工具/写入保护/README.md）",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|apply_patch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "d=\"$PWD\"; while [ \"$d\" != / ] && [ ! -f \"$d/agents/公共/工具/写入保护/protect_paths.py\" ]; do d=$(dirname \"$d\"); done; [ -f \"$d/agents/公共/工具/写入保护/protect_paths.py\" ] && exec python3 \"$d/agents/公共/工具/写入保护/protect_paths.py\"; exit 0",
+            "timeout": 10,
+            "statusMessage": "检查项目写入保护"
+          }
+        ]
+      }
+    ]
+  }
+}

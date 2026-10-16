@@ -13,7 +13,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/agent/tools/写入保护/protect_paths.py\"",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/agents/公共/工具/写入保护/protect_paths.py\"",
             "timeout": 10
           }
         ]

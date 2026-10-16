@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "project": {
+    "work_dir": "agents/工作",
+    "delivery_dir": "交付",
+    "overview": "agents/工作/任务总览.md",
+    "timezone": "Asia/Shanghai",
+    "read_only_dirs": [
+      "发布内容",
+      "固定资产"
+    ]
+  },
+  "packages": {
+    "social-video": [
+      "视频.mp4",
+      "封面.png",
+      "发布文案.txt"
+    ]
+  },
+  "statuses": [
+    "待开始",
+    "进行中",
+    "等待本人",
+    "等待外部",
+    "受阻",
+    "结束",
+    "取消"
+  ],
+  "workflows": {
+    "content": {
+      "label": "内容制作",
+      "document": "agents/role/总负责人/AGENT.md",
+      "phases": [
+        "调研",
+        "创意",
+        "评审",
+        "方案",
+        "制作",
+        "合成",
+        "审片",
+        "交付"
+      ],
+      "gates": [],
+      "required_checks": [
+        {
+          "name": "创意评审",
+          "before_phase": "方案"
+        },
+        {
+          "name": "成片审查",
+          "before_phase": "交付"
+        }
+      ],
+      "requires_acceptance": true
+    },
+    "delivery": {
+      "label": "发布材料交付",
+      "document": "agents/role/后期/知识/发布材料.md",
+      "phases": [
+        "理解作品",
+        "包装方案",
+        "制作材料",
+        "检查",
+        "交付"
+      ],
+      "gates": [],
+      "requires_acceptance": true
+    },
+    "research": {
+      "label": "研究与复盘",
+      "document": "agents/role/总负责人/知识/任务与异常.md",
+      "phases": [
+        "问题",
+        "取证",
+        "分析",
+        "沉淀"
+      ],
+      "gates": [],
+      "requires_acceptance": false
+    },
+    "maintenance": {
+      "label": "项目维护",
+      "document": "agents/role/总负责人/知识/任务与异常.md",
+      "phases": [
+        "查现状",
+        "方案",
+        "执行",
+        "检查",
+        "沉淀"
+      ],
+      "gates": [],
+      "requires_acceptance": false
+    }
+  }
+}

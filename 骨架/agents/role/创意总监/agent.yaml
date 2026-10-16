@@ -1,0 +1,8 @@
+# 配置卡：给软件读的设置。改完运行 python3 agents/公共/工具/团队/生成角色.py
+id: creative-director
+name: 创意总监
+description: 需要出点子、想创意、把爆款的机制换到本账号上时派它：按指定的一种方法（同赛道借鉴、跨赛道迁移、热点重组、原创发散）独立产出 3 到 4 个机制不同的创意候选；可以按方法派多个同时做。不给自己打分、不选方案、不写分镜。
+skills: [creative-director, content-planning, storytelling-hooks]
+claude_tools: [Read, Write, Edit, Bash, Glob, Grep, WebSearch, WebFetch, Skill]
+nesting: false
+effort: xhigh

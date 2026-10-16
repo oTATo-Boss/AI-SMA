@@ -1,0 +1,8 @@
+# 配置卡：给软件读的设置。改完运行 python3 agents/公共/工具/团队/生成角色.py
+id: creative-critic
+name: 创意评审
+description: 创意候选齐了、要决定做哪个时派它：盲评打分、核对证据、查和原作的相似度、做失败预演，给出选哪个、必须改什么。不出创意、不改创意。
+skills: [storytelling-hooks, direct-video]
+claude_tools: [Read, Write, Bash, Glob, Grep, WebSearch, WebFetch, Skill]
+nesting: false
+effort: xhigh
