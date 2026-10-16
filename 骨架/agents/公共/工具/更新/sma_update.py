@@ -59,6 +59,13 @@ def report(phase, state=None, **extra):
                 next_action=extra.pop('next_action', None), evidence=extra.pop('evidence', {}), **extra)
 
 
+def dependency_summary(value):
+    summary = {key: value.get(key) for key in ('owner', 'plan', 'path', 'backup', 'target_ref', 'verified', 'at')}
+    summary['previous_ref'] = (value.get('previous') or {}).get('ref')
+    summary['consumer_count'] = len(value.get('consumers', []))
+    return summary
+
+
 class Updater:
     def __init__(self, root, home=None):
         self.root = Path(root).expanduser().resolve()
@@ -192,10 +199,12 @@ class Updater:
     def status(self):
         state = self.state()
         reservations = read(machine(self.home) / 'registry.json', {}).get('reservations', {})
-        return report('client_reload_required' if state['client_pending'] else ('transaction_pending' if state['transaction'] else 'current'),
+        affected = {key: value for key, value in reservations.items() if state['project_id'] in value.get('consumers', [])}
+        phase = 'transaction_pending' if state['transaction'] else ('dependencies_pending' if affected else ('client_reload_required' if state['client_pending'] else 'current'))
+        return report(phase,
             state, policy=read(self.root / CONFIG)['updates'], transaction=state['transaction'],
             last_check=state.get('check'), blockers=blockers(self.root), roles=state['installed_roles'],
-            dependency_operations={key: value for key, value in reservations.items() if value['owner'] == state['project_id']})
+            dependency_operations={key: dependency_summary(value) for key, value in affected.items()})
 
     def policy(self, mode, pin=None):
         with coordinated(self.root, self.home):
@@ -266,6 +275,10 @@ class Updater:
         path = safe(machine(self.home), 'registry.json')
         registry = read(path, {})
         state = self.state()
+        completed = {key: value for key, value in registry.get('reservations', {}).items()
+                     if value.get('owner') == state['project_id'] and value.get('plan') == identifier and value.get('verified')}
+        if completed:
+            put(safe(self.root, CONTROL + '/plans/' + identifier + '/dependency-history.json'), completed)
         registry['reservations'] = {key: value for key, value in registry.get('reservations', {}).items()
             if not (value.get('owner') == state['project_id'] and value.get('plan') == identifier and value.get('verified'))}
         put(path, registry)
@@ -383,7 +396,7 @@ class Updater:
         source, manifest = self.source(to, source, development)
         with coordinated(self.root, self.home):
             state = self.state()
-            admission(self.root, self.home)
+            admission(self.root, self.home, allow_ready_dependency=True)
             self.remember_release(state, manifest)
             if release.version(manifest['version']) < release.version(state['version']):
                 raise UpdateError('降级请使用最近事务 rollback，不跨版本重新铺装')
@@ -396,7 +409,12 @@ class Updater:
             identifier = uuid.uuid4().hex
             folder = safe(self.root, CONTROL + '/plans/' + identifier)
             stage = folder / 'stage'
+            mixed_inputs = {rel: sha(safe(self.root, rel)) for rel in (
+                CONFIG, RECEIPT, GENERATION, 'agents/SKILLS_INDEX.md', '.claude/settings.json',
+                '.codex/hooks.json', '.codex/config.toml', 'agents/项目/装配清单.json')}
             plan, upstream = self.render(source, stage, state)
+            if any(sha(safe(self.root, rel)) != digest for rel, digest in mixed_inputs.items()):
+                raise UpdateError('规划期间配置或生成输入发生变化，请重新规划；当前文件已保留')
             current_sources = read(self.root / 'agents/公共/技能来源.json')['sources']
             target_catalog = read(stage / 'agents/公共/技能来源.json')
             for name in read(stage / CONFIG)['skills']['required']:
@@ -447,6 +465,20 @@ class Updater:
                 'target_version': manifest['version'], 'changes': changes, 'conflicts': conflicts, 'observed': observed,
                 'baseline': {**{p: h for p, h in desired.items() if category(p) != 'user'}, **{p: h for p, h in upstream.items() if category(p) == 'template'}},
                 'stage_hashes': desired, 'roles': plan['roles'], 'phase': 'planned'}
+            registry_path = safe(machine(self.home), 'registry.json')
+            usage = read(registry_path, {})
+            owned_operations = {key: op for key, op in usage.get('reservations', {}).items() if op['owner'] == state['project_id']}
+            required_sources = {target_catalog['skills'][name]['source'] for name in read(stage / CONFIG)['skills']['required']}
+            for source_id, operation in owned_operations.items():
+                spec = target_catalog['sources'].get(source_id, {})
+                accepted = {spec.get('ref'), *[item['ref'] for item in spec.get('compatible_versions', [])]}
+                if source_id in required_sources and operation['target_ref'] not in accepted:
+                    conflicts.append({'source': source_id, 'reason': '已准备技能与新计划不兼容；先按维护记录恢复'})
+            if not conflicts:
+                for operation in owned_operations.values():
+                    operation['plan'] = identifier
+                if owned_operations:
+                    put(registry_path, usage)
             for change in changes:
                 before_path = safe(self.root, change['path'])
                 after_path = safe(stage, change['path'])
@@ -476,6 +508,10 @@ class Updater:
             raise UpdateError('目标发行身份变化')
         if inventory(folder / 'stage') != plan['stage_hashes']:
             raise UpdateError('目标暂存内容变化，请重新规划')
+        if plan.get('phase') == 'prepared':
+            recovery = read(folder / 'recovery-runtime.json', {})
+            if fingerprint(recovery) != plan.get('recovery_digest') or inventory(folder / 'recovery-runtime') != recovery.get('files'):
+                raise UpdateError('恢复运行时缺失或损坏，不能应用更新')
         for rel, expected in plan['observed'].items():
             if sha(safe(self.root, rel)) != expected:
                 raise UpdateError('规划后文件变化，请重新规划：' + rel)
@@ -505,6 +541,13 @@ class Updater:
             state = self.validate_plan(folder, plan)
             for rel in inventory(self.control / 'baseline'):
                 put(safe(folder / 'previous-baseline', rel), safe(self.control / 'baseline', rel).read_bytes())
+            runtime = safe(self.root, 'agents/公共/工具/更新')
+            runtime_files = inventory(runtime)
+            for rel in runtime_files:
+                put(safe(folder / 'recovery-runtime', rel), safe(runtime, rel).read_bytes())
+            recovery = {'schema_version': 1, 'files': runtime_files}
+            put(folder / 'recovery-runtime.json', recovery)
+            plan['recovery_digest'] = fingerprint(recovery)
             for change in plan['changes']:
                 if change['before'] is not None:
                     put(safe(folder / 'backup', change['path']), safe(self.root, change['path']).read_bytes())
@@ -604,8 +647,16 @@ class Updater:
 
     def restore(self, folder, plan, transaction):
         problems = []
+        expected_changes = {change['path']: change for change in plan['changes']}
         # Check the complete restore set before modifying any file.
         for change in transaction['journal']:
+            expected = expected_changes.get(change['path'])
+            seed = change.get('kind') == 'seed' and change.get('before') is None and (
+                '/记忆/经验.md' in change['path'] or change['path'].startswith('agents/项目/定制/'))
+            if (not expected or any(change.get(k) != expected.get(k) for k in ('before', 'after', 'kind'))
+                    or (category(change['path']) == 'user' and not seed)):
+                problems.append('恢复日志越过受管范围或与计划不符：' + change['path'])
+                continue
             current = sha(safe(self.root, change['path']))
             if current not in {change['before'], change['after']}:
                 problems.append('更新后出现其他修改：' + change['path'])
@@ -656,6 +707,10 @@ class Updater:
         with coordinated(self.root, self.home):
             state = self.state()
             if not state['transaction']:
+                operations = self.status()['dependency_operations']
+                if operations:
+                    return report('dependency_recovery_required', state, dependency_operations=operations,
+                        next_action='按已有记录完成或恢复技能，运行 dependency-finish；已验证完成时可重新规划后整体应用')
                 return report('nothing_to_resume', state)
             folder, plan = self.load_plan(state['transaction'])
             transaction = read(folder / 'transaction.json')
@@ -714,6 +769,9 @@ class Updater:
 
     def dependency_begin(self, identifier, source_id, ref, path, adopt_existing=False):
         folder, plan = self.load_plan(identifier)
+        self.validate_plan(folder, plan)
+        if plan['phase'] != 'prepared':
+            raise UpdateError('先准备项目更新，再登记技能维护')
         target_catalog = read(folder / 'stage/agents/公共/技能来源.json')
         target_source = target_catalog['sources'].get(source_id, {})
         versions = [target_source, *[dict(target_source, **v) for v in target_source.get('compatible_versions', [])]]
@@ -751,7 +809,7 @@ class Updater:
             reservation['consumers'] = sorted(set(reservation['consumers']) | {self.state()['project_id']})
             registry['reservations'][source_id] = reservation
             put(registry_path, registry)
-        return report('dependency_reserved', self.state(), reservation=reservation,
+        return report('dependency_reserved', self.state(), reservation=dependency_summary(reservation),
             next_action='Codex 先保留完整旧包到 backup，再按公开说明安装到 path、维护索引及链接，最后 dependency-finish；本工具未执行安装')
 
     def dependency_finish(self, source_id, restore=False):
@@ -766,7 +824,7 @@ class Updater:
             inspector = module(folder / 'stage/agents/公共/工具/环境检查/检查环境.py', 'sma_dependency_finish')
             expected = reservation['previous'] if restore else reservation['target']
             if expected is None:
-                raise UpdateError('新装包无需删除；验证当前版本后保留为可复用安装')
+                expected = reservation['target']  # Retain a verified new package instead of deleting reusable skills.
             proof = inspector.verify_package(Path(reservation['path']), expected)
             if proof['status'] != 'verified':
                 raise UpdateError('技能实体校验失败：' + '；'.join(proof['errors']))
@@ -776,6 +834,10 @@ class Updater:
                     raise UpdateError('旧技能完整备份尚未验证')
             registry.setdefault('packages', {})[reservation['path']] = {'source': source_id, 'ref': expected['ref'], 'digest': proof['digest']}
             if restore:
+                history_path = folder / 'dependency-history.json'
+                history = read(history_path, {})
+                history[source_id] = dict(reservation, restored_at=now())
+                put(history_path, history)
                 del registry['reservations'][source_id]
             else:
                 reservation['verified'] = True
@@ -785,6 +847,9 @@ class Updater:
 
 
 def main(argv=None):
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, 'reconfigure'):
+            stream.reconfigure(encoding='utf-8')
     if sys.version_info < (3, 11):
         print(json.dumps(report('runtime_required', blockers=['更新工具需要 Python 3.11 或更新版本'],
                                 next_action='使用可用的新解释器重试；本次未修改项目'), ensure_ascii=False))

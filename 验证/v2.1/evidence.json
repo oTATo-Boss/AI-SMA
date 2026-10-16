@@ -1,21 +1,21 @@
 {
   "schema_version": 1,
   "version": "2.1.0",
-  "recorded_at": "2026-10-16T11:58:03.423198+00:00",
+  "recorded_at": "2026-10-16T12:20:29.653887+00:00",
   "release_status": "not_published",
   "local_suite": {
     "status": "passed",
     "platform": "Darwin",
     "python": "3.12.0",
-    "tests": 124,
+    "tests": 128,
     "groups": [
-      51,
+      55,
       27,
       24,
       9,
       13
     ],
-    "log_sha256": "99d1c7a8c8853e4b1622f3914b77da9b00dd20024cd66484e473806be3d0ab42"
+    "log_sha256": "bab817f19c9441bd9c0f3a7f8a39264956f9abd3ee09baa8a4c96c2d40c28743"
   },
   "native_ci": {
     "status": "passed",
@@ -29,12 +29,24 @@
       "3.13"
     ],
     "first_windows_failure": "Legacy Windows CRLF bytes differed from the generator LF text digest; fixed and covered by a regression test.",
-    "tested_commit": "8a3533c4d979ac5f5535d30b4f3958467659cff7",
-    "run_url": "https://github.com/oTATo-Boss/AI-SMA/actions/runs/38895878722",
-    "tests_per_job": 122,
+    "tested_commit": "da3e90c02e1fccb3ea9019534a0870d7d8282d8e",
+    "run_url": "https://github.com/oTATo-Boss/AI-SMA/actions/runs/38897295210",
+    "tests_per_job": 124,
     "jobs": [
       {
+        "name": "core (macos-latest, 3.13)",
+        "conclusion": "success"
+      },
+      {
         "name": "core (windows-latest, 3.13)",
+        "conclusion": "success"
+      },
+      {
+        "name": "core (windows-latest, 3.11)",
+        "conclusion": "success"
+      },
+      {
+        "name": "core (macos-latest, 3.11)",
         "conclusion": "success"
       },
       {
@@ -43,18 +55,6 @@
       },
       {
         "name": "core (ubuntu-latest, 3.13)",
-        "conclusion": "success"
-      },
-      {
-        "name": "core (macos-latest, 3.11)",
-        "conclusion": "success"
-      },
-      {
-        "name": "core (macos-latest, 3.13)",
-        "conclusion": "success"
-      },
-      {
-        "name": "core (windows-latest, 3.11)",
         "conclusion": "success"
       }
     ],
@@ -300,5 +300,7 @@
     "development": false,
     "package_validation": "passed",
     "published": false
-  }
+  },
+  "self_update_recovery": "Real subprocess recovered using the verified old runtime after its installed dependency was replaced before the new supporting module.",
+  "temporary_projects": "Removed after validation; scoped summaries retained in ignored outputs."
 }

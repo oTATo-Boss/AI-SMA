@@ -362,6 +362,8 @@ class UpdateTests(unittest.TestCase):
         self.updater.prepare(identifier)
         package = self.home / '.agents/skills/video/fixture'
         self.updater.dependency_begin(identifier, 'fixture', 'a' * 40, str(package))
+        self.assertEqual(self.updater.status()['phase'], 'dependencies_pending')
+        self.assertEqual(self.updater.resume()['phase'], 'dependency_recovery_required')
         with self.assertRaisesRegex(UpdateError, '共享技能'):
             with coordinated(self.project, self.home):
                 admission(self.project, self.home)
@@ -369,9 +371,19 @@ class UpdateTests(unittest.TestCase):
         for rel, data in self.skill_files.items():
             put(package / rel, data)
         self.assertEqual(self.updater.dependency_finish('fixture')['phase'], 'dependency_verified')
+        # User facts may change while installation is performed; replan without losing the maintenance barrier.
+        config = read(self.project / CONFIG)
+        config['project']['goal'] = 'Updated goal during installation'
+        put(self.project / CONFIG, config)
+        result = self.updater.plan(source=self.base / 'source-2.1.0', development=True)
+        self.assertEqual(result['phase'], 'planned', result)
+        identifier = result['plan']
+        self.updater.prepare(identifier)
         self.assertIn(self.updater.apply(identifier)['phase'], {'updated', 'client_reload_required'})
         registry = read(self.home / '.agents/ai-sma/registry.json')
         self.assertFalse(registry['reservations'])
+        history = read(self.project / CONTROL / 'plans' / identifier / 'dependency-history.json')
+        self.assertEqual(history['fixture']['target_ref'], 'a' * 40)
 
     def test_same_version_changed_manifest_is_refused(self):
         self.deploy()
@@ -559,6 +571,64 @@ class UpdateTests(unittest.TestCase):
         with self.assertRaisesRegex(UpdateError, '不兼容'):
             self.updater.rollback(identifier)
         self.assertEqual(self.updater.state()['version'], '2.1.0')
+
+    def test_entrypoint_recovers_when_updater_dependencies_are_half_replaced(self):
+        self.deploy()
+        self.install()
+        runtime = self.repo / '骨架/agents/公共/工具/更新'
+        common = runtime / 'sma_common.py'
+        put(common, common.read_bytes() + b'\nfrom zz_support import VALUE\n')
+        put(runtime / 'zz_support.py', b'VALUE = 1\n')
+        identifier = self.planned()
+        self.updater.prepare(identifier)
+        before = sha(self.project / 'agents/公共/工具/更新/sma_common.py')
+        import sma_update
+        original = sma_update.put
+        def stop_after_runtime(path, value):
+            if str(path).endswith('transaction.json') and isinstance(value, dict) and value.get('journal'):
+                last = value['journal'][-1]
+                if last['path'].endswith('sma_common.py') and last['state'] == 'done':
+                    raise KeyboardInterrupt('process stopped before zz_support is installed')
+            return original(path, value)
+        with patch.object(sma_update, 'put', side_effect=stop_after_runtime), self.assertRaises(KeyboardInterrupt):
+            self.updater.apply(identifier)
+        result = subprocess.run([sys.executable, str(self.project / '更新项目.py'), '--home', str(self.home), 'resume'],
+            cwd=self.base, capture_output=True, text=True, timeout=30)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(json.loads(result.stdout)['recovery']['phase'], 'rolled_back')
+        self.assertEqual(sha(self.project / 'agents/公共/工具/更新/sma_common.py'), before)
+        self.assertIsNone(self.updater.state()['transaction'])
+
+    def test_corrupt_recovery_journal_cannot_remove_user_deliveries(self):
+        self.deploy()
+        identifier = self.planned()
+        folder, plan = self.updater.load_plan(identifier)
+        path = self.project / '交付/已有作品.mp4'
+        put(path, b'original delivery')
+        transaction = {'id': identifier, 'phase': 'applying', 'previous': self.updater.state(),
+            'journal': [{'path': '交付/已有作品.mp4', 'before': None, 'after': sha(path), 'kind': 'write'}]}
+        result = self.updater.restore(folder, plan, transaction)
+        self.assertEqual(result['phase'], 'recovery_blocked')
+        self.assertEqual(path.read_bytes(), b'original delivery')
+
+    def test_cli_json_remains_utf8_with_ascii_host_encoding(self):
+        result = subprocess.run([sys.executable, str(ROOT / '更新项目.py'), '--project', str(self.project), 'status'],
+            env=dict(os.environ, PYTHONIOENCODING='ascii', PYTHONUTF8='0'), capture_output=True, timeout=15)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn('项目尚未接入', json.loads(result.stdout.decode('utf-8'))['blockers'][0])
+
+    def test_user_edit_during_render_is_not_captured_as_replaceable_baseline(self):
+        self.deploy()
+        original = self.updater.render
+        def edit_during_render(*args):
+            result = original(*args)
+            config = read(self.project / CONFIG)
+            config['project']['goal'] = 'Concurrent user edit'
+            put(self.project / CONFIG, config)
+            return result
+        with patch.object(self.updater, 'render', side_effect=edit_during_render), self.assertRaisesRegex(UpdateError, '规划期间'):
+            self.updater.plan(source=self.target(), development=True)
+        self.assertEqual(read(self.project / CONFIG)['project']['goal'], 'Concurrent user edit')
 
 
 if __name__ == '__main__':
