@@ -201,8 +201,15 @@ def closure(required, catalog):
     return result, errors
 
 
-def inspect_skill(name, spec, sources, candidates, receipt, shared, home, client, package_cache=None):
+def inspect_skill(name, spec, sources, candidates, receipt, shared, home, client, package_cache=None, allow_ref_transition=False):
     source = sources.get(spec.get('source'), {})
+    versions = [source]
+    for compatible in source.get('compatible_versions', []):
+        if not {'ref', 'files', 'license', 'license_files', 'compatibility_evidence'} <= compatible.keys() or not compatible['compatibility_evidence']:
+            return {'source': spec.get('source'), 'status': 'blocked', 'errors': ['兼容版本缺少完整包、许可或兼容验证证据']}
+        versions.append(dict(source, **compatible))
+    accepted = {v.get('ref') for v in versions}
+    versions.sort(key=lambda v: v.get('ref') != receipt.get('ref'))
     result = {'source': spec.get('source'), 'ref': source.get('ref'), 'status': 'missing',
               'verification': {'files': 'not_verified', 'source': 'not_verified'}, 'clients': {}, 'errors': []}
     if spec.get('status') != 'ready' or source.get('status') != 'ready':
@@ -236,11 +243,13 @@ def inspect_skill(name, spec, sources, candidates, receipt, shared, home, client
         if identity != spec.get('name', name):
             checked.append({'path': str(entry.parent), 'errors': ['frontmatter 名称不匹配']})
             continue
-        cache_key = (str(package), spec['source'])
+        cache_key = (str(package), spec['source'], tuple(v['ref'] for v in versions))
         if package_cache is not None and cache_key in package_cache:
             proof = package_cache[cache_key]
         else:
-            proof = verify_package(package, source)
+            proofs = [(v['ref'], verify_package(package, v)) for v in versions]
+            actual_ref, proof = next(((ref, proof) for ref, proof in proofs if proof['status'] == 'verified'), proofs[0])
+            proof = dict(proof, actual_ref=actual_ref)
             if package_cache is not None:
                 package_cache[cache_key] = proof
         checked.append({'path': str(entry.parent), **proof})
@@ -250,10 +259,10 @@ def inspect_skill(name, spec, sources, candidates, receipt, shared, home, client
         result.update(status='conflict', errors=['存在同名多个实体或完整包验证失败'], candidates=checked)
         return result
     entry, package, proof = valid[0]
-    if receipt.get('source') not in (None, spec['source']) or receipt.get('ref') not in (None, source['ref']):
+    if receipt.get('source') not in (None, spec['source']) or (not allow_ref_transition and receipt.get('ref') not in {None, *accepted}):
         result.update(status='conflict', errors=['旧回执的来源或版本与当前绑定冲突'])
         return result
-    result.update(path=str(entry.parent.resolve()), package_path=str(package), digest=proof['digest'],
+    result.update(ref=proof['actual_ref'], preferred_ref=source['ref'], path=str(entry.parent.resolve()), package_path=str(package), digest=proof['digest'],
                   verification={'files': 'verified', 'source': 'verified', 'files_checked': proof['files_checked']})
     for target in (['codex', 'claude'] if client == 'both' else [client]):
         if target == 'codex':
@@ -278,7 +287,7 @@ def inspect_skill(name, spec, sources, candidates, receipt, shared, home, client
 
 def inspect_tools(required, definitions):
     output = {}
-    for name in sorted(set(required)):
+    for name in sorted({'python3' if item == 'python' else item for item in required}):
         tool = definitions.get(name)
         if tool is None:
             output[name] = {'status': 'not_verified', 'reason': '无可执行的只读验证配方'}
@@ -304,9 +313,9 @@ def inspect_tools(required, definitions):
     return output
 
 
-def inspect(root, *, home=None, check_tools=True, bindings=None):
+def inspect(root, *, home=None, check_tools=True, bindings=None, allow_ref_transition=False):
     """返回结构化只读结果；home/check_tools/bindings 可供隔离测试和部署绑定使用。"""
-    root, home = Path(root).resolve(), Path(home or Path.home()).resolve()
+    root, home = Path(root).resolve(), Path(home or os.environ.get('AI_SMA_HOME') or Path.home()).resolve()
     config = read_json(root / 'agents/项目/项目配置.yaml', {})
     catalog = read_json(root / 'agents/公共/技能来源.json', {})
     receipt_path = root / 'agents/项目/安装回执.json'
@@ -327,8 +336,9 @@ def inspect(root, *, home=None, check_tools=True, bindings=None):
     # 同名客户端入口指错会在精确 samefile 检查中暴露，不靠名字复用。
     package_cache = {}
     rows = {name: inspect_skill(name, skills.get(name, {}), catalog.get('sources', {}), candidates,
-                                receipts.get(name, {}), shared, home, client, package_cache) for name in required}
+                                receipts.get(name, {}), shared, home, client, package_cache, allow_ref_transition) for name in required}
     runtimes = list(deps.get('core', ['python3', 'git']))
+    runtimes.extend(config.get('runtimes', []))
     for name in required:
         runtimes.extend(skills.get(name, {}).get('runtimes', []))
     tools = inspect_tools(runtimes, {item['name']: item for item in deps.get('tools', [])}) if check_tools else {}
@@ -356,7 +366,7 @@ def write_index(root, result=None):
         source = catalog.get('sources', {}).get(item.get('source'), {})
         observed = (result or {}).get('skills', {}).get(name, {})
         location = str(observed.get('path') or '待安装并验证').replace('|', '\\|')
-        identity = str(item.get('source', '未登记')) + '@' + str(source.get('ref') or '未固定')
+        identity = str(item.get('source', '未登记')) + '@' + str(observed.get('ref') or source.get('ref') or '未固定')
         lines.append(f"| {name} | `{identity}` | {observed.get('status', 'not_verified')} | `{location}` |")
     lines += ['', '文件验证不等于客户端已加载、账号模型就绪或媒体制作通过。详细证据见项目安装回执；技能来源和安装步骤见公共说明。', end]
     block = '\n'.join(lines)

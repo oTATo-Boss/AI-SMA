@@ -70,9 +70,9 @@ class DeploymentSafetyTests(unittest.TestCase):
         path = self.dest / '.codex/config.toml'
         content = path.read_text(encoding='utf-8') + '\n# User setting\nmodel = "user-model"\n'
         path.write_text(content, encoding='utf-8')
-        self.assertEqual(self.assemble(resume=True), 1)
+        self.assertEqual(self.assemble(resume=True), 2)
         self.assertEqual(path.read_text(encoding='utf-8'), content)
-        self.assertEqual(self.read(MOD.STATE)['phase'], 'checks_failed')
+        self.assertEqual(self.read(MOD.STATE)['phase'], 'installation_pending')
         # A user-created role file colliding with a generated name is preserved too.
         role = next((self.dest / '.claude/agents').glob('*.md'))
         role.write_text('User custom role\n', encoding='utf-8')
@@ -87,7 +87,7 @@ class DeploymentSafetyTests(unittest.TestCase):
         card.write_text(content.replace(line, 'description: 已调整的导演职责'), encoding='utf-8')
         self.assertEqual(self.assemble(resume=True), 2)
         self.assertIn('已调整的导演职责', (self.dest / '.codex/agents/film-director.toml').read_text(encoding='utf-8'))
-        self.assertIn('.codex/agents/film-director.toml'.replace('/', os.sep), self.read('agents/项目/团队生成记录.json')['files'])
+        self.assertIn('.codex/agents/film-director.toml', self.read('agents/项目/团队生成记录.json')['files'])
 
     def test_control_and_client_directory_links_do_not_write_outside_project(self):
         for name in ('.ai-sma-deploy', '.codex', '.claude'):

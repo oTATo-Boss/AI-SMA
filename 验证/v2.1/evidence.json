@@ -1,0 +1,306 @@
+{
+  "schema_version": 1,
+  "version": "2.1.0",
+  "recorded_at": "2026-10-16T12:20:29.653887+00:00",
+  "release_status": "not_published",
+  "local_suite": {
+    "status": "passed",
+    "platform": "Darwin",
+    "python": "3.12.0",
+    "tests": 128,
+    "groups": [
+      55,
+      27,
+      24,
+      9,
+      13
+    ],
+    "log_sha256": "bab817f19c9441bd9c0f3a7f8a39264956f9abd3ee09baa8a4c96c2d40c28743"
+  },
+  "native_ci": {
+    "status": "passed",
+    "matrix": [
+      "windows-latest",
+      "macos-latest",
+      "ubuntu-latest"
+    ],
+    "python": [
+      "3.11",
+      "3.13"
+    ],
+    "first_windows_failure": "Legacy Windows CRLF bytes differed from the generator LF text digest; fixed and covered by a regression test.",
+    "tested_commit": "da3e90c02e1fccb3ea9019534a0870d7d8282d8e",
+    "run_url": "https://github.com/oTATo-Boss/AI-SMA/actions/runs/38897295210",
+    "tests_per_job": 124,
+    "jobs": [
+      {
+        "name": "core (macos-latest, 3.13)",
+        "conclusion": "success"
+      },
+      {
+        "name": "core (windows-latest, 3.13)",
+        "conclusion": "success"
+      },
+      {
+        "name": "core (windows-latest, 3.11)",
+        "conclusion": "success"
+      },
+      {
+        "name": "core (macos-latest, 3.11)",
+        "conclusion": "success"
+      },
+      {
+        "name": "core (ubuntu-latest, 3.11)",
+        "conclusion": "success"
+      },
+      {
+        "name": "core (ubuntu-latest, 3.13)",
+        "conclusion": "success"
+      }
+    ],
+    "subsequent_commits": "See PR #1 checks for the final head; this record describes the exact tested commit."
+  },
+  "codex": {
+    "version": "0.162.0-alpha.17.2",
+    "exit_code": 0,
+    "scope": "real CLI executing updater commands against an isolated development release with synthetic skills",
+    "phases": [
+      "planned",
+      "prepared",
+      "updated",
+      "current"
+    ],
+    "from_version": "2.0.0",
+    "to_version": "2.1.0",
+    "project_prompt_visible": true,
+    "new_role_execution": "not_verified"
+  },
+  "claude": {
+    "version": "2.1.287",
+    "discovered_project_roles": [
+      "delivery-producer",
+      "fact-checker",
+      "film-director",
+      "motion-designer",
+      "post-producer",
+      "quality-reviewer",
+      "screenwriter",
+      "storyboard-artist",
+      "subtitle-editor",
+      "voice-director"
+    ],
+    "exit_code": 1,
+    "model_execution": "blocked_not_logged_in",
+    "post_update_reload": "not_verified"
+  },
+  "legacy_v2": {
+    "base_commit": "828977d",
+    "dependency_scope": "synthetic fixture catalog; original v2 template code",
+    "adopt": "adopted",
+    "plan": "planned",
+    "prepare": "prepared",
+    "apply": "client_reload_required",
+    "version_after_update": "2.1.0",
+    "rollback": "rolled_back",
+    "version_after_rollback": "2.0.0"
+  },
+  "clean_account_install": {
+    "method": "agent executed declared public Git recipes; no installer added to repository",
+    "sources": {
+      "ai-video-prompt": "a1c222490297dff1b7eb21f614df72fd3b3607fe",
+      "direct-video": "a1c222490297dff1b7eb21f614df72fd3b3607fe",
+      "my-social": "a1c222490297dff1b7eb21f614df72fd3b3607fe",
+      "rh-minimax-h3": "a1c222490297dff1b7eb21f614df72fd3b3607fe",
+      "codex-imagegen": "e19ccc4b31a53f14ecc8d3623eb4c6886927ed83",
+      "creative-director": "ac06eb255371da35d1db0a146dbfcca8c8857543",
+      "ffmpeg-skill": "1f7e7e3ad1c30cb39fe9032abb5b39cca8e63376",
+      "gpt-image-2-style-library": "63e6176fa01be51c000108dacd72716d3e46784b",
+      "humanizer-zh": "f4518a8eab97b8bfebc66a89d34320a89bef6930",
+      "screenwriting": "90508b56d32d0853e669f267d96e3f72b9740478",
+      "video-production-pipeline": "90508b56d32d0853e669f267d96e3f72b9740478",
+      "video-project-orchestration": "90508b56d32d0853e669f267d96e3f72b9740478",
+      "social-research": "64ba7b4dea71e130d2712ffb6c1c1024b3b7c4b2",
+      "storytelling": "24ef3c1e3d7fde66cc5f1c5953cd6c1d7afc0b4f"
+    },
+    "skill_count": 25,
+    "ready": true,
+    "skills": {
+      "ai-video-prompt": {
+        "status": "verified",
+        "ref": "a1c222490297dff1b7eb21f614df72fd3b3607fe",
+        "digest": "sha256:7f5c2a758e92ffa1b59389de376e6646fd99a44e8922020a70fddb84a6aee3bb"
+      },
+      "asset-generation": {
+        "status": "verified",
+        "ref": "a1c222490297dff1b7eb21f614df72fd3b3607fe",
+        "digest": "sha256:a00e254a62931986eb2a5261f85f4356caf5708f34d4492d232ea6a62fa126cf"
+      },
+      "channel-formula": {
+        "status": "verified",
+        "ref": "24ef3c1e3d7fde66cc5f1c5953cd6c1d7afc0b4f",
+        "digest": "sha256:3b7a72723ec6685f03f83ffba990b3145304b6f98ce54420f021823ae29b36a7"
+      },
+      "codex-imagegen": {
+        "status": "verified",
+        "ref": "e19ccc4b31a53f14ecc8d3623eb4c6886927ed83",
+        "digest": "sha256:e4141905d2a7f9c7f1614c21c091d387fc38e09bdb4e1fabb0d549575d8112a1"
+      },
+      "comment-mining": {
+        "status": "verified",
+        "ref": "64ba7b4dea71e130d2712ffb6c1c1024b3b7c4b2",
+        "digest": "sha256:202f524e76ba1db493cdeadfe463d0b9a009179a9ce1fcf3a9d4ef113b6fc034"
+      },
+      "competitor-social-research": {
+        "status": "verified",
+        "ref": "64ba7b4dea71e130d2712ffb6c1c1024b3b7c4b2",
+        "digest": "sha256:202f524e76ba1db493cdeadfe463d0b9a009179a9ce1fcf3a9d4ef113b6fc034"
+      },
+      "content-planning": {
+        "status": "verified",
+        "ref": "a1c222490297dff1b7eb21f614df72fd3b3607fe",
+        "digest": "sha256:a00e254a62931986eb2a5261f85f4356caf5708f34d4492d232ea6a62fa126cf"
+      },
+      "content-production": {
+        "status": "verified",
+        "ref": "a1c222490297dff1b7eb21f614df72fd3b3607fe",
+        "digest": "sha256:a00e254a62931986eb2a5261f85f4356caf5708f34d4492d232ea6a62fa126cf"
+      },
+      "creative-director": {
+        "status": "verified",
+        "ref": "ac06eb255371da35d1db0a146dbfcca8c8857543",
+        "digest": "sha256:6f16e587ad3d5d954e70b170f05311c938cb7da138d1337237ed995f0dd4518b"
+      },
+      "creator-profile-teardown": {
+        "status": "verified",
+        "ref": "64ba7b4dea71e130d2712ffb6c1c1024b3b7c4b2",
+        "digest": "sha256:202f524e76ba1db493cdeadfe463d0b9a009179a9ce1fcf3a9d4ef113b6fc034"
+      },
+      "direct-video": {
+        "status": "verified",
+        "ref": "a1c222490297dff1b7eb21f614df72fd3b3607fe",
+        "digest": "sha256:ef0883646a67ecbbc7c2c5e932dd4222119309fa086832b3e2897acbb7918386"
+      },
+      "ffmpeg-skill": {
+        "status": "verified",
+        "ref": "1f7e7e3ad1c30cb39fe9032abb5b39cca8e63376",
+        "digest": "sha256:bdd7118ecdb6802c407865bd7326f488486ce34070fe301d7d859f2ec8e9db85"
+      },
+      "gpt-image-2-style-library": {
+        "status": "verified",
+        "ref": "63e6176fa01be51c000108dacd72716d3e46784b",
+        "digest": "sha256:b24a938dec871ee338ebc50b79e45a2f7414636386466aa4a3e6e3318a8ef64c"
+      },
+      "humanizer-zh": {
+        "status": "verified",
+        "ref": "f4518a8eab97b8bfebc66a89d34320a89bef6930",
+        "digest": "sha256:d4ae8f557045500f8e12a9e971451f2f8d394bce00d8ba532af26765837b53c6"
+      },
+      "outlier-post-finder": {
+        "status": "verified",
+        "ref": "64ba7b4dea71e130d2712ffb6c1c1024b3b7c4b2",
+        "digest": "sha256:202f524e76ba1db493cdeadfe463d0b9a009179a9ce1fcf3a9d4ef113b6fc034"
+      },
+      "performance-analysis": {
+        "status": "verified",
+        "ref": "a1c222490297dff1b7eb21f614df72fd3b3607fe",
+        "digest": "sha256:a00e254a62931986eb2a5261f85f4356caf5708f34d4492d232ea6a62fa126cf"
+      },
+      "publishing-delivery": {
+        "status": "verified",
+        "ref": "a1c222490297dff1b7eb21f614df72fd3b3607fe",
+        "digest": "sha256:a00e254a62931986eb2a5261f85f4356caf5708f34d4492d232ea6a62fa126cf"
+      },
+      "retention-audit": {
+        "status": "verified",
+        "ref": "24ef3c1e3d7fde66cc5f1c5953cd6c1d7afc0b4f",
+        "digest": "sha256:3b7a72723ec6685f03f83ffba990b3145304b6f98ce54420f021823ae29b36a7"
+      },
+      "rh-minimax-h3": {
+        "status": "verified",
+        "ref": "a1c222490297dff1b7eb21f614df72fd3b3607fe",
+        "digest": "sha256:9d8f4f142a6a37395981a419839464201626413c38a31347456786128521fc12"
+      },
+      "screenwriting": {
+        "status": "verified",
+        "ref": "90508b56d32d0853e669f267d96e3f72b9740478",
+        "digest": "sha256:6c94093c7d9df4857248ed6f2fa764acd55cd616fbe8cb6d1a8bdb09c722edaa"
+      },
+      "social-media-router": {
+        "status": "verified",
+        "ref": "a1c222490297dff1b7eb21f614df72fd3b3607fe",
+        "digest": "sha256:a00e254a62931986eb2a5261f85f4356caf5708f34d4492d232ea6a62fa126cf"
+      },
+      "storytelling-hooks": {
+        "status": "verified",
+        "ref": "24ef3c1e3d7fde66cc5f1c5953cd6c1d7afc0b4f",
+        "digest": "sha256:3b7a72723ec6685f03f83ffba990b3145304b6f98ce54420f021823ae29b36a7"
+      },
+      "titles-and-thumbnails": {
+        "status": "verified",
+        "ref": "24ef3c1e3d7fde66cc5f1c5953cd6c1d7afc0b4f",
+        "digest": "sha256:3b7a72723ec6685f03f83ffba990b3145304b6f98ce54420f021823ae29b36a7"
+      },
+      "video-production-pipeline": {
+        "status": "verified",
+        "ref": "90508b56d32d0853e669f267d96e3f72b9740478",
+        "digest": "sha256:951e53b51324a0825617fbcb701f346dfdf25ff15ea7e773c750e25b10e13324"
+      },
+      "video-project-orchestration": {
+        "status": "verified",
+        "ref": "90508b56d32d0853e669f267d96e3f72b9740478",
+        "digest": "sha256:412f918cd89a6ba4678082897a6ea4adea95861879dac0e4ee6e7a052f430879"
+      }
+    },
+    "tools": {
+      "codex": "verified",
+      "ffmpeg": "verified",
+      "ffprobe": "verified",
+      "git": "verified",
+      "python-requests": "verified",
+      "python3": "verified"
+    },
+    "client_discovery": "not_verified",
+    "models": "not_verified"
+  },
+  "new_account_check": {
+    "project_and_environment_exit_code": 0,
+    "goal_pending": true,
+    "audience_pending": true,
+    "positioning": "待确认"
+  },
+  "public_skill_install": {
+    "method": "agent-executed-public-git-checkout-and-complete-package-copy",
+    "source": "https://github.com/oTATo-Boss/my-skills",
+    "ref": "90508b56d32d0853e669f267d96e3f72b9740478",
+    "skill": "video-project-orchestration",
+    "proof": {
+      "status": "verified",
+      "digest": "sha256:412f918cd89a6ba4678082897a6ea4adea95861879dac0e4ee6e7a052f430879",
+      "files_checked": 5,
+      "files_expected": 5,
+      "errors": []
+    },
+    "scope": "one complete public skill, not all profile dependencies"
+  },
+  "public_release_query": {
+    "stable_releases": [],
+    "transport": "curl-system-trust",
+    "published_asset_roundtrip": "not_available"
+  },
+  "release_build": {
+    "version": "2.1.0",
+    "files_checked": 188,
+    "development_package_roundtrip": "passed",
+    "stable_verifier_rejects_development": true,
+    "stable_build_rejects_uncommitted_inputs": true
+  },
+  "committed_release_build": {
+    "source_commit": "8a3533c4d979ac5f5535d30b4f3958467659cff7",
+    "files_verified": 188,
+    "development": false,
+    "package_validation": "passed",
+    "published": false
+  },
+  "self_update_recovery": "Real subprocess recovered using the verified old runtime after its installed dependency was replaced before the new supporting module.",
+  "temporary_projects": "Removed after validation; scoped summaries retained in ignored outputs."
+}

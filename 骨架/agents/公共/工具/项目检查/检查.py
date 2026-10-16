@@ -63,6 +63,8 @@ def resolve(target, base):
 
 def check_links(docs):
     broken = []
+    config = ROOT / 'agents/项目/项目配置.yaml'
+    client = json.loads(config.read_text(encoding='utf-8')).get('project', {}).get('client', 'both') if config.exists() else 'both'
     link = re.compile(r"\]\(<?([^)>]+?)>?\)")
     tick = re.compile(r"`([^`\s]+)`")
     for doc in docs:
@@ -75,6 +77,8 @@ def check_links(docs):
                 if (token.startswith(PATH_PREFIXES) or ("/" in token and token.endswith(PATH_SUFFIXES))) and not token.startswith(("http", "-")):
                     targets.append(token)
             for target in targets:
+                if (client == 'codex' and target.startswith('.claude/')) or (client == 'claude' and target.startswith('.codex/')):
+                    continue  # 未选择的客户端配置按说明可缺省。
                 if any(p in target for p in PLACEHOLDERS) or target.startswith(SKILL_INTERNAL + OPTIONAL + TASK_RELATIVE) or target.endswith(".env"):
                     continue  # 示例路径、技能包内路径、可选的私有配置不查存在性
                 if not any(c.exists() for c in resolve(target, doc.parent)):
