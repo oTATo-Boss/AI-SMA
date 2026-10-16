@@ -55,6 +55,18 @@ class EnvironmentTests(unittest.TestCase):
         self.assertEqual(result['skills']['example']['verification']['source'], 'verified')
         self.assertEqual(result['skills']['example']['clients']['codex']['discovery'], 'not_verified')
 
+    def test_generated_index_binds_only_project_skills_and_preserves_user_notes(self):
+        path = environment.write_index(self.root)
+        before = path.read_text(encoding='utf-8')
+        self.assertIn('not_verified', before)
+        self.assertNotIn(str(self.entry), before)
+        path.write_text(before + '\n用户的复用笔记。\n', encoding='utf-8')
+        environment.record(self.root, self.inspect())
+        after = path.read_text(encoding='utf-8')
+        self.assertIn(str(self.entry.resolve()), after)
+        self.assertIn('用户的复用笔记。', after)
+        self.assertEqual(after.count('<!-- AI-SMA:skills:start -->'), 1)
+
     def test_missing_shared_resource_fails_even_with_skill_entry(self):
         (self.package / 'shared/rule.md').unlink()
         result = self.inspect()

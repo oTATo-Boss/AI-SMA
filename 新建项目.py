@@ -251,6 +251,9 @@ def render_stage(stage, plan):
     write_json(stage / CONFIG, project_config(plan), stage)
     write_json(stage / 'agents/项目/装配清单.json', {k: v for k, v in plan.items() if k != 'roles_map'}, stage)
     write_json(stage / 'agents/项目/安装回执.json', dict(schema_version=2, skills={}, tools={}), stage)
+    (stage / 'agents/SKILLS_INDEX.md').write_text('# 项目技能索引\n\n只登记本项目分配的技能，来源清单用于解析完整依赖。\n', encoding='utf-8')
+    environment = load_module(stage / 'agents/公共/工具/环境检查/检查环境.py', 'assembly_environment')
+    environment.write_index(stage)
     flow_path = stage / 'agents/role/总负责人/工具/任务管理/流程定义.json'
     flow = read_json(flow_path)
     workflow = plan['workflow']

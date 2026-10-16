@@ -342,6 +342,37 @@ def inspect(root, *, home=None, check_tools=True, bindings=None):
             'readiness_scope': '本次 ready 仅表示完整技能包、发现入口路径及必要命令可用；不代表当前客户端发现、账号服务或制作小样通过'}
 
 
+def write_index(root, result=None):
+    """Update the owned binding table while retaining user prose outside its markers."""
+    root = Path(root)
+    config = read_json(root / 'agents/项目/项目配置.yaml', {})
+    catalog = read_json(root / 'agents/公共/技能来源.json', {})
+    required, _ = closure(required_skills(root, config), catalog.get('skills', {}))
+    start, end = '<!-- AI-SMA:skills:start -->', '<!-- AI-SMA:skills:end -->'
+    lines = [start, '## 本项目技能绑定', '',
+             '| 技能 | 来源与固定版本 | 文件状态 | 实际入口 |', '|---|---|---|---|']
+    for name in required:
+        item = catalog['skills'].get(name, {})
+        source = catalog.get('sources', {}).get(item.get('source'), {})
+        observed = (result or {}).get('skills', {}).get(name, {})
+        location = str(observed.get('path') or '待安装并验证').replace('|', '\\|')
+        identity = str(item.get('source', '未登记')) + '@' + str(source.get('ref') or '未固定')
+        lines.append(f"| {name} | `{identity}` | {observed.get('status', 'not_verified')} | `{location}` |")
+    lines += ['', '文件验证不等于客户端已加载、账号模型就绪或媒体制作通过。详细证据见项目安装回执；技能来源和安装步骤见公共说明。', end]
+    block = '\n'.join(lines)
+    target = root / 'agents/SKILLS_INDEX.md'
+    existing = target.read_text(encoding='utf-8') if target.exists() else '# 项目技能索引\n\n用于本项目技能选型与复用，随已分配能力和真实安装结果更新。\n'
+    if start in existing and end in existing:
+        before, rest = existing.split(start, 1)
+        _, after = rest.split(end, 1)
+        text = before + block + after
+    else:
+        text = existing.rstrip() + '\n\n' + block + '\n'
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(text, encoding='utf-8')
+    return target
+
+
 def record(root, result):
     """只保存检查器自己的实测结果；不接收伪造成功状态，不填客户端发现成功。"""
     destination = Path(root) / 'agents/项目/安装回执.json'
@@ -349,6 +380,7 @@ def record(root, result):
     temp = destination.with_suffix('.json.tmp')
     temp.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     os.replace(temp, destination)
+    write_index(root, result)
     return destination
 
 
