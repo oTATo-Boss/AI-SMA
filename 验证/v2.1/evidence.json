@@ -15,7 +15,13 @@
       9,
       13
     ],
-    "log_sha256": "cccc2826daef237108b5d77d41c061b9b4b633338012d20607d433e0aa628573"
+    "log_sha256": "cccc2826daef237108b5d77d41c061b9b4b633338012d20607d433e0aa628573",
+    "additional_regressions": [
+      {
+        "case": "legacy_windows_crlf_generated_files_are_not_user_conflicts",
+        "status": "passed"
+      }
+    ]
   },
   "native_ci": {
     "status": "pending",

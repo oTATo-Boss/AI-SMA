@@ -498,6 +498,15 @@ class UpdateTests(unittest.TestCase):
         with patch('sma_update.module', return_value=SimpleNamespace(inspect=legacy_inspect)):
             self.assertTrue(self.updater.environment(self.project)['ready'])
 
+    def test_legacy_windows_crlf_generated_files_are_not_user_conflicts(self):
+        self.deploy()
+        shutil.rmtree(self.project / CONTROL)
+        client = self.project / '.codex/agents/film-director.toml'
+        client.write_bytes(client.read_bytes().replace(b'\r\n', b'\n').replace(b'\n', b'\r\n'))
+        self.updater.adopt()
+        self.assertEqual(self.updater.state()['baseline']['.codex/agents/film-director.toml'], sha(client))
+        self.planned()
+
 
 if __name__ == '__main__':
     unittest.main()

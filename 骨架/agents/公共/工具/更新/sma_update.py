@@ -2,6 +2,7 @@
 import argparse
 import copy
 import difflib
+import hashlib
 import inspect as signature_tools
 import json
 import os
@@ -159,6 +160,16 @@ class Updater:
                 rel = rel.replace('\\', '/')
                 safe(self.root, rel)
                 if category(rel) in {'generated', 'mixed'}:
+                    current = safe(self.root, rel)
+                    if current.is_file() and sha(current) != digest:
+                        # v2 Windows generators hashed LF text but write_text stored CRLF bytes.
+                        # Adopt only the proven same text, preserving substantive user edits as conflicts.
+                        try:
+                            normalized_text = hashlib.sha256(current.read_text(encoding='utf-8').encode('utf-8')).hexdigest()
+                        except UnicodeError:
+                            normalized_text = None
+                        if normalized_text == digest:
+                            digest = sha(current)
                     normalized[rel] = digest
                     if sha(safe(self.root, rel)) == digest:
                         put(safe(baseline, rel), safe(self.root, rel).read_bytes())

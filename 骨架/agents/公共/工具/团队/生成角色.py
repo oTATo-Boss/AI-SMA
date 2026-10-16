@@ -132,7 +132,7 @@ def atomic_write(path, content):
     path = safe_output(path)
     temporary = safe_output(path.with_name(path.name + ".tmp"))
     path.parent.mkdir(parents=True, exist_ok=True)
-    temporary.write_text(content, encoding="utf-8")
+    temporary.write_bytes(content.encode('utf-8'))
     os.replace(temporary, path)
 
 
