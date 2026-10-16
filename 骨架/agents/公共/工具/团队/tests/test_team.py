@@ -65,6 +65,7 @@ class TeamToolTests(unittest.TestCase):
             self.assertIn("agents/role/创意评审/AGENT.md", data["developer_instructions"])
             config = tomllib.loads((self.root / ".codex/config.toml").read_text(encoding="utf-8"))
             self.assertEqual(config["agents"]["max_concurrent_threads_per_session"], 3)
+            self.assertTrue(config["sandbox_workspace_write"]["network_access"])
         self.assertEqual(self.run_tool("生成角色.py", "--check").returncode, 0)
         guide = self.root / "agents/role/审片/AGENT.md"
         guide.write_text(guide.read_text(encoding="utf-8") + "\n补一句。\n", encoding="utf-8")
@@ -76,8 +77,11 @@ class TeamToolTests(unittest.TestCase):
         self.assertIn("不是最新", result.stdout)
         config = self.root / "agents/账号/账号配置.yaml"
         config.write_text(config.read_text(encoding="utf-8").replace("max_parallel_agents: 3", "max_parallel_agents: 2"), encoding="utf-8")
+        config.write_text(config.read_text(encoding="utf-8").replace("network_commands: true", "network_commands: false"), encoding="utf-8")
         self.run_tool("生成角色.py")
-        self.assertIn("max_concurrent_threads_per_session = 2", (self.root / ".codex/config.toml").read_text(encoding="utf-8"))
+        written = (self.root / ".codex/config.toml").read_text(encoding="utf-8")
+        self.assertIn("max_concurrent_threads_per_session = 2", written)
+        self.assertNotIn("network_access", written)
 
     def test_package_problems_are_reported(self):
         bad = self.root / "agents/role/坏角色"

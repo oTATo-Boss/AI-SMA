@@ -1,5 +1,22 @@
 {
   "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Edit(/agents/**)",
+      "Bash(python3 *)",
+      "Bash(ffmpeg *)",
+      "Bash(ffprobe *)",
+      "Bash(npx remotion *)",
+      "Bash(npx hyperframes *)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(node *)",
+      "Bash(heygen *)",
+      "Bash(codex exec *)",
+      "Bash(codex login status)",
+      "WebSearch",
+      "WebFetch"
+    ],
     "deny": [
       "Edit(/发布内容/**)",
       "Edit(/固定资产/**)",

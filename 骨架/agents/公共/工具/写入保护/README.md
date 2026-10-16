@@ -9,6 +9,7 @@
 
 - 编辑工具（Claude 的 Write、Edit、MultiEdit、NotebookEdit，Codex 的 apply_patch）写这三个目录一律拦截；交付包用命令整份复制（见 `agents/role/后期/工具/发布包/README.md`）。
 - 命令（两个软件都叫 Bash）按常见写入命令（rm、mv、cp、rsync、mkdir、touch、chmod、sed -i、tee、dd 等）、重定向和 cd 解析目标路径，经软链接的路径也会还原到真实位置；命令里带补丁内容的也按补丁检查。复制到 `交付/` 时，只有目标包目录还不存在才放行。
+- 项目的自动放行规则（`.claude/settings.json` 的 allow、Codex 的联网放行）绕不过这个钩子：钩子拒绝的写入照样拦住。
 - 限制：Python 等脚本内部的写入、xargs 传入的路径、tar／unzip 解压目标无法静态判断，仍要遵守规则。钩子是兜底，不是完整的权限边界。
 - 钩子自身出错时报告错误但不阻断（避免卡住所有工具）；改动后运行测试：
 

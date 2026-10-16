@@ -116,5 +116,6 @@ autonomy:                            # 做内容的硬限制，智能体不能�
   idea_rounds_max: 2                 # 默认：创意评审都不过时最多重来几轮
   rework_rounds_max: 2               # 默认：审片不过时同一问题最多返工几轮
   explore_ratio: 0.2                 # 默认：选创意时留给探索性方案的比例
+  network_commands: true             # 默认：做内容时命令可以联网（调 RunningHub、HeyGen、装依赖），Codex 不再逐次请本人批准；改成 false 后运行生成角色.py
 isolation:
   allowed_terms: []                  # 项目检查发现同级其他账号的名称会报错；本人确认可以出现的名称写在这里

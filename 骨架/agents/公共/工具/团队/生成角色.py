@@ -170,9 +170,19 @@ def parallel_limit():
     return int(match.group(1)) if match else 3
 
 
+def network_commands():
+    """账号配置 autonomy.network_commands：没写时按 true，做内容时命令可以联网。"""
+    text = ACCOUNT_CONFIG.read_text(encoding="utf-8") if ACCOUNT_CONFIG.exists() else ""
+    match = re.search(r"^\s*network_commands:\s*(true|false)\b", text, re.M)
+    return match is None or match.group(1) == "true"
+
+
 def render_codex_config():
-    return (f"# {MARK}，上限取自 agents/账号/账号配置.yaml 的 autonomy.max_parallel_agents；要改请改源文件后重新运行\n"
+    text = (f"# {MARK}，取自 agents/账号/账号配置.yaml 的 autonomy（max_parallel_agents、network_commands）；要改请改源文件后重新运行\n"
             f"[agents]\nmax_concurrent_threads_per_session = {parallel_limit()}\n")
+    if network_commands():
+        text += "\n[sandbox_workspace_write]\nnetwork_access = true\n"
+    return text
 
 
 def plan():
