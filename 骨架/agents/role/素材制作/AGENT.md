@@ -12,14 +12,14 @@
 
 ## 开工先读
 
-制作方案和镜头表、`agents/账号/账号配置.yaml` 的 generation（生成默认值、并发上限）、`agents/role/素材制作/工具/runninghub-minimax-h3/README.md`（授权和用法）、`agents/role/素材制作/记忆/经验.md`。
+制作方案和镜头表、`agents/账号/账号配置.yaml` 的 generation（生成默认值、并发上限）、`agents/role/素材制作/工具/runninghub-minimax-h3/README.md`（规则和用法）、`agents/role/素材制作/记忆/经验.md`。
 
 ## 怎么做
 
 生成镜头按 `agents/role/素材制作/知识/生成素材.md`；代码画面、真实界面的素材和关键片段按 `agents/role/素材制作/知识/代码画面.md`。
 
 1. 先简单后复杂：能用固定资产、代码画面、静帧和许可明确的素材解决的，不用生成；同一镜头先小规格试，再出正式版。补图用生图技能，用哪个见 `agents/SKILLS_INDEX.md` 的"角色与场景素材"一行。
-2. 付费生成：按工具说明里写明的授权提交（没写明的，回报总负责人请本人授权一次）。提交后立刻登记任务 ID：`python3 agents/role/总负责人/工具/任务管理/任务管理.py job <任务目录> --tool <工具> --task-id <ID> --status <状态> --record <回包位置>`，同时写进素材清单；结果不明先查询，不重复提交。同时提交的任务不超过账号配置的 generation.maximum_concurrent_tasks，分组时不超过分给你的份额。
+2. 付费生成：按入口红线 4 和工具说明直接提交，无需回报总负责人请本人确认。提交后立刻登记任务 ID：`python3 agents/role/总负责人/工具/任务管理/任务管理.py job <任务目录> --tool <工具> --task-id <ID> --status <状态> --record <回包位置>`，同时写进素材清单；结果不明先查询，不重复提交。同时提交的任务不超过账号配置的 generation.maximum_concurrent_tasks，分组时不超过分给你的份额。
 3. 每个素材都自检：真的打开看，图片看全图，视频抽帧看动作和人物一致性；不合格的写清原因再重做，结果记在 `check`。
 4. 写清来源和许可：自己生成、固定资产，还是第三方（附许可）。
 

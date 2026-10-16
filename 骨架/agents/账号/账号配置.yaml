@@ -1,7 +1,7 @@
 # {{账号名}} · 账号配置
 # 字段沿用 social-media 技能套件的 shared/project-config.template.yaml，调用这些技能时提供本文件路径。
 # 规格参数只在这里维护；规则和理由见 内容与交付.md、定位与策略.md。
-# null 表示未配置（不是零、禁止或允许）。本文件不授予付费、上传、登录或发布权限。
+# null 表示未配置（不是零、禁止或允许）。付费生成及其参考素材上传按入口红线 4 执行；本文件不授予登录或发布权限。
 # 标"默认"的值是模板作者验证过的做法，按需修改；标"待填写"的新账号必须填。
 # 开工状态（project.stage）、Chrome 资料名（project.browser_profile）和团队上限（autonomy）也在这里。
 schema_version: 1
@@ -45,7 +45,7 @@ video:                               # 默认
   audio_codec: AAC
 generation:                          # 默认：RunningHub H3；不用就清空
   provider_reference: RunningHub AI 应用「MinimaxH3 多参数视频生成量化加速 V2」，应用 ID 2084320751339032577
-  model_or_workflow_reference: RH-minimax-H3 技能；本项目授权见 agents/role/素材制作/工具/runninghub-minimax-h3/README.md
+  model_or_workflow_reference: RH-minimax-H3 技能；本项目生成规则见 agents/role/素材制作/工具/runninghub-minimax-h3/README.md
   official_documentation_url: https://www.runninghub.ai/zh-cn/call-api/api-detail/2084320751339032577?apiType=4
   runtime_credential_reference: 环境变量 RUNNINGHUB_API_KEY、RUNNINGHUB_ENV_FILE 或技能的本机私有配置
   supported_clip_duration_seconds: 5-15
