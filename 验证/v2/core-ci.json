@@ -1,8 +1,8 @@
 {
-  "code_commit": "2b860cc2e1f4fd46bf22406bb2bd2b4e5114535d",
-  "url": "https://github.com/oTATo-Boss/AI-SMA/actions/runs/38879624167",
+  "code_commit": "6d650cc4e1c39bb7d519e2035ee6a384a1f837e0",
+  "url": "https://github.com/oTATo-Boss/AI-SMA/actions/runs/38880698009",
   "result": "success",
-  "tests_per_job": 86,
+  "tests_per_job": 87,
   "operating_systems": [
     "windows-latest",
     "macos-latest",
@@ -12,5 +12,6 @@
     "3.11",
     "3.13"
   ],
-  "scope": "native core behavior tests; not all creative software or model services"
+  "scope": "native core behavior tests; not all creative software or model services",
+  "legacy_command": "new v2 social project via 新建账号.py; structural and isolated-library environment checks passed"
 }
