@@ -10,7 +10,7 @@
 |---|---|
 | 项目装配与团队交接 | video-project-orchestration |
 | 创意、资料与剧本 | creative-director、content-planning、screenwriting；按片型补长视频或广告方法 |
-| 导演、分镜和连续性 | direct-video、production-continuity |
+| 导演、分镜和连续性 | direct-video、motion-video（代码及素材处理能力）、r2v（全能参考生成模型使用经验与策略）、production-continuity |
 | 图片与AI镜头 | asset-generation、ai-video-prompt、rh-minimax-h3、gpt-image-2-style-library |
 | 二维、艺术与解释动画 | huashu-art-motion + Remotion / HyperFrames |
 | 三维场景与动画 | Blender工作流与专长；Three.js路由与专长 |
@@ -19,7 +19,7 @@
 
 ## 完整登记
 
-来源包可能包含多个子技能和共享资源，依赖闭包按注册表计算。候选不自动成为项目必需项。
+来源包可能包含多个子技能和共享资源，依赖闭包按注册表计算。候选不自动成为项目必需项。motion-video 与 r2v 分配给导演和创意总监；导演启动加载两者，创意总监在判断表现形式、参考与生成可行性时按需加载。两包当前未声明独立技能许可证，注册表如实记为 unspecified。
 
 | 名称 | 一句话用途 | 状态 | 来源 |
 |---|---|---|---|
@@ -30,6 +30,8 @@
 | publishing-delivery | 标题文案与交付文件整理 | ready | [my-social](https://github.com/oTATo-Boss/my-skills/tree/a1c222490297dff1b7eb21f614df72fd3b3607fe/skills/social-media) |
 | performance-analysis | 后台指标口径、对比与复盘 | ready | [my-social](https://github.com/oTATo-Boss/my-skills/tree/a1c222490297dff1b7eb21f614df72fd3b3607fe/skills/social-media) |
 | direct-video | 导演方案、分镜、节奏与视听验收 | ready | [direct-video](https://github.com/oTATo-Boss/my-skills/tree/a1c222490297dff1b7eb21f614df72fd3b3607fe/skills/video/creative/direct-video) |
+| motion-video | 代码生成、素材编辑/合成/三维的能力与输入条件 | ready | [motion-video](https://github.com/oTATo-Boss/my-skills/tree/8432657680dd094f64bd06caadd76d10bf807ef9/skills/video/creative/motion-video) |
+| r2v | 全能参考视频生成模型使用经验、参考组合与生成/质量/失败修订策略 | ready | [r2v](https://github.com/oTATo-Boss/my-skills/tree/8432657680dd094f64bd06caadd76d10bf807ef9/skills/video/ai/r2v) |
 | ai-video-prompt | AI镜头提示词与按结果修订 | ready | [ai-video-prompt](https://github.com/oTATo-Boss/my-skills/tree/a1c222490297dff1b7eb21f614df72fd3b3607fe/skills/video/ai/ai-video-prompt) |
 | rh-minimax-h3 | RunningHub生成、查询恢复与素材下载 | ready | [rh-minimax-h3](https://github.com/oTATo-Boss/my-skills/tree/a1c222490297dff1b7eb21f614df72fd3b3607fe/skills/video/ai/rh-minimax-h3) |
 | skill-library-management | 完整技能包、来源、分类与入口维护 | ready | [skill-library-management](https://github.com/oTATo-Boss/my-skills/tree/a1c222490297dff1b7eb21f614df72fd3b3607fe/skills/Rules/skill-library-management) |

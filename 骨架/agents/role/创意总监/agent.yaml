@@ -2,7 +2,7 @@
 id: creative-director
 name: 创意总监
 description: 根据简报提出机制不同的创意、主题、视觉母题与观看体验；按片型组织方案，不给自己的候选打最终分，不直接改已锁定剧本。
-skills: [creative-director, content-planning, storytelling-hooks]
+skills: [creative-director, content-planning, storytelling-hooks, motion-video, r2v]
 preload_skills: [creative-director]
 claude_tools: inherit
 nesting: false

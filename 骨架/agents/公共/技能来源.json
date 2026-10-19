@@ -16041,6 +16041,136 @@
           "mode": "100644"
         }
       }
+    },
+    "motion-video": {
+      "repository": "https://github.com/oTATo-Boss/my-skills",
+      "ref": "8432657680dd094f64bd06caadd76d10bf807ef9",
+      "package_root": "skills/video/creative/motion-video",
+      "license": "unspecified",
+      "license_files": {},
+      "status": "ready",
+      "files": {
+        "CHANGELOG.md": {
+          "blob": "2b98b0e082d4042a51fbecaecd5c26b97a700cd2",
+          "mode": "100644"
+        },
+        "SKILL.md": {
+          "blob": "a4e934f5ea383e8b8a6885057a6e763f00be3406",
+          "mode": "100644"
+        },
+        "SOURCE.md": {
+          "blob": "dc65870f57c3a3c7aa911d82ad2c86b4c81d937e",
+          "mode": "100644"
+        },
+        "references/3d-spatial.md": {
+          "blob": "665c1d4d2e085eaca8191516250c28f7ba79709b",
+          "mode": "100644"
+        },
+        "references/audio-captions.md": {
+          "blob": "7d7a534b01b280329c21c771de1c5f54d1187dcd",
+          "mode": "100644"
+        },
+        "references/compositing.md": {
+          "blob": "cdd895c8a6b394c5437bc05f68f42f8ad33515d4",
+          "mode": "100644"
+        },
+        "references/graphics-animation.md": {
+          "blob": "3a40bf0d7b9304329fe783a512efe883561b0c38",
+          "mode": "100644"
+        },
+        "references/media-editing.md": {
+          "blob": "ca19a262b002142afb74d0f7ce6f5fd7fb5516ac",
+          "mode": "100644"
+        },
+        "references/rendering-output.md": {
+          "blob": "0d6a574059cb139273e9621a8229ee909ac3ee88",
+          "mode": "100644"
+        },
+        "references/source-analysis.md": {
+          "blob": "e6ebda46258a6a840d48e4e38fc3eb135d341286",
+          "mode": "100644"
+        },
+        "references/sources.md": {
+          "blob": "20d8b6de11710720d8a703ca8c4e7c3c93bd048d",
+          "mode": "100644"
+        },
+        "references/visual-effects.md": {
+          "blob": "2dc8add377eb829eb911a97167c7c68d940d9cfc",
+          "mode": "100644"
+        }
+      },
+      "install": {
+        "method": "由部署智能体获取固定提交的完整 package_root；保留包内结构和权限。包外许可按 license_files 放进包根 .ai-sma-source/ 对应相对位置。",
+        "verification": "逐文件 Git blob 核对；不运行上游 install/setup 脚本。"
+      },
+      "note": "完整文档包已固定；包内来源记录未声明独立技能许可证，不沿用仓库其他技能的 MIT。能力说明及经验不等于当前入口实测。"
+    },
+    "r2v": {
+      "repository": "https://github.com/oTATo-Boss/my-skills",
+      "ref": "8432657680dd094f64bd06caadd76d10bf807ef9",
+      "package_root": "skills/video/ai/r2v",
+      "license": "unspecified",
+      "license_files": {},
+      "status": "ready",
+      "files": {
+        "CHANGELOG.md": {
+          "blob": "39061dd85b36b6d8045f94d1381ec3cc6331c9c2",
+          "mode": "100644"
+        },
+        "README.md": {
+          "blob": "381317cef466d90bae91d6254a0766fa04698502",
+          "mode": "100644"
+        },
+        "SKILL.md": {
+          "blob": "35d173c8aec071afe87015b9377f338f007cee22",
+          "mode": "100644"
+        },
+        "SOURCE.md": {
+          "blob": "feb37b71e6617d92def7c3af987425d6f81056d3",
+          "mode": "100644"
+        },
+        "evals/cases.json": {
+          "blob": "de02362bbd6bfd8356d60a4c372b57ab7e9642d4",
+          "mode": "100644"
+        },
+        "evals/sources.md": {
+          "blob": "24996166da2031441d3b164e390acb7fc503fbb9",
+          "mode": "100644"
+        },
+        "evals/validate.py": {
+          "blob": "255a5e60e6b78b01317d689bde7da98de490e88f",
+          "mode": "100644"
+        },
+        "evals/validation.json": {
+          "blob": "e6231abdd26d75367b30cd6f2e40256951e6159a",
+          "mode": "100644"
+        },
+        "evals/walkthrough.md": {
+          "blob": "f02d52f77e77a1a695a40733b4a55348a9bdc727",
+          "mode": "100644"
+        },
+        "references/asset-selection.md": {
+          "blob": "8cfe00cea5e4b9da430af4dd771f19669898a1bd",
+          "mode": "100644"
+        },
+        "references/generation-strategy.md": {
+          "blob": "6c3a51118caeaa527983c196fba4af34a15ebc42",
+          "mode": "100644"
+        },
+        "references/production-brief.md": {
+          "blob": "104e1a3a1e736f6f48134dbfd56d2a750bea6037",
+          "mode": "100644"
+        },
+        "references/reference-composition.md": {
+          "blob": "418676605ed70c4d40ac364695929957f9035375",
+          "mode": "100644"
+        }
+      },
+      "install": {
+        "method": "由部署智能体获取固定提交的完整 package_root；保留包内结构和权限。包外许可按 license_files 放进包根 .ai-sma-source/ 对应相对位置。",
+        "verification": "逐文件 Git blob 核对；不运行上游 install/setup 脚本。"
+      },
+      "note": "完整文档包已固定；包内来源记录未声明独立技能许可证，不沿用仓库其他技能的 MIT。能力说明及经验不等于当前入口实测。"
     }
   },
   "skills": {
@@ -17487,6 +17617,40 @@
       },
       "status": "candidate",
       "note": "来源链与许可尚未完整核实"
+    },
+    "motion-video": {
+      "name": "motion-video",
+      "source": "motion-video",
+      "entry": "SKILL.md",
+      "category": "video/creative",
+      "requires": [],
+      "runtimes": [],
+      "clients": [
+        "codex",
+        "claude"
+      ],
+      "verification": {
+        "package": "full_git_blob_manifest",
+        "client": "realpath_identity_then_live_client_check"
+      },
+      "status": "ready"
+    },
+    "r2v": {
+      "name": "r2v",
+      "source": "r2v",
+      "entry": "SKILL.md",
+      "category": "video/ai",
+      "requires": [],
+      "runtimes": [],
+      "clients": [
+        "codex",
+        "claude"
+      ],
+      "verification": {
+        "package": "full_git_blob_manifest",
+        "client": "realpath_identity_then_live_client_check"
+      },
+      "status": "ready"
     }
   }
 }

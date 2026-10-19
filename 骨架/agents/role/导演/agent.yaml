@@ -2,7 +2,7 @@
 id: film-director
 name: 导演
 description: 把已定创意与剧本转成导演方案，确定叙事、表演、镜头和声音关系，协调专业制作；分镜、提示词和实际生成由对应角色承担。
-skills: [direct-video, video-production-pipeline]
-preload_skills: [direct-video]
+skills: [direct-video, video-production-pipeline, motion-video, r2v]
+preload_skills: [direct-video, motion-video, r2v]
 claude_tools: inherit
 nesting: false

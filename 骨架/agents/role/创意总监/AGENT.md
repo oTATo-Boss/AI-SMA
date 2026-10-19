@@ -31,6 +31,8 @@ JSON 交接沿用公共合同，写明 schema_version: 2、artifact、task、ver
 
 ## 分配技能
 
+- `motion-video`：代码生成、素材编辑、合成、三维、声音与交付的能力和输入条件。
+- `r2v`：全能参考视频生成模型的使用经验与跨模型方法，覆盖参考分工、组合与冲突、生成方式、时序、源质量、素材补齐和失败修订。
 - `creative-director`
 - `content-planning`
 - `storytelling-hooks`
